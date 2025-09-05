@@ -1,0 +1,89 @@
+\documentclass[11pt]{article}
+\usepackage[spanish]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath, amssymb}
+\usepackage{geometry}
+\usepackage{setspace}
+\usepackage{enumitem}
+\usepackage{graphicx}
+\usepackage{xurl}
+\usepackage{listings}
+
+\geometry{letterpaper, margin=2cm}
+
+\begin{document}
+\begin{titlepage}
+    \centering
+    \vspace{2cm}
+    {\includegraphics[height=3.2cm]{logo_unam.png}}
+    \hfill
+    {\includegraphics[height=3.2cm]{logo_fc.png}\par}
+    \vspace{1cm}
+    {\bfseries\LARGE UNIVERSIDAD NACIONAL AUTONOMA DE MÉXICO \par}
+    \vspace{0.7cm}
+    {\scshape\Large FACULTAD DE CIENCIAS \par}
+    \vspace{1cm}
+    {\itshape\Large Lenguajes de programación \par}
+    \vspace{0.5cm}
+    {\itshape\Large Semestre 2026-1 \par}
+    \vspace{2cm}
+    {\scshape\Huge Tarea 2 \par}
+    \vspace{1cm}
+    {\itshape\Large Fecha de entrega: 8 de septiembre de 2025 \par}
+    \vspace{2cm}
+    {\Large Autores: \par}
+    \vspace{0.4cm}
+    {\Large Escobar Gonzalez Isaac Giovani \hspace{1cm} 321336400 \par}
+    {\Large Garduño Escobar Kevin Jonathan \hspace{0.5cm} 321070629 \par}
+    {\Large Zaldivar Alanis Rodrigo \hspace{2.75cm} 424029605 \par}
+\end{titlepage}
+\section*{Instrucciones}
+\noindent Resolver los siguientes ejercicios de forma clara y ordenada de acuerdo a los lineamientos de entrega de tareas disponibles en la página del curso.\\
+\section*{Ejercicios}
+
+\begin{enumerate}[leftmargin=0.8cm]
+
+    \item Dadas las siguientes expresiones en la gramática \textit{WAE} dispuesta en sintaxis concreta, da la respectiva representación utilizando sintaxis abstracta por medio de los Árboles de Sintaxis Abstracta (ASA) correspondientes.\\
+    En caso de no poder generar el árbol, justifica. \textbf{(1 puntos)}
+    \begin{enumerate}
+        \item \{- 5 \{+ 17 \{+ 48 5\} \} \}
+        \item \{- \{+ 30 \{+ 4 \} \} \}
+    \end{enumerate}
+    
+    \item Dadas las siguientes expresiones en la gramática \textit{WAE} dispuesta en sintaxis concreta, da la sintaxis abstracta correspondiente y realiza la sustitución que se indica. \textbf{(3 puntos)}
+    \begin{enumerate}
+        \item[a.] \begin{lstlisting}
+e = {with {y {- 30 {- y z} } }
+      {- 30 {+ y z } } }
+(subst (parse e) 'y (id 'w))
+        \end{lstlisting}
+        \item[b.] e = \{+ a \{+ b \{- 32 57\} \} \}\\
+        (subst (parse e) 'a (add (num 3) (num 4)))
+    \end{enumerate}
+
+    \item Convierte las siguientes expresiones usando la notación de índices de \textit{De Bruijn}.\textbf{(3 puntos)}
+    \begin{lstlisting}
+{with {v 2}
+  {with {w 3}
+    {with {x 4}
+      {with {y {+ v {- w x} } }
+        {with {z {with {v {+ w x } } v } }
+          {+ y {with {w {- y z } } {- w x } } } } } } } }
+    \end{lstlisting}
+
+    \item Dadas las siguientes expresiones representadas mediante índices de \textit{De Bruijn}, obtén su respectiva versión usando los nombres de los identificadores de variables, iniciando por ”a”, ” b ”, ”c”, ”d”, ”e”, ”f ”.\textbf{(3 puntos)}
+
+    \begin{lstlisting}
+{multi-with {1 2 3 }
+  {multi-with {4 5 6 }
+    {with { {with { {+ <:0 1> <:1 2>} {- <:1 1> <:0 0>} } 3 } }
+      {with {<: 0 0>}
+        {+ <:3 2> {+ <:2 1> {+ <:1 0> <:0 0>} } } } } } }
+    \end{lstlisting}
+
+\end{enumerate}
+
+\section*{Bibliografía:}
+ 
+
+\end{document}
