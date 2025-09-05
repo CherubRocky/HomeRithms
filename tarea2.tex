@@ -1,0 +1,159 @@
+\documentclass[12pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{fullpage}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{algorithm2e}
+\usepackage{float}
+%% Sets page size and margins
+\usepackage[a4paper,top=2.5cm,bottom=2.5cm,left=2cm,right=2cm]{geometry}
+
+
+%% Title
+\title{
+		\vspace{-0.7in} 	
+		\usefont{OT1}{bch}{b}{n}
+		\begin{minipage}{3cm}
+        \vspace{-0.5in} 	
+    	\begin{center}
+    		\includegraphics[height=3.2cm]{logo_unam.png}
+    	\end{center}
+    \end{minipage}\hfill
+    \begin{minipage}{10.7cm}
+    
+    	\begin{center}
+\normalfont \normalsize \textsc{UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO \\ FACULTAD DE CIENCIAS \\ Análisis de Algoritmos } \\
+		\huge Tarea 2
+    	\end{center}
+     
+    \end{minipage}\hfill
+    \begin{minipage}{3.2cm}
+    \vspace{-0.5in} 
+    	\begin{center}
+    		\includegraphics[height=3.2cm]{logo_fc.png}
+    	\end{center}
+    \end{minipage}
+
+\author{Escobar Gonzalez Isaac Giovani \hspace{1cm} 321336400\\
+        Garduño Escobar Kevin Jonathan \hspace{0.5cm} 321070629\\
+        Zaldivar Alanis Rodrigo \hspace{2.75cm} 424029605 }
+\date{}
+}
+ 
+\begin{document}
+
+\maketitle
+
+\section*{Ejercicio 1}
+Para los siguientes ejercicios, da el análisis de complejidad en tiempo y espacio, así como la demostración de correctitud. Ilustra la ejecución de los algoritmos con algunos ejemplares.
+\begin{itemize}
+    \item[1.A] Diseña un algoritmo para multiplicar dos números dados en el sistema romano.\\
+    Por ejemplo, \textit{XIX} por \textit{XXXIV} es \textit{DCXLVI}.\\\\
+    No es válido hacer un cambio al sistema arábigo.
+    \item[1.B] Dado un arreglo $A$ de $n$ bits y un entero $k > 0$, describe un algoritmo para encontrar el subarreglo más pequeño de $A$ que contiene $k$ unos.
+    \item[1.C] Dado un arreglo $A$ que contiene $n - 1$ enteros  únicos en el rango $[0, n - 1]$; existe un número que no se encuentra en el arreglo. Diseña un algoritmo de complejidad en tiempo $O(n)$ y espacio $O(1)$ para encontrar ese número.
+\end{itemize}
+
+% P-2
+\section*{Ejercicio 2}
+La búsqueda binaria trabaja dividiendo el problema a la mitad.
+\begin{itemize}
+    \item[2.A] Propón un algoritmo iterativo para una búsqueda ternaria, que divida el problema en tres partes; debe hacer a los más dos comparaciones y trabajar con un problema de tamaño $n/3$. Realiza el análisis de complejidad de tiempo y espacio, y la demostración de correctitud.
+    \item[2.B] Diseña un algoritmo recursivo que generalice para proponer una búsqueda $k-$enaria que divida el problema en $k-$partes; se deben hacer a lo más $k - 1$ comparaciones y trabajar con un problema de tamaño $n/k$. ¿Cómo cambiaría el análisis de complejidad en tiempo?
+\end{itemize}
+
+% P-3
+\section*{Ejercicio 3}
+Un polinomio $p(x)$ de grado $n$ es una ecuación de la forma:
+\[
+    p(x)=\sum_{i=0}^n a_ix^j
+\]
+donde $x$ es un número real y $a_i \in \mathbb{R}$ son constantes.
+\begin{itemize}
+    \item[3.a] Describe un algoritmo simple de complejidad $O(n^2)$ para evaluar $p(x)$, considerando que $x$ es un valor de entrada.
+    \item[3.b] Considera la siguiente expresión (método de Horner) para reescribir $p(x)$:
+    \[
+        p(x) = a_0 + x(a_1 + x(a_2 + x(a_3 + . . . + x(a_{n-1} + xa_n). . .)))
+    \]
+    ¿Cuál es el número de sumas y multiplicaciones que se realizan en este método?
+    \item[3.c] Propón un algoritmo recursivo para el método anterior.\\
+    ¿La complejidad asintótica es diferente al análisis anterior?, ¿Cambiaría la complejidad (en tiempo o espacio) si se propusiera el método en su versión iterativa?
+\end{itemize}
+
+% P-4
+\section*{Ejercicio 4}
+Considera el siguiente algoritmo:
+\begin{algorithm}
+    \While{$a > 0$}{
+        \If{$a < b$}{
+            $(a, b) \gets (2a, b - a)$
+        }
+        \Else{$(a, b) \gets (a-b, 2b)$}
+    }
+\end{algorithm}
+\begin{itemize}
+    \item ¿Qué hace el algoritmo?
+    \item Asume como precondición que $a, b > 0$.\\
+    ¿Para qué valores de $a, b$ se puede garantizar que el algoritmo termina?
+    \item Si el algoritmo termina, ¿en cuántos pasos lo hace?\\
+    Si el algoritmo no termina, justifica la respuesta.
+\end{itemize}
+
+% P-5
+\section*{Ejercicio 5}
+En clase revisamos la notación asintótica $O-$grande, $\Omega$ y $\Theta$. Algunos autores utilizan también la notación $o$ ($o-$ pequeña) para resaltar que $f$ no solo está acotada por $g$, sino que crece estrictamente más lento. Formalmente:
+\[
+    o-\text{pequeña: Una función } f(n) \text{ es } o(g(n)) \text{ si } \forall b \in \mathbb{R}, \, b>0 \,\, \exists a \in \mathbb{Z},\, a>0
+\]
+\[
+    \text{tal que } \forall n \geq a, \, f(n) < b \cdot g(n)
+\]
+Informalmente, podemos pensar en $O-$grande como una comparación $\leq$ entre funciones, y $o-$pequeña como una comparación $<$; es decir, no importa qué tan pequeña elegimos a b, $f(n)$ será más pequeña que $bg(n)$ a partir de cierta $n$.
+\begin{itemize}
+    \item[5.a] Prueba que:
+        \begin{itemize}
+            \item $n$ no es $o(2n)$ pero $n$ es $o(n^2)$
+            \item $log_{10}(n)$ es $O(log_2(n))$ pero no es $o(log_2(n))$
+            \item si $x, y > 1$, $log_x(n)$ es $o(n^y)$
+        \end{itemize}
+    \item[5.b] ¿Qué pasa si cambiamos la función $f(n) < b \cdot g(n)$ por $f(n) \leq b \cdot g(n)$?, ¿Cambiaría el significado de $o-$ pequeña?
+\end{itemize}
+
+% P-6
+\section*{Ejercicio 6}
+Considera las siguientes recurrencias. En cada caso, demuestra la forma cerrada de $T(n)$ por inducción.
+\begin{itemize}
+    \item[6.a]  
+    \[
+        T(n) = \left\{ \begin{array}{ll}
+        1 & \text{si } n=1\\ T(n-1)+n & \text{en otro caso} \end{array}\right.
+    \]
+    \\
+    \[
+        T(n) = n(n+1)/2
+    \]
+    \item[6.b]
+    \[
+        T(n) = \left\{ \begin{array}{ll}
+        1 & \text{si } n=0\\ T(n-1)+2^n & \text{en otro caso} \end{array}\right.
+    \]
+    \\
+    \[
+        T(n) = 2^{n+1}-1
+    \]
+    \item[6.c]
+    \[
+        T(n) = \left\{ \begin{array}{ll}
+        1 & \text{si } n=0\\ 2T(n-1) & \text{en otro caso} \end{array}\right.
+    \]
+    \\
+    \[
+        T(n) = 2^n
+    \]
+\end{itemize}
+
+\end{document}
