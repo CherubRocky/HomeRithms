@@ -45,11 +45,29 @@
 
     \item Dadas las siguientes expresiones en la gramática \textit{WAE} dispuesta en sintaxis concreta, da la respectiva representación utilizando sintaxis abstracta por medio de los Árboles de Sintaxis Abstracta (ASA) correspondientes.\\
     En caso de no poder generar el árbol, justifica. \textbf{(1 puntos)}
+
+    Para generar el árbol de sintaxis abstracta, procedemos primero a aplicar la función parse a las expresiones.
     \begin{enumerate}
-        \item \{- 5 \{+ 17 \{+ 48 5\} \} \}
+        \item \{- 5 \{+ 17 \{+ 48 5\} \} \}\\
+        \begin{lstlisting}
+            > {parse {- 5 {+ 17 {+ 48 5}}}}
+            > {sub {parse 5} {parse {+ 17 {+ 48 5}}}}
+            > {sub {num 5} {add {parse 17} {parse {+ 48 5}}}}
+            > {sub {num 5} {add {num 17}  {add {parse 48} {parse 5}}}}
+            > {sub {num 5} {add {num 17}  {add {num 48} {num 5}}}}
+        \end{lstlisting}
+        \begin{center}
+            \includegraphics[height=6.5cm]{ASA.png}
+        \end{center}
+
         \item \{- \{+ 30 \{+ 4 \} \} \}
+        \begin{lstlisting}
+            > {parse {- {+ 30 {+ 4 }}}}
+            > Error!
+        \end{lstlisting}
+        El error producido se de debe a que, después de aplicar la primera línea de código, deja el - como sub y aplica parse al segundo elemento y al tercer elemento de la lista, sin embargo, en la expresión \{- \{+ 30 \{+ 4 \} \} \}, no existe un tercer elemento en la lista, por lo cuál el programa falla y no es una expresión bien formada en la gramática del lenguaje, por lo que esta expresión no tiene un árbol de sintaxis abstracta.
     \end{enumerate}
-    
+
     \item Dadas las siguientes expresiones en la gramática \textit{WAE} dispuesta en sintaxis concreta, da la sintaxis abstracta correspondiente y realiza la sustitución que se indica. \textbf{(3 puntos)}
     \begin{enumerate}
         \item[a.] \begin{lstlisting}
@@ -81,7 +99,7 @@ e = {with {y {- 30 {- y z} } }
         \end{lstlisting}
         Por lo tanto, la expresión queda:
         \begin{lstlisting}
-e = {with y {sub (num 30) {sub (id y) (id z)} } 
+e = {with y {sub (num 30) {sub (id y) (id z)} }
       {sub (num 30) {add (id y) (id z)} } }
         \end{lstlisting}
         Y expresión completa para aplicar la sustitución quedaría:
@@ -91,12 +109,12 @@ e = {with y {sub (num 30) {sub (id y) (id z)} }
 ;; with -> (if (symbol=? y y)) = SI
 > (with y (subst {sub (num 30) {sub (id y) (id z)}} 'y (id 'w))
     {sub (num 30) {add (id y) (id z)}})
-> (with y (sub (subst (num 30) 'y (id 'w)) (subst 
+> (with y (sub (subst (num 30) 'y (id 'w)) (subst
     {sub (id y) (id z)} 'y (id 'w)))
     {sub (num 30) {add (id y) (id z)}})
 > (with y (sub (num 30) (subst {sub (id y) (id z)} 'y (id 'w)))
     {sub (num 30) {add (id y) (id z)}})
-> (with y (sub (num 30) (sub (subst (id y) 'y (id 'w)) 
+> (with y (sub (num 30) (sub (subst (id y) 'y (id 'w))
     (subst (id z) 'y (id 'w))))
     {sub (num 30) {add (id y) (id z)}})
 ;; id -> (if (symbol=? y y)) = SI
@@ -129,24 +147,24 @@ e = {with y {sub (num 30) {sub (id y) (id z)} }
         \begin{lstlisting}
 (subst (add (id a) (add (id b) (sub (num 32) (num 57))))
     'a (add (num 3) (num 4)))
-> (add (subst (id a) 'a (add (num 3) (num 4))) 
+> (add (subst (id a) 'a (add (num 3) (num 4)))
     (subst (add (id b) (sub (num 32) (num 57))) 'a (add (num 3) (num 4))))
 ;; id -> (if (symbol=? a a)) = SI
-> (add (add (num 3) (num 4)) (subst (add (id b) (sub (num 32) (num 57))) 
+> (add (add (num 3) (num 4)) (subst (add (id b) (sub (num 32) (num 57)))
     'a (add (num 3) (num 4))))
-> (add (add (num 3) (num 4)) (add (subst (id b) 'a (add (num 3) (num 4))) 
+> (add (add (num 3) (num 4)) (add (subst (id b) 'a (add (num 3) (num 4)))
     (subst (sub (num 32) (num 57)) 'a (add (num 3) (num 4)))))
 ;; id -> (if (symbol=? b a)) = NO
-> (add (add (num 3) (num 4)) (add (id b)) 
+> (add (add (num 3) (num 4)) (add (id b))
     (subst (sub (num 32) (num 57)) 'a (add (num 3) (num 4)))))
-> (add (add (num 3) (num 4)) (add (id b)) 
+> (add (add (num 3) (num 4)) (add (id b))
     (sub (subst (num 32)) (subst (num 57)) 'a (add (num 3) (num 4))))
-> (add (add (num 3) (num 4)) (add (id b)) 
+> (add (add (num 3) (num 4)) (add (id b))
     (sub (num 32) (subst (num 57)) 'a (add (num 3) (num 4))))
 > (add (add (num 3) (num 4)) (add (id b) (sub (num 32) (num 57))))
         \end{lstlisting}
         La expresión final es:\\
-        \boxed{\text{(add (add (num 3) (num 4)) 
+        \boxed{\text{(add (add (num 3) (num 4))
         (add (id b) (sub (num 32) (num 57))))}}
     \end{enumerate}
 
@@ -173,6 +191,6 @@ e = {with y {sub (num 30) {sub (id y) (id z)} }
 \end{enumerate}
 
 \section*{Bibliografía:}
- 
+
 
 \end{document}
