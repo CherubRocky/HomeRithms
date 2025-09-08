@@ -167,6 +167,7 @@ e = {with y {sub (num 30) {sub (id y) (id z)} }
         \boxed{\text{(add (add (num 3) (num 4))
         (add (id b) (sub (num 32) (num 57))))}}
     \end{enumerate}
+\newpage
 
     \item Convierte las siguientes expresiones usando la notación de índices de \textit{De Bruijn}.\textbf{(3 puntos)}
     \begin{lstlisting}
@@ -178,14 +179,36 @@ e = {with y {sub (num 30) {sub (id y) (id z)} }
           {+ y {with {w {- y z } } {- w x } } } } } } } }
     \end{lstlisting}
 
+    \textbf{Solución:}
+
+    \begin{lstlisting}
+{with 2
+  {with 3
+    {with 4
+      {with {+ <:2 0> {- <:1 0> <:0 0>} }
+        {with {with {+ <:2 0> <:1 0> } <:0 0> }
+          {+ <:1 0> {with {- <:1 0> <:0 0> } {- <:0 0> <:3 0> } } } } } } } }
+    \end{lstlisting}
+
+
     \item Dadas las siguientes expresiones representadas mediante índices de \textit{De Bruijn}, obtén su respectiva versión usando los nombres de los identificadores de variables, iniciando por ”a”, ” b ”, ”c”, ”d”, ”e”, ”f ”.\textbf{(3 puntos)}
 
     \begin{lstlisting}
 {multi-with {1 2 3 }
   {multi-with {4 5 6 }
-    {with { {with { {+ <:0 1> <:1 2>} {- <:1 1> <:0 0>} } 3 } }
+    {with { {multi-with { {+ <:0 1> <:1 2>} {- <:1 1> <:0 0>} } 3 } }
       {with {<: 0 0>}
         {+ <:3 2> {+ <:2 1> {+ <:1 0> <:0 0>} } } } } } }
+    \end{lstlisting}
+
+    \textbf{Solución:}
+
+    \begin{lstlisting}
+{multi-with {{a 1} {b 2} {c 3} }
+  {multi-with {{d 4} {e 5} {f 6} }
+    {with { g {multi-with {{+ e c}{- b d}} 3} }
+      {with { h g}
+        {+ c {+ e {+ g h} } } } } } }
     \end{lstlisting}
 
 \end{enumerate}
