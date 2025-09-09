@@ -78,54 +78,58 @@ e = {with {y {- 30 {- y z} } }
         Para convertir la expresión dada en la gramática \textit{WAE} en sintaxis concreta a abstracta, le aplicamos la función \texttt{parse} y se haría de la siguiente forma:
         \begin{lstlisting}
 (parse e)
-> {with y {parse {- 30 {- y z} } }
-    {parse {- 30 {+ y z } } } }
-> {with y {sub {parse 30} {parse {- y z} }}
-    {parse {- 30 {+ y z } } } }
-> {with y {sub {num 30} {parse {- y z} }}
-    {parse {- 30 {+ y z } } } }
-> {with y {sub {num 30} {sub {parse y} {parse z} } }
-    {parse {- 30 {+ y z } } } }
-> {with y {sub {num 30} {sub {id y} {parse z} } }
-    {parse {- 30 {+ y z } } } }
-> {with y {sub {num 30} {sub {id y} {id z} } }
-    {parse {- 30 {+ y z } } } }
-> {with y {sub {num 30} {sub {id y} {id z} } }
-    {sub {num 30} {add {parse y} {parse z } } } }
-> {with y {sub {num 30} {sub {id y} {id z} } }
-    {sub {num 30} {add {id y} {parse z } } } }
-> {with y {sub {num 30} {sub {id y} {id z} } }
-    {sub {num 30} {add {id y} {id z } } } }
+> {with {y {parse {- 30 {- y z}}}}
+    {parse {- 30 {+ y z} } } }
+> {with {y {sub {parse 30} {parse {- y z}}}}
+    {parse {- 30 {+ y z} } } }
+> {with {y {sub {num 30} {parse {- y z}}}}
+    {parse {- 30 {+ y z} } } }
+> {with {y {sub {num 30} {sub {parse y} {parse z}}}}
+    {parse {- 30 {+ y z} } } }
+> {with {y {sub {num 30} {sub {id y} {parse z}}}}
+    {parse {- 30 {+ y z} } } }
+> {with {y {sub {num 30} {sub {id y} {id z}}}}
+    {parse {- 30 {+ y z} } } }
+> {with {y {sub {num 30} {sub {id y} {id z}}}}
+    {sub {parse 30} {parse {+ y z} } } }
+> {with {y {sub {num 30} {sub {id y} {id z}}}}
+    {sub {num 30} {parse {+ y z} } } }
+> {with {y {sub {num 30} {sub {id y} {id z}}}}
+    {sub {num 30} {add {parse y} {parse z} } } }
+> {with {y {sub {num 30} {sub {id y} {id z}}}}
+    {sub {num 30} {add {id y} {parse z} } } }
+> {with {y {sub {num 30} {sub {id y} {id z}}}}
+    {sub {num 30} {add {id y} {id z} } } }
         \end{lstlisting}
         Por lo tanto, la expresión queda:
         \begin{lstlisting}
-e = {with y {sub (num 30) {sub (id y) (id z)} }
+e = {with {y {sub (num 30) {sub (id y) (id z)}}}
       {sub (num 30) {add (id y) (id z)} } }
         \end{lstlisting}
         Y expresión completa para aplicar la sustitución quedaría:
         \begin{lstlisting}
-(subst {with y {sub (num 30) {sub (id y) (id z)} }
+(subst {with {y {sub (num 30) {sub (id y) (id z)}}}
       {sub (num 30) {add (id y) (id z)}}} 'y (id 'w))
 ;; with -> (if (symbol=? y y)) = SI
-> (with y (subst {sub (num 30) {sub (id y) (id z)}} 'y (id 'w))
+> (with (y (subst {sub (num 30) {sub (id y) (id z)}} 'y (id 'w)))
     {sub (num 30) {add (id y) (id z)}})
-> (with y (sub (subst (num 30) 'y (id 'w)) (subst
-    {sub (id y) (id z)} 'y (id 'w)))
+> (with (y (sub (subst (num 30) 'y (id 'w)) (subst
+    {sub (id y) (id z)} 'y (id 'w))))
     {sub (num 30) {add (id y) (id z)}})
-> (with y (sub (num 30) (subst {sub (id y) (id z)} 'y (id 'w)))
+> (with (y (sub (num 30) (subst {sub (id y) (id z)} 'y (id 'w))))
     {sub (num 30) {add (id y) (id z)}})
-> (with y (sub (num 30) (sub (subst (id y) 'y (id 'w))
-    (subst (id z) 'y (id 'w))))
+> (with (y (sub (num 30) (sub (subst (id y) 'y (id 'w))
+    (subst (id z) 'y (id 'w)))))
     {sub (num 30) {add (id y) (id z)}})
 ;; id -> (if (symbol=? y y)) = SI
-> (with y (sub (num 30) (sub (id w) (subst (id z) 'y (id 'w))))
+> (with (y (sub (num 30) (sub (id w) (subst (id z) 'y (id 'w)))))
     {sub (num 30) {add (id y) (id z)}})
 ;; id -> (if (symbol=? z y)) = NO
-> (with y (sub (num 30) (sub (id w) (id z)))
+> (with (y (sub (num 30) (sub (id w) (id z))))
     (sub (num 30) (add (id y) (id z))))
         \end{lstlisting}
         La expresión final es:\\
-        \boxed{\text{(with y (sub (num 30) (sub (id w) (id z)))\\
+        \boxed{\text{(with (y (sub (num 30) (sub (id w) (id z))))\\
     (sub (num 30) (add (id y) (id z))))}}
 
         \item[b.] e = \{+ a \{+ b \{- 32 57\} \} \}\\
@@ -133,13 +137,13 @@ e = {with y {sub (num 30) {sub (id y) (id z)} }
         Aplicamos la función \texttt{parse} a la expresión:
         \begin{lstlisting}
 (parse e)
-> (add (parse a) (parse {+ b {- 32 57} }))
-> (add (id a) (parse {+ b {- 32 57} }))
+> (add (parse a) (parse {+ b {- 32 57}} ))
+> (add (id a) (parse {+ b {- 32 57}} ))
 > (add (id a) (add (parse b) (parse {- 32 57}) ))
 > (add (id a) (add (id b) (parse {- 32 57}) ))
-> (add (id a) (add (id b) (sub (parse 32) (parse 57))))
-> (add (id a) (add (id b) (sub (num 32) (parse 57))))
-> (add (id a) (add (id b) (sub (num 32) (num 57))))
+> (add (id a) (add (id b) (sub (parse 32) (parse 57)) ))
+> (add (id a) (add (id b) (sub (num 32) (parse 57)) ))
+> (add (id a) (add (id b) (sub (num 32) (num 57)) ))
         \end{lstlisting}
         Por lo tanto, la expresión queda:
         \texttt{e = (add (id a) (add (id b) (sub (num 32) (num 57))))}
