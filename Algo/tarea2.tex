@@ -764,14 +764,60 @@ Un polinomio $p(x)$ de grado $n$ es una ecuación de la forma:
 \]
 donde $x$ es un número real y $a_i \in \mathbb{R}$ son constantes.
 \begin{itemize}
-    \item[3.a] Describe un algoritmo simple de complejidad $O(n^2)$ para evaluar $p(x)$, considerando que $x$ es un valor de entrada.
+    \item[3.a] Describe un algoritmo simple de complejidad $O(n^2)$ para evaluar $p(x)$, considerando que $x$ es un valor de entrada.\\
+    La forma simple de evaluar un polinomio de grado $n$ es calcular cada término de la suma por separado y después sumarlos, lo que nos lleva a trabajar con dos \textbf{for} anidados, en el primero se hacen \textit{n} iteraciones y para el \textbf{for} interno calculamos $x^i$ multiplicamos $x$ por si mismo $i$ veces, para después en el \textbf{for} exterior multiplicamos por $a_i$ y lo sumamos a lo que ya teniamos.\\
+    En cada iteración del primer \textbf{for} el \textbf{for} interno hace \textit{i} iteraciones, lo que nos ayuda a saber el número de operaciones que hace para poder sacar la complejidad que es $0+1+2+\dots+n = \frac{n(n+1)}{2} = O(n^2)$, y lo que queda son una multiplicación, una suma y una asignación lo que tiene complejidad constante, por lo tanto el algoritmo tiene complejidad $O(n^2)$.\\
+    El algoritmo es el siguiente, recibe un arreglo $A$ con $a_i \in \mathbb{R}$ constantes y un número real $x$ y devuelve el resultado de $p(x)$.\\
+    \RestyleAlgo{ruled}
+    \LinesNumbered
+    \renewcommand{\algorithmcfname}{Algoritmo}
+    \begin{algorithm}[H]
+        \caption{Evaluación de un polinomio $p(x)$ de grado $n$}
+        $potencia \gets 1$\\
+        $longitud \gets len(A)$\\
+        $resultado \gets 0$\\
+        \For{$i \gets 0$ \KwTo $longitud$}{
+            \For{$j \gets 1$ \KwTo $i$}{
+                $potencia \gets potencia \cdot x$\\
+            }
+            $resultado \gets resultado + A[i] \cdot potencia$\\
+        }
+        \Return $resultado$
+    \end{algorithm}
     \item[3.b] Considera la siguiente expresión (método de Horner) para reescribir $p(x)$:
     \[
         p(x) = a_0 + x(a_1 + x(a_2 + x(a_3 + . . . + x(a_{n-1} + xa_n). . .)))
     \]
-    ¿Cuál es el número de sumas y multiplicaciones que se realizan en este método?
+    ¿Cuál es el número de sumas y multiplicaciones que se realizan en este método?\\
+    Este método se evalúa primero lo más adentro primero y después lo que este por fuera, entonces, empezando con $a_n$ que se multiplica por $x$ y se suma a $a_{n-1}$ entonces ya llevamos 1 multiplicación y una suma, pero eso que teniamos lo vamos a multiplicar otra vez por $x$ y eso se le suma a $a_{n-2}$ lo que da dos sumas y dos multiplicaciones, pero de nuevo eso se multiplica por $x$ y se le suma a $a_{n-3}$ y así hasta llegar a que se multiplique por $x$ y se sume a $a_0$ y como ya no hay más constantes $a_i$ anteriores a este entonces ya no hay más multiplicaciones ni sumas que hacer por lo cual se hizo una multiplicación y  una suma por cada $a_i$.\\
+    Por lo tanto, en este método se realizan $n$ sumas y $n$ multiplicaciones.
     \item[3.c] Propón un algoritmo recursivo para el método anterior.\\
-    ¿La complejidad asintótica es diferente al análisis anterior?, ¿Cambiaría la complejidad (en tiempo o espacio) si se propusiera el método en su versión iterativa?
+    Para el algoritmo recursivo, tomaremos como caso base si la longitud del arreglo es $0$ entonces regresara $0$ pero si no es $0$ tomaremos el primer elemento del arreglo y se lo sumaremos a $x$ multiplicado por la misma función con el resto del arreglo sin el primer elemento y $x$ como argumentos.\\
+    El algoritmo se llamara \texttt{horner\_Recursivo(A, x)} donde $A$ es el arreglo con los coeficientes del polinomio y $x$ es el valor en el que se evaluara el polinomio.\\
+    \begin{algorithm}[H]
+        \caption{Algoritmo recursivo para el método de Horner}
+        $longitud \gets len(A)$\\
+        $resto \gets A[1:]$\\
+        \If{$longitud == 0$}{
+            \Return $0$
+        }
+        \Return $A[0] + x \cdot horner\_Recursivo(resto, x)$
+    \end{algorithm}
+    ¿La complejidad asintótica es diferente al análisis anterior?\\
+    La complejidad asintótica no es diferente al análisis anterior ya que en este método recursivo se realiza una suma y una multiplicación por cada elemento del arreglo, es decir, como toma solo el primer elemento y luego lo suma a $x$ multiplicado por la función menos ese elemento lo hara $n$ veces, por lo tanto la complejidad asintótica es $O(n)$.\\
+    ¿Cambiaría la complejidad (en tiempo o espacio) si se propusiera el método en su versión iterativa?\\
+    Veamos como sería el algoritmo iterativo, en este primero declaramos a $p(x)$ con el último elemento del arreglo y después empezamos desde el indice del penúltimo elemento y le sumamos a $p(x)$ el elemento en ese indice más $x$ por $p(x)$:\\
+    \begin{algorithm}[H]
+        \caption{Algoritmo iterativo}
+        $long \gets len(A)$\\
+        $resultado \gets A[long - 1]$\\
+        \For{$i \gets long - 2$; $i\geq 0$; $i--$}{
+            $resultado \gets A[i] + x \cdot resultado$
+        }
+        \Return $resultado$
+    \end{algorithm}
+    Por lo tanto ya con el algoritmo iterativo, veamos la complejidad en tiempo, tanto en el iterativo como en el recursivo solamente se hacen $n$ sumas y $n$ multiplicaciónes por lo que la complejidad en tiempo del algoritmo recursivo y del algoritmo iterativo es de $O(n)$.\\
+    Para la complejidad en espacio, si consideramos que en el algoritmo recursivo se asigna memoria en cada llamada de la función entonces este tiene complejidad $O(n)$ en espacio, mientras que el algoritmo iterativo solo hace dos declaraciones considerando que el arreglo viene en la entrada, por lo tanto, el algoritmo iterativo tiene complejidad $O(1)$ en espacio, por lo cual si podemos ver la diferencia entre estas dos opciones.
 \end{itemize}
 
 % P-4
@@ -786,11 +832,15 @@ Considera el siguiente algoritmo:
     }
 \end{algorithm}
 \begin{itemize}
-    \item ¿Qué hace el algoritmo?
+    \item ¿Qué hace el algoritmo?\\
+    El algoritmo solo cambia los valores que tienen $a$ y $b$, en dado caso de que el algoritmo termine el valor final de $a$ sera $0$ y el valor final de $b$ sera la suma de los valores originales de $a$ y $b$. Pero si el algoritmo no termina, es decir, en ningún momento $a = 0$, entonces, se cicla y permanece cambiando los valores de $a$ y $b$, con la excepción de si $b = 0$ por que entonces se cicla pero no cambia nunca el valor de ninguno de los dos.
     \item Asume como precondición que $a, b > 0$.\\
-    ¿Para qué valores de $a, b$ se puede garantizar que el algoritmo termina?
+    ¿Para qué valores de $a, b$ se puede garantizar que el algoritmo termina?\\
+    El algoritmo termina siempre y cuando en algún punto $a = b$, es decir, cualquier valor que tome $a$ tiene  que ser el mismo valor para $b$ para que entonces el algoritmo pueda terminar al inicio, pero esto tambien puede suceder en alguna iteración, si en algún momento el valor que tenga $a$ multiplicado por 2 es lo mismo que si a $b$ le restamos el valor de $a$ antes de multiplicarlo o viceversa, cambiando $a$ por $b$ y $b$ por $a$, además una forma de que termine es si los valores iniciales de $a$ y $b$ sumados dan como resultado una potencia de dos.
     \item Si el algoritmo termina, ¿en cuántos pasos lo hace?\\
-    Si el algoritmo no termina, justifica la respuesta.
+    Si el algoritmo no termina, justifica la respuesta.\\
+    Si el algoritmo termina depende de sus entradas para saber en cuantos pasos lo hara si sus entradas son iguales entonces terminara en un solo paso, si sus entradas son diferentes pero en un inicio da la opción de que el mayor menos el menor de lo mismo que el menor multiplicado por 2 entonces terminara en un solo paso, pero si la suma de las entradas da como resultado una potencia de 2 entonces el número de pasos en los que terminara sera menor o igual al $\log_2(S)$ siendo \textit{S} la suma de las entradas.\\
+    En cambio, si el algoritmo no termina será por que $a$ nunca sera igual a $0$, entonces $a$ se estara multiplicando por 2 o variando su valor pero como sigue siendo mayor que 0, entonces el While nunca va a terminar y el algoritmo se va a ciclar.
 \end{itemize}
 
 % P-5
@@ -805,12 +855,146 @@ En clase revisamos la notación asintótica $O-$grande, $\Omega$ y $\Theta$. Alg
 Informalmente, podemos pensar en $O-$grande como una comparación $\leq$ entre funciones, y $o-$pequeña como una comparación $<$; es decir, no importa qué tan pequeña elegimos a b, $f(n)$ será más pequeña que $bg(n)$ a partir de cierta $n$.
 \begin{itemize}
     \item[5.a] Prueba que:
-        \begin{itemize}
-            \item $n$ no es $o(2n)$ pero $n$ es $o(n^2)$
-            \item $log_{10}(n)$ es $O(log_2(n))$ pero no es $o(log_2(n))$
-            \item si $x, y > 1$, $log_x(n)$ es $o(n^y)$
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    \begin{itemize}
+            \item $n$ no es $o(2n)$ pero $n$ es $o(n^2)$\\
+            \textbf{Demostración:}\\
+            $\bullet$ Empecemos por demostrar que \textbf{$n$ no es $o(2n)$}.\\
+            Para ello, debemos mostrar que existe al menos un $b > 0$ tal que para cualquier $a > 0$ existe una $n \geq a$ tal que $n \geq b \cdot 2n$ (contraejemplo).\\
+            Tomemos $b = \frac{1}{2}$. Entonces, para cualquier $a > 0$ podemos tomar $n = 1$. Así, tenemos que:
+            \[
+            1 < \frac{1}{2} \cdot 2(1)
+            \]
+            \[
+            \Rightarrow 1 < 1
+            \]
+            Lo cual es un contraejemplo a la definición de $o-$pequeña.\\
+            Por lo tanto, $n$ no es $o(2n)$.\\
+            $\bullet$ Ahora, demostraremos que \textbf{$n$ es $o(n^2)$}.\\
+            Procedemos a mostrar que para cualquier $b > 0$ existe un $a > 0$ tal que para cualquier $n \geq a$ se cumple que:
+            \[
+            n < b \cdot n^2
+            \]
+            Vemos que podemos dividir ambos lados entre $n$ (ya que por definición $n > 0$), obteniendo:
+            \[
+            1 < b \cdot n
+            \]
+            Procedemos a despejar $n$:
+            \[
+            \Rightarrow \frac{1}{b} < n
+            \]
+            Ahora podríamos decir que $a = \frac{1}{b}$ pero tenemos el detalle de que $a$ debe ser un entero positivo por la definición, por lo que tomamos $a = \lfloor \frac{1}{b} \rfloor + 1$, que es un entero positivo.\\
+            Por lo tanto, hemos demostrado que $n$ es $o(n^2)$. \\
+            \qed
+
+
+            \item $log_{10}(n)$ es $O(log_2(n))$ pero no es $o(log_2(n))$\\
+            \textbf{Demostración:}\\
+            $\bullet$ Realizamos el mismo procedimiento que en el inciso anterior.\\
+            Primero, demostraremos que \textbf{$log_{10}(n)$ es $O(log_2(n))$}.\\
+            Procedemos a mostrar que existe una constante $c \in \mathbb{R^{+}}$ y un $n_0 \in \mathbb{N}$ tales que $\forall n \geq n_0$ se cumple que:
+            \[
+            log_{10}(n) \leq c \cdot log_2(n)
+            \]
+            Aqui podemos hacer uso de la propiedad de los logaritmos que dice que:
+            \[
+            log_a(b) = \frac{log_c(b)}{log_c(a)}
+            \]
+            Por lo que podemos reescribir $log_{10}(n)$ como:
+            \[
+            log_{10}(n) = \frac{log_2(n)}{log_2(10)}
+            \]
+            Esto lo usamos a conveniencia, pues ahora podemos sustituir en la desigualdad:
+            \[
+            \frac{log_2(n)}{log_2(10)} \leq c \cdot log_2(n)
+            \]
+            Ahora podemos dividir ambos lados entre $log_2(n)$, para esto debemos tener en cuenta en que $log_2(n) > 0$, por lo que tomamos $n_0 = 2$ (pues si $n_0 = 1$ tenemos $log_2(1) = 0$). Entonces, tenemos:
+            \[
+            \frac{1}{log_2(10)} \leq c
+            \]
+            Por lo que podemos tomar $c = \frac{1}{log_2(10)}$.\\
+            Por tanto, hemos demostrado que $log_{10}(n)$ es $O(log_2(n))$.\\
+            Con $n_0 = 2$ y $c = \frac{1}{log_2(10)}$ $\forall n \geq 2$.\\
+
+
+            $\bullet$ Ahora demostremos que \textbf{$log_{10}(n)$ no es $o(log_2(n))$}.\\
+            Por lo que exhibiremos un contraejemplo, un $b > 0$ tal que para cualquier $a > 0$ existe una $n \geq a$ tal que no se cumpla la desigualdad
+            \[
+            log_{10}(n) < b \cdot log_2(n)
+            \]
+            Podemos hacer la sustitucion que hicimos anteriormente y reescribir la desigualdad como:
+            \[
+            \frac{log_2(n)}{log_2(10)} < b \cdot log_2(n)
+            \]
+            Dividiendo ambos lados entre $log_2(n)$ (con $n \geq 2$) obtenemos:
+            \[
+            \frac{1}{log_2(10)} < b
+            \]
+            Podemos hacer el calculo de $\frac{1}{log_2(10)} \approx 0.3010$, quedando la desigualdad como:
+            \[
+            0.3010 < b
+            \]
+            Pero ahora podemos tomar por conveniencia a $b = 0.1$, que es un valor menor a $0.3010$, lo cual es lo que buscabamos en un inicio pues hemos encontrado un $b$ que no cumple la desigualdad (contraejemplo).\\
+            Por lo tanto, hemos demostrado que $log_{10}(n)$ no es $o(log_2(n))$.\\
+            \qed
+
+
+
+
+            \item si $x, y > 1$, $log_x(n)$ es $o(n^y)$\\
+            \textbf{Demostración:}\\
+            Procedemos a demostrar lo que se nos pide mediante la definición de $o-$pequeña.\\
+            Debemos mostrar que para cualquier $b > 0$ existe un $a > 0$ tal que para cualquier $n \geq a$ se cumple que:
+            \[
+            log_x(n) < b \cdot n^y
+            \]
+            Nuevamente, notemos que podemos hacer uso de la propiedad de los logaritmos sobre el cambio de base, por lo que podemos reescribir $log_x(n)$ como:
+            \[
+            log_x(n) = \frac{log_2(n)}{log_2(x)}
+            \]
+            Y observemos que $log_2(x)$ es una constante positiva pues $x > 1$.\\
+            Sustituyendo en la desigualdad, tenemos que:
+            \[
+            \frac{log_2(n)}{log_2(x)} < b \cdot n^y
+            \]
+            O bien, multiplicando ambos lados por $log_2(x)$ (que es positivo, por lo que no cambia la desigualdad):
+            \[
+            \Rightarrow \frac{log_2(n)}{log_2(x)} \cdot log_2(x) < b \cdot n^y \cdot log_2(x)
+            \]
+            \[
+            \Rightarrow log_2(n) < b \cdot n^y \cdot log_2(x)
+            \]
+            Ahora nosotros buscamos que logaritmo crezca más lento que una función polinómica para que $log_x(n)$ sea $o(n^y)$, y sabemos que $b$ y $log_2(x)$ son constantes positivas, por tanto solo nos bastaría demostrar que:
+            \[
+            log_2(n) < n^y
+            \]
+            Sabemos que el logaritmo crece más lento que cualquier función polinómica, pero lo mostraremos formalmente con uso de los límites.\\
+            Consideremos el siguiente límite:
+            \[
+            \lim_{n \to \infty} \frac{log_2(n)}{n^y}
+            \]
+
+            Aplicando la regla de L'Hôpital, tenemos que:
+            \[
+            \lim_{n \to \infty} \frac{log_2(n)}
+            {n^y} \xrightarrow[\text{L'Hôpital}]{} \lim_{n \to \infty} \frac{\frac{1}{n \cdot ln(2)}}{y \cdot n^{y-1}} = \lim_{n \to \infty} \frac{1}{y \cdot ln(2) \cdot n^y} = 0
+            \]
+            Y como vemos el límite tiende a 0, entonces:
+            \[
+            log_2(n) < n^y
+            \]
+            Por lo que el límite tiende a 0, es decir, $log_2(n)$ crece más lento que $n^y$.\\
+            Por lo tanto, $log_x(n)$ es $o(n^y)$.\\
+            \qed
+
+
+
         \end{itemize}
     \item[5.b] ¿Qué pasa si cambiamos la función $f(n) < b \cdot g(n)$ por $f(n) \leq b \cdot g(n)$?, ¿Cambiaría el significado de $o-$ pequeña?
+    \textbf{Respuesta:}\\
+    Cambiaria la definición formal de $o-$pequeña, aunque la diferencia entre $<$ y $\leq$ pudiera ser mínima, puesto que en ambos casos $f(n)$ debería seguir estando estrictamente acotada por $g(n)$, pero en términos generales, $o-$pequeña \textbf{seguiria significando lo mismo}, es decir, que $f(n)$ crece estrictamente más lento que $g(n)$ solo que ahora $f(n)$ podría llegar a ser igual a $b \cdot g(n)$ en algún punto a partir de una $n$ suficientemente grande, y aun asi cumpliría que $b > 0$ tal y como indica la definición.\\
+
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \end{itemize}
 
 % P-6
@@ -822,10 +1006,79 @@ Considera las siguientes recurrencias. En cada caso, demuestra la forma cerrada 
         T(n) = \left\{ \begin{array}{ll}
         1 & \text{si } n=1\\ T(n-1)+n & \text{en otro caso} \end{array}\right.
     \]
-    \\
     \[
         T(n) = n(n+1)/2
     \]
+    \\\textbf{Demostración:}\\
+    Primero procedemos a obtener la forma cerrada de $T(n)$ mediante la expansión de la recurrencia:
+    \[
+        T(n) = T(n-1) + n
+    \]
+    \[
+        = T(n-2) + (n-1) + n
+    \]
+    \[
+        = T(n-3) + (n-2) + (n-1) + n
+    \]
+    \[
+        ...
+    \]
+    \[
+        = T(1) + 2 + 3 + ... + (n-2) + (n-1) + n
+    \]
+    \[
+    \Rightarrow T(n) = 1 + 2 + 3 + ... + (n-2) + (n-1) + n
+    \]
+    Vemos que se trata sobre la suma de los primeros $n$ enteros positivos:
+    \[
+    \Rightarrow T(n) = \frac{n(n+1)}{2}
+    \]
+    Como vemos, la forma cerrada de $T(n)$ es $\frac{n(n+1)}{2}$.\\
+    Ahora procedemos a demostrar por \textbf{inducción} que la forma cerrada es correcta.\\
+    \textbf{Caso Base:} Tomamos a $n = 1$ y ver si se cumple:
+    \[
+        T(1) = 1
+    \]
+    \[
+        \frac{1(1+1)}{2} = 1
+    \]
+    \[
+        1 = 1
+    \]
+    Por lo tanto, el caso base se cumple.\\
+    \textbf{Hipotesis de Inducción:} Supongamos que para alguna $k \geq 1$ se cumple que:
+    \[
+        T(k) = \frac{k(k+1)}{2}
+    \]
+    \textbf{Paso Inductivo:} Demostraremos que se cumple para $k + 1$:\\
+    Queremos demostrar o llegar que:
+    \[
+        T(k+1) = \frac{(k+1)(k+2)}{2}
+    \]
+    Por la definición de la recurrencia, tenemos que:
+    \[
+        T(k+1) = T(k) + (k + 1)
+    \]
+    Por hipotesis de inducción, sabemos que $T(k) = \frac{k(k+1)}{2}$, por lo que sustituimos:
+    \[
+        T(k+1) = \frac{k(k+1)}{2} + (k + 1)
+    \]
+    \[
+        \Rightarrow = \frac{k(k+1)+2(k + 1)}{2}
+    \]
+    Desarrollamos el numerador:
+    \[
+        \Rightarrow = \frac{k^2 + 3k + 2}{2}
+    \]
+    Factorizamos el numerador:
+    \[
+        \Rightarrow = \frac{(k+1)(k+2)}{2}
+    \]
+    Y como vemos, hemos llegado a lo que queríamos demostrar.\\
+    Por lo tanto, hemos demostrado que la forma cerrada de $T(n)$ es correcta, mediante inducción.\\
+    \qed
+
+
     \item[6.b]
     \[
         T(n) = \left\{ \begin{array}{ll}
@@ -835,6 +1088,73 @@ Considera las siguientes recurrencias. En cada caso, demuestra la forma cerrada 
     \[
         T(n) = 2^{n+1}-1
     \]
+    \\\textbf{Demostración:}\\
+    Realizamos el mismo procedimiento que en el inciso anterior.\\
+    Obtenemos su forma cerrada mediante la expansión de la recurrencia:
+    \[
+        T(n) = T(n-1) + 2^n
+    \]
+    \[
+        = T(n-2) + 2^{n-1} + 2^n
+    \]
+    \[
+        = T(n-3) + 2^{n-2} + 2^{n-1} + 2^n
+    \]
+    \[
+        ...
+    \]
+    \[
+        = T(0) + 2^1 + 2^2 + ... + 2^{n-1} + 2^n
+    \]
+    \[
+    \Rightarrow T(n) = 1 + 2^1 + 2^2 + ... + 2^{n-1} + 2^n
+    \]
+    Vemos que se trata sobre la suma de una serie geométrica:
+    \[
+    \Rightarrow T(n) = 2^{n+1} - 1
+    \]
+
+    Ahora procedemos a demostrar por \textbf{inducción} que la forma cerrada obtenida es correcta.\\
+    \textbf{Caso Base:} Tomamos a $n = 0$ y ver si se cumple:
+    \[
+        T(0) = 1
+    \]
+    \[
+        2^{0+1} - 1 = 1
+    \]
+    \[
+        1 = 1
+    \]
+    Por lo tanto, el caso base se cumple.\\
+    \textbf{Hipotesis de Inducción:} Supongamos que para alguna $k \geq 0$ se cumple que:
+    \[
+        T(k) = 2^{k+1} - 1
+    \]
+    \textbf{Paso Inductivo:} Demostraremos que se cumple para $k + 1$:\\
+    Queremos demostrar o llegar que:
+    \[
+        T(k+1) = 2^{(k+2)} - 1
+    \]
+    Por la definición de la recurrencia, tenemos que:
+    \[
+        T(k+1) = T(k) + 2^{k + 1}
+    \]
+    Podemos hacer uso de la hipotesis de inducción, por lo que sustituimos:
+    \[
+    \Rightarrow = 2^{k+1} - 1 +
+        2^{k + 1}
+    \]
+    \[        \Rightarrow = 2 \cdot 2^{k+1} - 1
+    \]
+    \[        \Rightarrow = 2^{(k+1)+1} - 1
+    \]
+    \[        \Rightarrow = 2^{k+2} - 1
+    \]
+    Y como vemos, hemos llegado a lo que queríamos demostrar.\\
+    Por lo tanto, hemos demostrado que la forma cerrada de $T(n)$ es correcta, mediante inducción.\\
+    \qed
+
+
     \item[6.c]
     \[
         T(n) = \left\{ \begin{array}{ll}
@@ -844,6 +1164,58 @@ Considera las siguientes recurrencias. En cada caso, demuestra la forma cerrada 
     \[
         T(n) = 2^n
     \]
+    Procedemos encontrar su forma cerrada mediante la expansión de la recurrencia que se nos da:
+    \[
+        T(n) = 2T(n-1)
+    \]
+    \[
+        = 2(2T(n-2)) = 2^2T(n-  2)
+    \]
+    \[
+        = 2^2(2T(n-3)) = 2^3T(n-3)
+    \]
+    \[        ...
+    \]
+    \[        = 2^{n-1}T(1)
+    \]
+    \[    \Rightarrow T(n) = 2^{n-1}(2T(0))
+    \]
+    \[    \Rightarrow T(n) = 2^{n-1}(2(1))
+    \]
+    Vemos que $T(0) = 1$ por la definición de la recurrencia.\\
+    \[    \Rightarrow T(n) = 2^n
+    \]
+    Una vez que deducimos la forma cerrada de $T(n)$, procedemos a demostrar por \textbf{inducción} que la forma cerrada es correcta.\\
+    \textbf{Caso Base:} Tomamos a $n = 0$:
+    \[
+        T(0) = 1
+    \]
+    \[        2^0 = 1
+    \]
+    \[        1 = 1
+    \]
+    Por lo tanto, el caso base se cumple.\\
+    \textbf{Hipotesis de Inducción:} Supongamos que para alguna $k \geq 0$ se cumple que:
+    \[        T(k) = 2^k
+    \]
+    \textbf{Paso Inductivo:} Demostraremos que se cumple para $k + 1$:\\
+    Queremos demostrar o llegar que:
+    \[        T(k+1) = 2^{k+1}
+    \]
+    Por la definición de la recurrencia, tenemos que:
+    \[        T(k+1) = 2T(k)
+    \]
+    Aplicamos la hipotesis de inducción, por lo que sustituimos:
+    \[    \Rightarrow = 2(2^k)
+    \]
+    \[        \Rightarrow = 2^{k+1}
+    \]
+    Y como vemos, hemos llegado a lo que queríamos demostrar.\\
+    Por lo tanto, hemos demostrado que la forma cerrada de $T(n)$ es correcta.\\
+    \qed
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \end{itemize}
 
 \end{document}
