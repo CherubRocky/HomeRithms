@@ -15,24 +15,24 @@
 
 %% Title
 \title{
-		\vspace{-0.7in} 	
+		\vspace{-0.7in}
 		\usefont{OT1}{bch}{b}{n}
 		\begin{minipage}{3cm}
-        \vspace{-0.5in} 	
+        \vspace{-0.5in}
     	\begin{center}
     		\includegraphics[height=3.2cm]{../logo_unam.png}
     	\end{center}
     \end{minipage}\hfill
     \begin{minipage}{10.7cm}
-    
+
     	\begin{center}
 \normalfont \normalsize \textsc{UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO \\ FACULTAD DE CIENCIAS \\ Análisis de Algoritmos } \\
 		\huge Tarea 2
     	\end{center}
-     
+
     \end{minipage}\hfill
     \begin{minipage}{3.2cm}
-    \vspace{-0.5in} 
+    \vspace{-0.5in}
     	\begin{center}
     		\includegraphics[height=3.2cm]{../logo_fc.png}
     	\end{center}
@@ -43,7 +43,7 @@
         Zaldivar Alanis Rodrigo \hspace{2.75cm} 424029605 }
 \date{}
 }
- 
+
 \begin{document}
 
 \maketitle
@@ -53,17 +53,707 @@ Para los siguientes ejercicios, da el análisis de complejidad en tiempo y espac
 \begin{itemize}
     \item[1.A] Diseña un algoritmo para multiplicar dos números dados en el sistema romano.\\
     Por ejemplo, \textit{XIX} por \textit{XXXIV} es \textit{DCXLVI}.\\\\
-    No es válido hacer un cambio al sistema arábigo.
-    \item[1.B] Dado un arreglo $A$ de $n$ bits y un entero $k > 0$, describe un algoritmo para encontrar el subarreglo más pequeño de $A$ que contiene $k$ unos.
-    \item[1.C] Dado un arreglo $A$ que contiene $n - 1$ enteros  únicos en el rango $[0, n - 1]$; existe un número que no se encuentra en el arreglo. Diseña un algoritmo de complejidad en tiempo $O(n)$ y espacio $O(1)$ para encontrar ese número.
+    No es válido hacer un cambio al sistema arábigo.\\\\
+    \textbf{Algoritmo:} Debido a la longitud del algoritmo, se decidió separarlo en diferentes algoritmos, algunos invocan otros algoritmos.\\
+
+    \begin{algorithm}[H]
+    \footnotesize
+    \SetAlgorithmName{Algoritmo}{Romanos}{Multiplicación}
+    \caption{separar(s)}
+    \KwIn{String s con número romano}
+    \KwOut{Arreglo de enteros de 7 posiciones}
+    \SetAlgoLined
+    \Begin{
+        posiciones $\gets$ nuevo arreglo de 7 enteros inicializados en 0 \\
+        finM, finD, finC, finL, finX, finV $\gets$ false \\
+
+        \For{$i \gets 0$ \KwTo $s.length() - 1$}{
+            \uIf{$s[i] =$ 'M'}{
+                \eIf{finM}{
+                    posiciones[1] $\gets$ posiciones[1] + 1 \\
+                    posiciones[2] $\gets$ posiciones[2] + 3 \\
+                }{
+                    posiciones[0] $\gets$ posiciones[0] + 1 \\
+                }
+            }
+            \uElseIf{$s[i] =$ 'D'}{
+                \eIf{finD}{
+                    posiciones[2] $\gets$ posiciones[2] + 3 \\
+                }{
+                    finM $\gets$ true \\
+                    posiciones[1] $\gets$ posiciones[1] + 1 \\
+                }
+            }
+            \uElseIf{$s[i] =$ 'C'}{
+                \eIf{finC}{
+                    posiciones[3] $\gets$ posiciones[3] + 1 \\
+                    posiciones[4] $\gets$ posiciones[4] + 3 \\
+                }{
+                    finM $\gets$ true \\
+                    finD $\gets$ true \\
+                    posiciones[2] $\gets$ posiciones[2] + 1 \\
+                }
+            }
+            \uElseIf{$s[i] =$ 'L'}{
+                \eIf{finL}{
+                    posiciones[4] $\gets$ posiciones[4] + 3 \\
+                }{
+                    finC $\gets$ true \\
+                    posiciones[3] $\gets$ posiciones[3] + 1 \\
+                }
+            }
+            \uElseIf{$s[i] =$ 'X'}{
+                \eIf{finX}{
+                    posiciones[5] $\gets$ posiciones[5] + 1 \\
+                    posiciones[6] $\gets$ posiciones[6] + 3 \\
+                }{
+                    finC $\gets$ true \\
+                    finL $\gets$ true \\
+                    posiciones[4] $\gets$ posiciones[4] + 1 \\
+                }
+            }
+            \uElseIf{$s[i] =$ 'V'}{
+                \eIf{finV}{
+                    posiciones[6] $\gets$ posiciones[6] + 3 \\
+                }{
+                    finX $\gets$ true \\
+                    posiciones[5] $\gets$ posiciones[5] + 1 \\
+                }
+            }
+            \uElseIf{$s[i] =$ 'I'}{
+                finX $\gets$ true \\
+                finV $\gets$ true \\
+                posiciones[6] $\gets$ posiciones[6] + 1 \\
+            }
+        }
+        \Return{posiciones}
+    }
+    \end{algorithm}
+    \textbf{Complejidad:}
+    \begin{itemize}
+        \item Tiempo: Se declara y crea un arreglo de longitud 7, luego se declaran e inicializan 6 variables con false. Todo esto es $O(1)$.
+        Luego, el ciclo for se ejecuta el mismo número de veces que
+        la longitud de la cadena. En el cuerpo del for, no hay ningún ciclo presente. Solo hay condicionales, incrementos y asignaciones. Por lo cuál, el cuerpo del for tiene complejidad $O(1)$. Como la complejidad de un for es la complejidad de su cuerpo por el número de iteraciones de este, tenemos que su complejidad total es $O(n)$ si tomamos n como la longitud del número romano. Después de ejecutar el for, se hace un retorno que tiene complejidad $O(1)$. Por lo que la complejidad del algoritmo es $O(n)$ en tiempo.
+        \item Espacio: Se declara y crea un arreglo de longitud 7, luego se declaran e inicializan 6 variables con false. Como la reserva del espacio en memoria en este caso no depende de la longitud del número romano, su complejidad es $O(1)$.
+        En el ciclo, se crea la variable i (solo una vez en toda la ejecución del algoritmo). En el cuerpo del for no se reserva memoria, todas las operaciones son condicionales, sumas, accesos a memoria y asignaciones. Por lo que todo el for tiene complejidad $O(1)$. El retorno también tiene complejidad $O(1)$, por lo que todo el algoritmo tiene complejidad $O(1)$ en espacio.
+    \end{itemize}
+    \textbf{Correctitud:} Se crea un arreglo de longitud siete para almacenar los valores en romano de: M, D, C, L, X, V y I.
+    Luego, las variables fin nos dicen si ya se leyó un símbolo con valor menor que el que llevan en su nombre, nos indican que la cadena de ese símbolo '\textit{ha llegado a su fin}' por lo que si aparece un símbolo de nuevo, se trata de \textit{notación sustractiva}.
+
+    Proponemos la invariante: Antes de la i-ésima iteración, el producto punto del arreglo posiciones con valores = [1000,500,100,50,10,5,1] representa el valor parcial acumulado del s en la porción $s[0:i - 1]$.
+
+    \textbf{Inicialización:} Antes de la primera iteración, todos los valores de posiciones son cero, por lo que el producto punto es cero. A pesar de que en los números romanos el cero no tiene una representación, podemos interpretar la usencia de símbolos como el cero.
+
+    \textbf{Mantenimiento:} Supongamos que después de la k-ésima iteración, se cumplió la invariante.
+    Ejecutamos el algoritmo:\\
+    Procedemos a contemplar dos casos.\\
+    Al leer un símbolo, la variable fin correspondiente a este símbolo es false (exceptuando I):
+    En este caso, se incrementa en uno la posición del arreglo correspondiente al símbolo. En la posición 0 para M, 1 para D, 2 para C, 3 para L, 4 para X, 5 para V y 6 para I.
+    Además de que si se leyó I, se asignan $finX$ y $finV$ como verdadero, si fue X, $finC$ y $finL$ son verdaderas; si fue C, $finD$ y $finM$ son verdaderas.
+    En este caso, se sigue cumpliendo la invariante, ya que el producto punto del arreglo después de esta iteración $k + 1$ es el de la iteración k + (1000, 500, 100, 50, 10, 5 o 1) dependiendo si se leyó M, D, C, L, X, V o I respectivamente.\\
+    En el caso en el que la variable fin correspondiente al símbolo leído es falsa, esto quiere decir que se presenta un caso de notación sustractiva.
+    Si se leyó 'M' (caso CM):\\
+    posiciones[1]++ (D → + 1 * 500)\\
+    posiciones[2] += 3 (CCC → + 3 * 100)\\
+    Total: +800, que sumado al 100 anterior (como finM es verdadera, la iteración anterior se leyó 'C' por lo que ya estaba incrementado en uno)da 900\\\\
+    Si se leyó 'D' (caso CD):\\
+    posiciones[2] += 3 (CCC → + 3 * 100 = +300)\\
+    Total: +300, que sumado al 100 anterior (de la 'C' previa) da 400.\\\\
+    Si se leyó 'C' (caso XC):\\
+    posiciones[3]++ (L → + 1 * 50 = +50)\\
+    posiciones[4] += 3 (XXX → + 3 * 10 = +30)\\
+    Total: +80, que sumado al 10 anterior (de la 'X' previa) da 90.\\\\
+    Si se leyó 'L' (caso XL):\\
+    posiciones[4] += 3 (XXX → + 3 * 10 = +30)\\
+    Total: +30, que sumado al 10 anterior (de la 'X' previa) da 40.\\\\
+    Si se leyó 'X' (caso IX):\\
+    posiciones[5]++ (V → + 1 * 5 = +5)\\
+    posiciones[6] += 3 (III → + 3 * 1 = +3)\\
+    Total: +8, que sumado al 1 anterior (de la 'I' previa) da 9.\\\\
+    Si se leyó 'V' (caso IV):\\
+    posiciones[6] += 3 (III → + 3 * 1 = +3)\\
+    Total: +3, que sumado al 1 anterior (de la 'I' previa) da 4.\\\\
+    Los anteriores casos cubren todos los casos de notación sustractiva romana, por lo que se cumple la invariante después de la iteración k + 1.
+    \textbf{Terminación:} El ciclo termina debido a que se ejecuta mientras i sea menor que la longitud de la cadena e y se incrementea en uno en cada iteración.
+    Como se vio en la parte de mantenimiento, después de n-ésima iteración, el producto punto del arreglo con los valores representa el valor correctamente de la cadena s[0:n - 1]. Es decir, de toda la cadena. Por lo que el algoritmo es correcto.
+
+    \begin{algorithm}[H]
+    \SetAlgorithmName{Algoritmo}{Romanos}{Multiplicación}
+    \caption{multiplicar(a, b)}
+    \KwIn{Dos arreglos de enteros a y b de 7 posiciones}
+    \KwOut{Arreglo de enteros de 7 posiciones}
+    \SetAlgoLined
+    \Begin{
+        c $\gets$ nuevo arreglo de 7 enteros inicializados en 0 \\
+        valores $\gets$ [1000, 500, 100, 50, 10, 5, 1] \\
+
+        \For{$i \gets 6$ \KwDownto $0$}{
+            \For{$j \gets 6$ \KwDownto $0$}{
+                \If{$b[i] \neq 0$}{
+                    $c[j] \gets c[j] + a[j] \times b[i] \times valores[i]$ \\
+                }
+            }
+        }
+        \Return{c}
+    }
+    \end{algorithm}
+    \textbf{Complejidad:}
+    \begin{itemize}
+        \item Tiempo: Se declara un nuevo arreglo c de tamaño 7 y un arreglo valores que se inicializan. Estas operaciones son $O(1)$. Luego se tienen dos bucles for anidados. El bucle interno se ejecuta 49 (O(49) = O(1)) veces y en su cuerpo se ejecuta una condicional, una asignación, una suma y 2 multiplicaciones y accesos a memoria.
+        Todo esto es $O(1)$. El bucle externo también se ejecuta 7 veces y su cuerpo tiene complejidad $O(1)$. Al final, se devuelve el arreglo c, esto es $O(1)$. Por lo que el algoritmo tiene complejidad en tiempo de $O(1)$.
+        \item Espacio: Tiempo: Se declara un nuevo arreglo c de tamaño 7 y un arreglo valores que se inicializan. Estas operaciones son $O(1)$. Son las únicas operaciones en las que se reservan espacios en memoria. Por lo que el algoritmo es $O(1)$ en espacio.
+    \end{itemize}
+
+    \textbf{Correctitud:} Como tenemos dos ciclos anidados, tendremos que hacer dos análisis por invariante:
+    \begin{enumerate}
+        \item Ciclo interno:
+        Proponemos la invariante: Antes de cada iteración del ciclo interno, para un índice fijo $i$ del ciclo externo, cada posición de $c$ que ya se procesó ($k > j$) contiene la cantidad de símbolos de $a[k]$ multiplicada por la cantidad de símbolos de $b[i]$ y sumada a lo que ya estaba acumulado de iteraciones anteriores del ciclo externo. Las posiciones $k \le j$ aún no han sido actualizadas para este índice $i$.
+
+        \textbf{Inicialización:} Antes de la primera iteración del ciclo interno, no hay posiciones procesadas, y la invariante se cumple.\\
+        \textbf{Mantenimiento:} Si la invariante se cumple al inicio de la iteración $j$, tras actualizar $c[j]$, la posición $j$ se suma a las procesadas y la invariante sigue siendo cierta.\\
+        \textbf{Terminación:} Al finalizar el ciclo interno ($j=-1$), todas las posiciones se han actualizado con la contribución de $b[i]$, es decir, cada posición $c[k]$ contiene correctamente la cantidad de símbolos de $a[k]$ multiplicada por $b[i]$ y sumada a lo acumulado.
+
+        \item Ciclo externo:
+        Proponemos como invariante: Antes de cada iteración del ciclo externo, cada posición $k$ de $c$ contiene la suma de todas las multiplicaciones de los símbolos de $a[k]$ por los símbolos de $b[m]$ ya procesados ($m > i$).
+
+        \textbf{Inicialización:} Antes de la primera iteración del ciclo externo ($i=6$), $c[k]=0$ para todo $k$, la invariante se cumple.\\
+        \textbf{Mantenimiento:} Tras ejecutar el ciclo interno para $i$, se agrega la contribución de $b[i]$, y la invariante se cumple para el siguiente $i-1$.\\
+        \textbf{Terminación:} Cuando $i=-1$ (fin del ciclo externo), todas las posiciones se han procesado, es decir, cada posición $c[k]$ contiene la multiplicación completa de los símbolos correspondientes de $a[k]$ y $b$, garantizando que el número romano resultante será correcto.
+    \end{enumerate}
+
+    \begin{algorithm}[H]
+    \caption{ajustar(c)}
+    \SetAlgorithmName{Algoritmo}{Romanos}{Multiplicación}
+    \KwIn{Arreglo de enteros a de 7 posiciones}
+    \KwOut{Arreglo de enteros ajustado}
+    \SetAlgoLined
+    \Begin{
+        c[5] $\gets$ c[5] + $\lfloor$c[6] / 5$\rfloor$ \\
+        c[6] $\gets$ c[6] mod 5 \\
+
+        c[4] $\gets$ c[4] + $\lfloor$c[5] / 2$\rfloor$ \\
+        c[5] $\gets$ c[5] mod 2 \\
+
+        c[3] $\gets$ c[3] + $\lfloor$c[4] / 5$\rfloor$ \\
+        c[4] $\gets$ c[4] mod 5 \\
+
+        c[2] $\gets$ c[2] + $\lfloor$c[3] / 2$\rfloor$ \\
+        c[3] $\gets$ c[3] mod 2 \\
+
+        c[1] $\gets$ c[1] + $\lfloor$c[2] / 5$\rfloor$ \\
+        c[2] $\gets$ c[2] mod 5 \\
+
+        c[0] $\gets$ c[0] + $\lfloor$c[1] / 2$\rfloor$ \\
+        c[1] $\gets$ c[1] mod 2 \\
+
+        \Return{c}
+    }
+    \end{algorithm}
+
+        \textbf{Complejidad:}
+        \begin{itemize}
+            \item Tiempo: Como en este algoritmo no hay ningún ciclo involucrado, ni método ni llamadas recursivas. Si no, solamente asignaciones, accesos a memoria, divisiones, sumas y módulos, su complejidad en tiempo es O(1).
+            \item Espacio: En este caso, no se reserva ningún espacio de memoria adicional, por lo que su complejidad es O(1).
+        \end{itemize}
+        \textbf{Correctitud:}
+        El algoritmo normaliza un arreglo de 7 posiciones que representa un número romano en notación aditiva, asegurando que cumple con las reglas de la numeración romana estándar.
+
+\textbf{Precondición:} El arreglo de entrada $a$ contiene conteos de símbolos romanos en el orden: \\
+$[M, D, C, L, X, V, I]$
+
+\textbf{Postcondición:} El arreglo resultante cumple:
+\begin{itemize}
+    \item $0 \leq a[6] \leq 4$ (máximo 4 I's)
+    \item $0 \leq a[5] \leq 1$ (máximo 1 V)
+    \item $0 \leq a[4] \leq 4$ (máximo 4 X's)
+    \item $0 \leq a[3] \leq 1$ (máximo 1 L)
+    \item $0 \leq a[2] \leq 4$ (máximo 4 C's)
+    \item $0 \leq a[1] \leq 1$ (máximo 1 D)
+    \item $a[0] \geq 0$
 \end{itemize}
+
+\textbf{Demostración de correctitud:}
+
+    El algoritmo procesa los símbolos de menor a mayor valor (I → V → X → L → C → D → M), aplicando las conversiones:
+
+    \begin{enumerate}
+        \item \textbf{Nivel I-V:} Convierte cada 5 I's en 1 V
+            \[
+            a[5] += \lfloor a[6] / 5 \rfloor, \quad a[6] = a[6] \mod 5
+            \]
+
+        \item \textbf{Nivel V-X:} Convierte cada 2 V's en 1 X
+            \[
+            a[4] += \lfloor a[5] / 2 \rfloor, \quad a[5] = a[5] \mod 2
+            \]
+
+        \item \textbf{Nivel X-L:} Convierte cada 5 X's en 1 L
+            \[
+            a[3] += \lfloor a[4] / 5 \rfloor, \quad a[4] = a[4] \mod 5
+            \]
+
+        \item \textbf{Nivel L-C:} Convierte cada 2 L's en 1 C
+            \[
+            a[2] += \lfloor a[3] / 2 \rfloor, \quad a[3] = a[3] \mod 2
+            \]
+
+        \item \textbf{Nivel C-D:} Convierte cada 5 C's en 1 D
+            \[
+            a[1] += \lfloor a[2] / 5 \rfloor, \quad a[2] = a[2] \mod 5
+            \]
+
+        \item \textbf{Nivel D-M:} Convierte cada 2 D's en 1 M
+            \[
+            a[0] += \lfloor a[1] / 2 \rfloor, \quad a[1] = a[1] \mod 2
+            \]
+    \end{enumerate}
+    El resultado final cumple todas las reglas de la numeración romana y representa el mismo valor numérico que la entrada.
+
+\begin{algorithm}[H]
+\caption{parse(c)}
+\SetAlgorithmName{Algoritmo}{Romanos}{imprimir}
+
+\KwIn{Arreglo de enteros c de 7 posiciones}
+\KwOut{String con número romano}
+\SetAlgoLined
+\Begin{
+    sb $\gets$ nuevo StringBuilder \\
+    sim $\gets$ ['M', 'D', 'C', 'L', 'X', 'V', 'I'] \\
+
+    \For{$i \gets 0$ \KwTo $6$}{
+        \uIf{$i = 1$ \textbf{y} $c[1] = 1$ \textbf{y} $c[2] = 4$}{
+            sb.append("CM") \\
+            c[1] $\gets$ 0 \\
+            c[2] $\gets$ 0 \\
+        }
+        \uIf{$i = 2$ \textbf{y} $c[2] = 4$}{
+            sb.append("CD") \\
+            c[2] $\gets$ 0 \\
+        }
+        \uIf{$i = 3$ \textbf{y} $c[3] = 1$ \textbf{y} $c[4] = 4$}{
+            sb.append("XC") \\
+            c[3] $\gets$ 0 \\
+            c[4] $\gets$ 0 \\
+        }
+        \uIf{$i = 4$ \textbf{y} $c[4] = 4$}{
+            sb.append("XL") \\
+            c[4] $\gets$ 0 \\
+        }
+        \uIf{$i = 5$ \textbf{y} $c[5] = 1$ \textbf{y} $c[6] = 4$}{
+            sb.append("IX") \\
+            c[5] $\gets$ 0 \\
+            c[6] $\gets$ 0 \\
+        }
+        \uIf{$i = 6$ \textbf{y} $c[6] = 4$}{
+            sb.append("IV") \\
+            c[6] $\gets$ 0 \\
+        }
+
+        \For{$j \gets 0$ \KwTo $c[i] - 1$}{
+            sb.append(sim[i]) \\
+        }
+    }
+    \Return{sb.toString()}
+}
+\end{algorithm}
+
+    \textbf{Complejidad:}
+    \begin{itemize}
+        \item Tiempo: El algoritmo declara e inicializa dos variables nuevas al inicio. Después  entra en un ciclo que se ejecuta siete veces siempre. Luego, entra máximo solo un if por ejecución en el que máximo se ejecutan tres operaciones básicas. $O(1)$. Luego entra en un ciclo for interno que se ejecuta máximo tres veces debido a la normalización y en este se ejecuta solo una operación simple; por lo que el for interno tiene una complejidad O(1). Como todo el cuerpo del for externo tiene complejidad constante y este se ejecuta un número fijo de veces (7), su complejidad es constante O(1). El retorno es una operación constante, por lo que todo el algoritmo tiene complejidad O(1).
+        \item \textbf{Espacio:} Como la complejidad en espacio se ve acotada por la complejidad en tiempo, esta es constante O(1).
+    \end{itemize}
+    \textbf{Correctitud:} En este algoritmo igualmente tendremos que
+    utilizar dos invariantes para cada ciclo.\\
+    \begin{enumerate}
+        \item Interno:\\
+        Proponemos la invariante: Antes de la k-ésima iteración, se han agregado k - 1 símbolos más correspondientes al valor de i (por este ciclo).
+        \textbf{Inicialización:} Antes de entrar a la primera iteración no se han agregado símbolos correspondientes a este ciclo, por lo que tenemos k - 1 = 1 - 1 = 0 símbolos agregados.\\
+        \textbf{Mantenimiento:}
+        Supongamos que después de la l-ésima iteración, se mantuvo la invariante, l símbolos agregados. Al entrar a la l+1, se agrega el símbolo correspondiente a la misma i de nuevo. Por lo que tenemos en total l+1 símbolos antes de la iteración l+2. Por lo que la invariante se mantiene.\\
+        \textbf{Terminación:} Como el arreglo c viene ajustado, este se ejecuta a lo más 3 veces. Por lo que siempre termina. Así, este ciclo agrega la cantidad de símbolos indicados por c[i].
+
+        \item Externo:
+        Proponemos la invariante: Antes de la $(i+1)$-ésima iteración, se habrá representado correctamente el valor original en números romanos utilizando los símbolos en el subarreglo $c[0:i-1]$ que nos permitan hacerlo.
+        \textbf{Inicialización:} Antes de que se ejecute el ciclo, no se habrá representado ningún valor lo que es correspondiente al valor acumulado en el arreglo vacío.\\
+        \textbf{Mantenimiento:} Supongamos que después de la iteración donde $i = k$, y antes de cuando $i = k + 1$; se mantuvo la invariante.
+        Separemos esto en dos casos:
+        \begin{enumerate}
+            \item El número que representa i en sim[i] es ((M, C, X o I) y c[i] < 4) o (es (D, L o V) y c[i] < 2).\\
+            En este caso, la numeración romana permite agregar directamente la cantidad de símbolos correspondientes a $i$
+            por lo que se ejecuta el for interno y se agregan la cantidad de símbolos indicados por $i$. Por lo que después de cuando $i = k + 1$ y antes de cuando $i = k + 2$, se representó correctamente la parte del valor original que los símbolos en $c[0: k + 1]$ nos permiten.
+            \item El número que representa i en sim[i] es
+            C, X o I y $c[i] = 4$.\\
+            En este caso, como no hay una representación consecutiva de símbolos para este valor, se asigna cero en $c[i]$ para que no se ejecute el for interno y después agregamos la cadena correspondiente que equivale a cuatro veces el símbolo. Ya sea, CD, XL o IV.
+            O el número que se representa es D, L o V y c[i] == 1 y c[i + 1] == 4. Como no se pueden agregar 4 símbolos consecutivos, esto quiere decir que se debe utilizar notación sustractiva. Por lo que asignamos cero a $c[i]$ y a $c[i + 1]$. Agregamos la cadena correspondiente. Ya sea CM, XC o IX.\\
+            No se entra en el ciclo interno.
+            Por lo cuál después de la iteración se representó adecuadamente la parte del valor original que los símbolos en $c[0,k + 1]$ nos permiten.\\
+            \textbf{Terminación:} Como el for externo se ejecuta 7 veces, termina. Y como nuestra invariante nos indica: Se representó adecuadamente la parte del valor que los símbolos en $[0:6]$ (inclusivo) nos permite representar. O sea, pudimos representar de manera correcta todo el valor porque ya se utilizaron potencialmente todos los símbolos.
+        \end{enumerate}
+
+        \end{enumerate}
+            \begin{algorithm}[H]
+        \caption{operar(s1, s2)}
+        \SetAlgorithmName{Algoritmo}{Romanos}{operar}
+        \KwIn{Dos strings s1 y s2 con números romanos}
+        \SetAlgoLined
+        \Begin{
+            a $\gets$ separar(s1) \\
+            b $\gets$ separar(s2) \\
+            c $\gets$ multiplicar(a, b) \\
+            c $\gets$ ajustar(c) \\
+            imprimir(parse(c)) \\
+        }
+        \end{algorithm}
+        \textbf{Complejidad:} En este algoritmo se hacen dos usos del algoritmo separar, uno de multiplicar, uno de ajusta y se imprime. Como Separar tiene complejidad O(n), este algoritmo también lo tiene.
+        En espacio, como todos los algoritmos tienen complejidad constante, este también es O(1).
+
+        \textbf{Correctitud:} Como los algoritmos separar reciben una entrada de números romanos bien formados y da como salida un arreglo que representa el mismo valor, multiplicar los recibe y da como salida un arreglo cuyo valor representa la multiplicación de los dos números. Luego, ajusta da su representación aditiva y el método imprimir, como vimos da la representación correcta de la multiplicación. Por lo que el algoritmo es correcto.
+
+        \textbf{Ejecución:} Probaremos el algoritmo con las entradas 'IV' y 'IX'.\\
+    Separar\\
+    \begin{verbatim}
+    Entrada: "IX"
+    i=0: 'I' → finX=true, finV=true, posiciones[6]=1
+    i=1: 'X' → finX=true → posiciones[5]++, posiciones[6]+=3
+    Resultado: [0,0,0,0,0,1,4] (Valor: 5 + 4 = 9)
+    \end{verbatim}
+
+    Separar\\
+    \begin{verbatim}
+    Entrada: "IV"
+    i=0: 'I' → finX=true, finV=true, posiciones[6]=1
+    i=1: 'V' → finV=true → posiciones[6]+=3
+    Resultado: [0,0,0,0,0,0,4] (Valor: 4 = 4)
+    \end{verbatim}
+
+    Multiplicar\\
+    \begin{verbatim}
+    valores = [1000,500,100,50,10,5,1]
+    Para i=6 (I): b[6]=4 ≠0
+    j=6: c[6] += a[6]b[6]valores[6] = 4*4*1 = 16
+    j=5: c[5] += a[5]b[6]valores[6] = 1*4*1 = 4
+    ... (para otros j)
+    Para i=5 (V): b[5]=0 → skip
+    ... (para otros i)
+    Resultado: [0,0,0,0,0,4,16]
+    \end{verbatim}
+
+    Ajustar\\
+    \begin{verbatim}
+    a[6]=16 → residuo=1, a[5]+=3, a[6]=1
+    a[5]=7 → a[4]+=3, a[5]=1
+    a[4]=3 → a[3]+=0, a[4]=3
+    a[3]=0 → a[2]+=0, a[3]=0
+    a[2]=0 → a[1]+=0, a[2]=0
+    a[1]=0 → a[0]+=0, a[1]=0
+    Resultado: [0,0,0,0,3,1,1]
+    \end{verbatim}
+
+    Parse\\
+    \begin{verbatim}
+    i=4: X=3 → "XXX"
+    i=5: V=1 → "V"
+    i=6: I=1 → "I"
+    Resultado final: "XXXVI" (36) //Resultado correcto
+    Verificación: 9 × 4 = 36
+    \end{verbatim}
+    A excepción de la ejecución del primero algoritmo, la salida de los algoritmos,
+    fue la entrada del siguiente.
+
+    Ahora probaremos con II y III (más compacto):\\
+    \begin{verbatim}
+    separar("III") → [0,0,0,0,0,0,3]
+    separar("II") → [0,0,0,0,0,0,2]
+    multiplicar:
+        i=6: c[6] += 3*2*1 = 6
+        Resultado: [0,0,0,0,0,0,6]
+    ajusta([0,0,0,0,0,0,6]):
+        a[6]=6 → residuo=1, a[5]+=1, a[6]=1
+        a[5]=1 → a[4]+=0, a[5]=1
+        Resultado: [0,0,0,0,0,1,1]
+    parse([0,0,0,0,0,1,1]) = "VI" (6)
+    \end{verbatim}
+
+
+    \item[1.B] Dado un arreglo $A$ de $n$ bits y un entero $k > 0$, describe un algoritmo para encontrar el subarreglo más pequeño de $A$ que contiene $k$ unos.
+
+    \begin{algorithm}[H]
+    \caption{Subarreglo mínimo con $k$ unos}
+    \KwIn{Arreglo de bits $A$ de longitud $n$, entero $k > 0$}
+    \KwOut{Índices $(i,j)$ del subarreglo más pequeño con exactamente $k$ unos}
+    \SetAlgoLined
+    \Begin{
+        min\_len $\gets n + 1$ \\
+        min\_indices $\gets (-1,-1)$ \\
+        unos $\gets 0$\\
+        \For{$i \gets 0$ \KwTo $n-1$}{
+            unos $\gets 0$ \\
+            \For{$j \gets i$ \KwTo $n-1$}{
+                \If{$A[j] = 1$}{
+                    unos++\\
+                }
+                \If{unos = k \textbf{and} (j - i + 1) $<$ min\_len}{
+                    min\_len $\gets j - i + 1$ \\
+                    min\_indices $\gets (i,j)$ \\
+                    \textbf{break} \\
+                }
+            }
+        }
+        \Return{min\_indices}
+    }
+    \end{algorithm}
+
+    \textbf{Complejidad:}
+    Tiempo: Se declaran tres variables y se inicializan, esto es complejidad O(1).
+    Luego se tiene un ciclo for que va desde cero hasta $n - 1$ con incrementos de uno en uno.\\
+    En su cuerpo:
+    Asignación de variable, O(1).\\
+    Inicia otro ciclo for de i hasta n - 1 de uno  en uno.
+    Dentro del for, solamente hay operaciones de comparación asignación y operaciones aritméticas, por lo que la complejidad del cuerpo del for anidado es O(1). La complejidad del for anidado por sí solo es O(n).\\La complejidad del for externo: Su cuerpo tiene complejidad O(n) y se ejecuta O(n) veces, por lo que su complejidad es $O(n^2)$.
+
+    Espacio: Solo se reserva espacio de memoria en las tres primeras líneas. Que solo se ejecutan una vez dentro del algoritmo. Por lo que tiene complejidad $O(1)$ en espacio.
+
+    \textbf{Correctitud:} Como se tienen dos ciclos for anidados, hacemos primero la invariante del ciclo interno.
+
+    Interno:\\
+    Proponemos como invariante: Con $i$ fija, antes de la iteración donde j = l, tenemos que se han contado el número de unos en el subarreglo $[i:l - 1]$ y si hubo algún subarreglo que empezara en $i$ y terminara en $j'$ con $i \leq j' \leq j$ tal que $unos = k$ y $j' - i + 1 < min_len$, entonces $min\_len$ ahora contiene ese valor.
+    \textbf{Inicialización:} Antes de que se ejecute la primera iteración ($j = i$), $unos$ vale cero y ningún subarreglo $A[1:j']$ ha sido guardado en min\_len porque el arreglo es vacío, por lo que se cumple la invariante.\\
+    \textbf{Mantenimiento:} Supongamos que se cumple la invariante antes de cuando $j = l$, es decir. Se tienen el número de unos presentes en $A[i:l-1]$ y en caso de haber un subarreglo $A[i:j']$ tal que $unos = k$ y fuera de menor tamaño que $min\_len$, entonces está almacenado.
+    Si $A[l] == 1$, entonces incrementa $unos$, en caso contrario, no.
+    Si se incrementó unos, $unos = k$ y $l - i + 1 < min\_len$, entonces $min\_indices = (i, l)$, en caso contrario, no sucede nada. Así que al final de la
+    l-ésima iteración, la invariante se mantiene.
+    \textbf{Finalización:} El ciclo termina debido a que se ejecuta siempre que $j < n$ y j incrementa de uno en uno.
+    Además, por la invariante, se tiene que si existió un subarreglo $A[i, j']$, $i \leq j' \leq n - 1$ con $k$ unos y su longitud menor a $min\_len$, entonces, este está guardado en min\_len y sus índices en $min\_indices$.
+
+    Externo:\\
+    Proponemos como invariante: Antes de cuando i = l, $min\_indices$ contiene los índices del subarreglo $A[i':n - 1]$, $0 \leq i' \leq i$ con menor longitud que tiene $k$ unos (si es que existe).\\
+    \textbf{Inicialización:} Antes de comenzar el ciclo, min\_indices contiene (-1,-1), los cuáles son índices inválidos, por lo cuál pueden representar al arreglo vacío. Se cumple la invariante por vacuidad.\\
+    \textbf{Mantenimiento:} Supongamos que mantuvo la invariante antes de la que i = l. Si ejecutamos el ciclo, tenemos que por la invariante del ciclo interno, si un subarreglo A[l:j'] con $l \leq j' \leq n - 1$ menor a min\_len con k unos, sus índices están en min\_len, de lo contrario, no sucedió nada en esa iteración.
+    Si aunamos esto a la invariante de la iteración anterior, tenemos que si el arreglo se encuentra entre $A[i':j']$, $0 \leq i' \leq i$ y $i \leq j' \leq n - 1$, en caso contrario, min\_indices = (-1, -1). Por lo tanto, invariante se mantiene.\\
+    \textbf{Terminación:} El ciclo termina porque va desde cero hasta $n-1$ con un incremento por iteración.
+    De acuerdo al mantenimiento de la invariante, si existe un subarreglo que cumpla la propiedad en el rango $A[i':j']$, $0 \leq i' \leq j \leq n - 1$, sus índices están en min\_indices. Es decir, si existe algún arreglo con k unos en A, los índices del mínimo están en min\_indices. Por lo que el algoritmo es correcto.
+
+    \textbf{Ejecución}: Ejecutamos primero el algoritmo con [0, 1, 1, 0, 1, 0, 1] y k = 3.
+    \begin{verbatim}
+        INICIO:
+      min_len = 8
+      min_indices = (-1, -1)
+
+    i = 0:
+      unos = 0
+      j = 0: A[0]=0 → unos=0
+      j = 1: A[1]=1 → unos=1
+      j = 2: A[2]=1 → unos=2
+      j = 3: A[3]=0 → unos=2
+      j = 4: A[4]=1 → unos=3 → longitud=5 → min_len=5, min_indices=(0,4)
+
+    i = 1:
+      unos = 0
+      j = 1: A[1]=1 → unos=1
+      j = 2: A[2]=1 → unos=2
+      j = 3: A[3]=0 → unos=2
+      j = 4: A[4]=1 → unos=3 → longitud=4 → min_len=4, min_indices=(1,4)
+
+    i = 2:
+      unos = 0
+      j = 2: A[2]=1 → unos=1
+      j = 3: A[3]=0 → unos=1
+      j = 4: A[4]=1 → unos=2
+      j = 5: A[5]=0 → unos=2
+      j = 6: A[6]=1 → unos=3 → longitud=5 (no actualiza, 5 > 4)
+
+    i = 3:
+      unos = 0
+      j = 3: A[3]=0 → unos=0
+      j = 4: A[4]=1 → unos=1
+      j = 5: A[5]=0 → unos=1
+      j = 6: A[6]=1 → unos=2
+
+    i = 4:
+      unos = 0
+      j = 4: A[4]=1 → unos=1
+      j = 5: A[5]=0 → unos=1
+      j = 6: A[6]=1 → unos=2
+
+    i = 5:
+      unos = 0
+      j = 5: A[5]=0 → unos=0
+      j = 6: A[6]=1 → unos=1
+
+    i = 6:
+      unos = 0
+      j = 6: A[6]=1 → unos=1
+
+    RESULTADO: (1, 4)
+    Subarreglo: A[1:4] = [1, 1, 0, 1] (longitud 4, 3 unos)
+    \end{verbatim}
+
+    Ahora hacemos la ejecución con [1,1,1,1] y k = 2
+    \begin{verbatim}
+        INICIO:
+          min_len = 5
+          min_indices = (-1, -1)
+
+        i = 0:
+          unos = 0
+          j = 0: A[0]=1 → unos=1
+          j = 1: A[1]=1 → unos=2 → longitud=2 → min_len=2, min_indices=(0,1)
+
+        i = 1:
+          unos = 0
+          j = 1: A[1]=1 → unos=1
+          j = 2: A[2]=1 → unos=2 → longitud=2 → min_len=2
+
+        i = 2:
+          unos = 0
+          j = 2: A[2]=1 → unos=1
+          j = 3: A[3]=1 → unos=2 → longitud=2 → min_len=2
+
+        i = 3:
+          unos = 0
+          j = 3: A[3]=1 → unos=1
+
+        RESULTADO: (0, 1)
+        Subarreglo: A[0:1] = [1,1] (longitud 2, 2 unos)
+    \end{verbatim}
+
+    \item[1.C] Dado un arreglo $A$ que contiene $n - 1$ enteros  únicos en el rango $[0, n - 1]$; existe un número que no se encuentra en el arreglo. Diseña un algoritmo de complejidad en tiempo $O(n)$ y espacio $O(1)$ para encontrar ese número.
+
+    \begin{algorithm}[H]
+    \caption{faltante}
+    \KwIn{Arreglo de enteros $arr$ de longitud $n-1$}
+    \KwOut{Número faltante en el arreglo}
+    suma $\gets 0$ \\
+    \For{$i \gets 0$ \KwTo $n-2$}{
+        suma $\gets$ suma $+$ arr[i] \\
+    }
+    \Return{$\frac{n(n - 1)}{2}$ $-$ suma}
+    \end{algorithm}
+
+    \textbf{Complejidad:}\\
+    Tiempo: En la primera línea del algoritmo, se declara la valiable suma y se le asigna cero. O(1).\\
+    En el for, este se ejecuta n + 1 veces y en su cuerpo hace
+    1 suma, 1 acceso a memoria y una asignación.
+    Como el for depende de n y su cuerpo es constante, su complejidad es O(n).\\
+    En el retorno se hacen dos multiplicaciones, una división y dos restas. Toda la línea es O(n).\\
+    Como la complejidad más grande en sus operaciones fue O(n), la complejidad del algoritmo es O(n) en tiempo.
+
+    \textbf{Espacio}: En espacio, solo se reseva el espacio en memoria para la suma que al ser un valor numérico, es un valor fijo. Por lo que su complejidad es O(1).
+
+    \textbf{Correctitud:}
+    Para la correctitud, propononemos una invariante para el ciclo for.
+    Esta es: Antes de la iteración donde i = k, se ha calculado la suma de los elementos del arreglo $[0:k-1]$.\\
+    \textbf{Inicialización:} Antes de la iteración donde i = 0, (antes de la primera iteración), el arreglo sobre el que se ha calculado la suma es el vacío, por lo que la suma debería ser cero. Esto se cumple.\\
+    \textbf{Mantenimiento:} Supongamos que se mantuvo la invariante antes de la iteración donde i = k, es decir, después de la iteración en la que i = k + 1. Al ejecutar el ciclo, se le suma la posición arr[i] a \textit{suma}, por lo que al terminar la k-ésima iteración y antes de empezar la k + 1, se calculó la suma del subarreglo $[0, k]$. Por lo que se cumple la invariante.\\
+    \textbf{Finalización:} Como el ciclo se ejecuta mientras i sea menor a n - 1 e i se incrementa al finalizar cada ciclo, este termina. Además de que antes de la iteración donde $i = n - 1$ se calculó la suma de $arr[0:n - 2]$. Por lo que se ha calculado la suma de todo el subarreglo.
+    Y la invariante es correcta.\\
+    Después, regresamos el valor que da restar la suma de Gauss hasta $n - 1$ menos suma. Esto da el valor esperado porque suma tiene valores entre 0 hasta n - 1. Lo cuál podemos expresar en una ecuación, donde e es el número que falta. \[suma + e = \frac{n(n - 1)}{2}\] Si despejamos, obtenemos el valor de e que se ve reflejado en el retorno.
+
+    \textbf{Ejecución:}\\
+    \begin{verbatim}
+        ENTRADA: arr = [0, 1, 2, 3, 5, 6] , n = 7
+        Rango completo: [0, 1, 2, 3, 4, 5, 6]
+        Número faltante: 4
+        EJECUCIÓN:
+          suma = 0
+          i=0: suma = 0 + 0 = 0
+          i=1: suma = 0 + 1 = 1
+          i=2: suma = 1 + 2 = 3
+          i=3: suma = 3 + 3 = 6
+          i=4: suma = 6 + 5 = 11
+          i=5: suma = 11 + 6 = 17
+          suma_total_esperada = 7*6/2 = 21
+          resultado = 21 - 17 = 4
+    \end{verbatim}
+\end{itemize}
+
 
 % P-2
 \section*{Ejercicio 2}
 La búsqueda binaria trabaja dividiendo el problema a la mitad.
 \begin{itemize}
-    \item[2.A] Propón un algoritmo iterativo para una búsqueda ternaria, que divida el problema en tres partes; debe hacer a los más dos comparaciones y trabajar con un problema de tamaño $n/3$. Realiza el análisis de complejidad de tiempo y espacio, y la demostración de correctitud.
-    \item[2.B] Diseña un algoritmo recursivo que generalice para proponer una búsqueda $k-$enaria que divida el problema en $k-$partes; se deben hacer a lo más $k - 1$ comparaciones y trabajar con un problema de tamaño $n/k$. ¿Cómo cambiaría el análisis de complejidad en tiempo?
+    \item[2.A] Propón un algoritmo iterativo para una búsqueda ternaria, que divida el problema en tres partes; debe hacer a los más dos comparaciones y trabajar con un problema de tamaño $n/3$. Realiza el análisis de complejidad de tiempo y espacio, y la demostración de correctitud.\\
+    \begin{algorithm}[H]
+    \caption{Búsqueda ternaria}
+    \KwIn{Arreglo ordenado $A$ de longitud $n$, $target$}
+    \KwOut{Índice del elemento si se encuentra, $-1$ en otro caso}
+    \SetAlgoLined
+    \Begin{
+        $l \gets 0$ \\
+        $r \gets n - 1$ \\
+        \While{$l \leq r$}{
+            $micha1 \gets l + \frac{(r-l)}{3}$ \\
+            $micha2 \gets r - \frac{(r-l)}{3}$ \\
+
+            \If{$A[micha1] = target$}{
+                \Return{$micha1$}
+            }
+            \If{$A[micha2] = target$}{
+                \Return{$micha2$}
+            }
+
+            \If{$target < A[micha1]$}{
+                $r \gets micha1 - 1$ \\
+            }
+            \ElseIf{$target > A[micha2]$}{
+                $l \gets micha2 + 1$ \\
+            }
+            \Else{
+                $l \gets micha1 + 1$ \\
+                $r \gets micha2 - 1$ \\
+            }
+        }
+        \Return{$-1$}
+    }
+    \end{algorithm}
+    \textbf{Complejidad:}
+    \begin{itemize}
+        \item Tiempo: Se hacen dos declaraciones y dos asignaciones en las dos primeras líneas. Esto es O(1).
+        Después entra a un ciclo.
+        En su cuerpo se calcula los dos pivotes que dividen el subarreglo en 3, se hacen comparaciones, condicionales, accesos a memoria, sumas, restas y asignaciones. Todo el cuerpo $\in O(1)$.\\
+        Ahora bien, en el peor de los casos, el elemento no se encuentra dentro del arreglo. En cada iteración, el subarreglo entre l y r, se divide en tres partes casi iguales. Y tamaño del arreglo sobre el que quedan los pivotes se reduce por lo menos en 1 en el mejor caso, por lo que eventualmente sucede que l > r. Como el arreglo se divide entre tres por cada iteración, tenemos que tiene una complejidad de $O(log(n))$.\\
+        \item Espacio: En este algoritmo solo se declaran las variables l y r al inicio antes de entrar al algoritmo, por lo que tiene complejidad en espacio constante $O(1)$.
+    \end{itemize}
+
+    \textbf{Correctitud:} Para probar la correctitud del algoritmo, es necesario hacer un análisis por invariante del ciclo porque es el que hace la búsqueda.\\
+    Proponemos como invariante: Si el elemento target se encuentra en el arreglo, este siempre estará entre l y r.
+    Inicialización: Antes del ciclo, se inicializaron l con 0 y r con n - 1, el arreglo completo. Por lo que se cumple que si el elemento target está en el arreglo, está entre l y r. Se cumple la invariante.\\
+    Mantenimiento: Supongamos que se cumple la invariante antes de la i-ésima iteración. Por lo que el target se encuentra entre l y r.
+    Al ejecutar el algoritmo de nuevo, se divide el arreglo entre tres.
+    Si alguno de los dos pivotes quedó sobre el target, regresamos el índice de este. En este caso, se cumple la invariante porque como ya terminó el algoritmo, no hay i+1-ésima iteración.
+    Si el target es menor que el elemento en el primer pivote,
+    simplemente movemos r una posición menos que micha1. El target es menor o igual al elemento de r. Y mayor o igual a l por la invariante.
+    Si target es mayor al segundo pivote, movemos l una posición más que micha2. En este caso, es mayor o igual a l. Y menor o igual a r por la invariante.
+    En otro caso, se mueve a l una posición más que micha1 y a r una posición menos que micha2. Como no se cumplieron los casos anteriores y por la invariante, se tiene que target estaría entre l y r.
+    Por lo tanto, se mantiene la invariante.\\
+    Finalización: El ciclo termina por los casos descrito allá arriba o si el elemento no está en el arreglo. En este caso, se va reduciendo el intervalo hasta que solamente queda el arreglo vacío para buscar, lo que, según nuestra invariante, indica que el target no se encuentra en el arreglo, entonces se retorna -1. Y el algoritmo es correcto.
+
+    \item[2.B] Diseña un algoritmo recursivo que generalice para proponer una búsqueda $k-$enaria que divida el problema en $k-$partes; se deben hacer a lo más $k - 1$ comparaciones y trabajar con un problema de tamaño $n/k$. ¿Cómo cambiaría el análisis de complejidad en tiempo?\\
+    \begin{algorithm}[H]
+    \caption{kenaria}
+    \KwIn{Arreglo ordenado $A$ de longitud $n$, $target$, l, r}
+    \KwOut{Índice del elemento si se encuentra, $-1$ en otro caso}
+    \SetAlgoLined
+    \Begin{
+    pivote1 $\gets l + \frac{(r - l)}{k}$\\
+    pivote2 $\gets l + 2\frac{(r - l)}{k}$\\
+    \vdots
+    pivotei $\gets l + i\frac{(r - l)}{k}$\\
+    pivotei+1 $\gets r - (i + 1)\frac{(r - l)}{k}$\\
+    \vdots
+    pivotek-2 $\gets r - 2\frac{r -l}{k}$\\
+    pivotek-1 $\gets r - \frac{r -l}{k}$\\
+    \If{A[pivote1] = target}{ \Return{pivote1} }
+    \vdots
+    \If{A[pivotei] = target}{ \Return{$pivote_i$} }
+    \vdots
+    \If{A[pivotek-1] = target}{ \Return{pivotek-1} }
+    \ElseIf{target $<$ A[pivote1]}{ \Return{kenaria(A, target, l, $pivote_1$ - 1)} }
+    \vdots
+    \ElseIf{A[pivotei] $<$ target $<$ A[$pivote_{i+1}$]}{ \Return{kenaria(A, target, $pivote_i$ + 1, $pivote_{i+1}$ - 1)} }
+    \vdots
+    \Else{kenaria(A, target, $pivote_{k-1}$ + 1, r)} \Return{$-1$} } \end{algorithm}
+Este algoritmo, al dividir el arreglo en k partes con k-1 pivotes, sería $O(log_kn)$, a pesar de que aumentan el número de operaciones por ciclo, se reduce el número de llamadas recursivas entre más grande sea k. Son del orden $O(log_k{n})$. Y por cada llamada recursiva, se harían O(1) operaciones. Por lo que el análisis de complejidad sería similar. Cada llamada recursiva opera sobre $1/k$ la longitud longitud del arreglo que se trabajó en la llamada anteror.
 \end{itemize}
 
 % P-3
@@ -127,7 +817,7 @@ Informalmente, podemos pensar en $O-$grande como una comparación $\leq$ entre f
 \section*{Ejercicio 6}
 Considera las siguientes recurrencias. En cada caso, demuestra la forma cerrada de $T(n)$ por inducción.
 \begin{itemize}
-    \item[6.a]  
+    \item[6.a]
     \[
         T(n) = \left\{ \begin{array}{ll}
         1 & \text{si } n=1\\ T(n-1)+n & \text{en otro caso} \end{array}\right.
