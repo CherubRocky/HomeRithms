@@ -74,14 +74,60 @@ Un polinomio $p(x)$ de grado $n$ es una ecuación de la forma:
 \]
 donde $x$ es un número real y $a_i \in \mathbb{R}$ son constantes.
 \begin{itemize}
-    \item[3.a] Describe un algoritmo simple de complejidad $O(n^2)$ para evaluar $p(x)$, considerando que $x$ es un valor de entrada.
+    \item[3.a] Describe un algoritmo simple de complejidad $O(n^2)$ para evaluar $p(x)$, considerando que $x$ es un valor de entrada.\\
+    La forma simple de evaluar un polinomio de grado $n$ es calcular cada término de la suma por separado y después sumarlos, lo que nos lleva a trabajar con dos \textbf{for} anidados, en el primero se hacen \textit{n} iteraciones y para el \textbf{for} interno calculamos $x^i$ multiplicamos $x$ por si mismo $i$ veces, para después en el \textbf{for} exterior multiplicamos por $a_i$ y lo sumamos a lo que ya teniamos.\\
+    En cada iteración del primer \textbf{for} el \textbf{for} interno hace \textit{i} iteraciones, lo que nos ayuda a saber el número de operaciones que hace para poder sacar la complejidad que es $0+1+2+\dots+n = \frac{n(n+1)}{2} = O(n^2)$, y lo que queda son una multiplicación, una suma y una asignación lo que tiene complejidad constante, por lo tanto el algoritmo tiene complejidad $O(n^2)$.\\
+    El algoritmo es el siguiente, recibe un arreglo $A$ con $a_i \in \mathbb{R}$ constantes y un número real $x$ y devuelve el resultado de $p(x)$.\\
+    \RestyleAlgo{ruled}
+    \LinesNumbered
+    \renewcommand{\algorithmcfname}{Algoritmo}
+    \begin{algorithm}[H]
+        \caption{Evaluación de un polinomio $p(x)$ de grado $n$}
+        $potencia \gets 1$\\
+        $longitud \gets len(A)$\\
+        $resultado \gets 0$\\
+        \For{$i \gets 0$ \KwTo $longitud$}{
+            \For{$j \gets 1$ \KwTo $i$}{
+                $potencia \gets potencia \cdot x$\\
+            }
+            $resultado \gets resultado + A[i] \cdot potencia$\\
+        }
+        \Return $resultado$
+    \end{algorithm}
     \item[3.b] Considera la siguiente expresión (método de Horner) para reescribir $p(x)$:
     \[
         p(x) = a_0 + x(a_1 + x(a_2 + x(a_3 + . . . + x(a_{n-1} + xa_n). . .)))
     \]
-    ¿Cuál es el número de sumas y multiplicaciones que se realizan en este método?
+    ¿Cuál es el número de sumas y multiplicaciones que se realizan en este método?\\
+    Este método se evalúa primero lo más adentro primero y después lo que este por fuera, entonces, empezando con $a_n$ que se multiplica por $x$ y se suma a $a_{n-1}$ entonces ya llevamos 1 multiplicación y una suma, pero eso que teniamos lo vamos a multiplicar otra vez por $x$ y eso se le suma a $a_{n-2}$ lo que da dos sumas y dos multiplicaciones, pero de nuevo eso se multiplica por $x$ y se le suma a $a_{n-3}$ y así hasta llegar a que se multiplique por $x$ y se sume a $a_0$ y como ya no hay más constantes $a_i$ anteriores a este entonces ya no hay más multiplicaciones ni sumas que hacer por lo cual se hizo una multiplicación y  una suma por cada $a_i$.\\
+    Por lo tanto, en este método se realizan $n$ sumas y $n$ multiplicaciones.
     \item[3.c] Propón un algoritmo recursivo para el método anterior.\\
-    ¿La complejidad asintótica es diferente al análisis anterior?, ¿Cambiaría la complejidad (en tiempo o espacio) si se propusiera el método en su versión iterativa?
+    Para el algoritmo recursivo, tomaremos como caso base si la longitud del arreglo es $0$ entonces regresara $0$ pero si no es $0$ tomaremos el primer elemento del arreglo y se lo sumaremos a $x$ multiplicado por la misma función con el resto del arreglo sin el primer elemento y $x$ como argumentos.\\
+    El algoritmo se llamara \texttt{horner\_Recursivo(A, x)} donde $A$ es el arreglo con los coeficientes del polinomio y $x$ es el valor en el que se evaluara el polinomio.\\
+    \begin{algorithm}[H]
+        \caption{Algoritmo recursivo para el método de Horner}
+        $longitud \gets len(A)$\\
+        $resto \gets A[1:]$\\
+        \If{$longitud == 0$}{
+            \Return $0$
+        }
+        \Return $A[0] + x \cdot horner\_Recursivo(resto, x)$
+    \end{algorithm}
+    ¿La complejidad asintótica es diferente al análisis anterior?\\
+    La complejidad asintótica no es diferente al análisis anterior ya que en este método recursivo se realiza una suma y una multiplicación por cada elemento del arreglo, es decir, como toma solo el primer elemento y luego lo suma a $x$ multiplicado por la función menos ese elemento lo hara $n$ veces, por lo tanto la complejidad asintótica es $O(n)$.\\
+    ¿Cambiaría la complejidad (en tiempo o espacio) si se propusiera el método en su versión iterativa?\\
+    Veamos como sería el algoritmo iterativo, en este primero declaramos a $p(x)$ con el último elemento del arreglo y después empezamos desde el indice del penúltimo elemento y le sumamos a $p(x)$ el elemento en ese indice más $x$ por $p(x)$:\\
+    \begin{algorithm}[H]
+        \caption{Algoritmo iterativo}
+        $long \gets len(A)$\\
+        $resultado \gets A[long - 1]$\\
+        \For{$i \gets long - 2$; $i\geq 0$; $i--$}{
+            $resultado \gets A[i] + x \cdot resultado$
+        }
+        \Return $resultado$
+    \end{algorithm}
+    Por lo tanto ya con el algoritmo iterativo, veamos la complejidad en tiempo, tanto en el iterativo como en el recursivo solamente se hacen $n$ sumas y $n$ multiplicaciónes por lo que la complejidad en tiempo del algoritmo recursivo y del algoritmo iterativo es de $O(n)$.\\
+    Para la complejidad en espacio, si consideramos que en el algoritmo recursivo se asigna memoria en cada llamada de la función entonces este tiene complejidad $O(n)$ en espacio, mientras que el algoritmo iterativo solo hace dos declaraciones considerando que el arreglo viene en la entrada, por lo tanto, el algoritmo iterativo tiene complejidad $O(1)$ en espacio, por lo cual si podemos ver la diferencia entre estas dos opciones. 
 \end{itemize}
 
 % P-4
@@ -96,11 +142,15 @@ Considera el siguiente algoritmo:
     }
 \end{algorithm}
 \begin{itemize}
-    \item ¿Qué hace el algoritmo?
+    \item ¿Qué hace el algoritmo?\\
+    El algoritmo solo cambia los valores que tienen $a$ y $b$, en dado caso de que el algoritmo termine el valor final de $a$ sera $0$ y el valor final de $b$ sera la suma de los valores originales de $a$ y $b$. Pero si el algoritmo no termina, es decir, en ningún momento $a = 0$, entonces, se cicla y permanece cambiando los valores de $a$ y $b$, con la excepción de si $b = 0$ por que entonces se cicla pero no cambia nunca el valor de ninguno de los dos.
     \item Asume como precondición que $a, b > 0$.\\
-    ¿Para qué valores de $a, b$ se puede garantizar que el algoritmo termina?
+    ¿Para qué valores de $a, b$ se puede garantizar que el algoritmo termina?\\
+    El algoritmo termina siempre y cuando en algún punto $a = b$, es decir, cualquier valor que tome $a$ tiene  que ser el mismo valor para $b$ para que entonces el algoritmo pueda terminar al inicio, pero esto tambien puede suceder en alguna iteración, si en algún momento el valor que tenga $a$ multiplicado por 2 es lo mismo que si a $b$ le restamos el valor de $a$ antes de multiplicarlo o viceversa, cambiando $a$ por $b$ y $b$ por $a$, además una forma de que termine es si los valores iniciales de $a$ y $b$ sumados dan como resultado una potencia de dos.
     \item Si el algoritmo termina, ¿en cuántos pasos lo hace?\\
-    Si el algoritmo no termina, justifica la respuesta.
+    Si el algoritmo no termina, justifica la respuesta.\\
+    Si el algoritmo termina depende de sus entradas para saber en cuantos pasos lo hara si sus entradas son iguales entonces terminara en un solo paso, si sus entradas son diferentes pero en un inicio da la opción de que el mayor menos el menor de lo mismo que el menor multiplicado por 2 entonces terminara en un solo paso, pero si la suma de las entradas da como resultado una potencia de 2 entonces el número de pasos en los que terminara sera menor o igual al $\log_2(S)$ siendo \textit{S} la suma de las entradas.\\
+    En cambio, si el algoritmo no termina será por que $a$ nunca sera igual a $0$, entonces $a$ se estara multiplicando por 2 o variando su valor pero como sigue siendo mayor que 0, entonces el While nunca va a terminar y el algoritmo se va a ciclar.
 \end{itemize}
 
 % P-5
