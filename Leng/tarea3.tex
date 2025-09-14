@@ -1,0 +1,76 @@
+\documentclass[11pt]{article}
+\usepackage[spanish]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath, amssymb}
+\usepackage{geometry}
+\usepackage{setspace}
+\usepackage{enumitem}
+\usepackage{graphicx}
+\usepackage{xurl}
+\usepackage{listings}
+
+\geometry{letterpaper, margin=2cm}
+
+\begin{document}
+\begin{titlepage}
+    \centering
+    \vspace{2cm}
+    {\includegraphics[height=3.2cm]{../logo_unam.png}}
+    \hfill
+    {\includegraphics[height=3.2cm]{../logo_fc.png}\par}
+    \vspace{1cm}
+    {\bfseries\LARGE UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO \par}
+    \vspace{0.7cm}
+    {\scshape\Large FACULTAD DE CIENCIAS \par}
+    \vspace{1cm}
+    {\itshape\Large Lenguajes de programación \par}
+    \vspace{0.5cm}
+    {\itshape\Large Semestre 2026-1 \par}
+    \vspace{2cm}
+    {\scshape\Huge Tarea 3 \par}
+    \vspace{1cm}
+    {\itshape\Large Fecha de entrega: 19 de septiembre de 2025 \par}
+    \vspace{2cm}
+    {\Large Autores: \par}
+    \vspace{0.4cm}
+    {\Large Escobar Gonzalez Isaac Giovani \hspace{1cm} 321336400 \par}
+    {\Large Garduño Escobar Kevin Jonathan \hspace{0.5cm} 321070629 \par}
+    {\Large Zaldivar Alanis Rodrigo \hspace{2.75cm} 424029605 \par}
+\end{titlepage}
+\section*{Instrucciones}
+\noindent Resolver los siguientes ejercicios de forma clara y ordenada de acuerdo a los lineamientos de entrega de tareas disponibles en la página del curso.\\
+\section*{Ejercicios}
+
+\begin{enumerate}[leftmargin=0.8cm]
+
+    \item Evalúa las siguientes expresiones usando el régimen de evaluación especificado en cada inciso. En cada inciso coloca el ambiente \textbf{en forma de lista}, con el cual se evaluó la expresión.
+    \begin{lstlisting}
+{with {x {- 13 {* 5 8}}}
+    {with {y {- x x}}
+        {with {foo {fun {a} {- x y}}}
+            {with {x {+ (-13) {- 3 6}}}
+                {with {y {+ x x}}
+                    {foo -3}}}}}}
+    \end{lstlisting}
+    \begin{itemize}
+        \item Alcance estático. \textbf{(1 punto)}
+        \item Alcance dinámico. \textbf{(1 punto)}
+    \end{itemize}
+    \item Evalúa las siguientes expresiones usando el régimen de evaluación y alcance especificado en cada inciso. En cada inciso coloca el ambiente \textbf{en forma de pila}, con el cual se evaluó la expresión.
+    \begin{lstlisting}
+{with {a {- 5 5}}
+    {with {b {- a a}}
+        {with {foo {fun {x} {- a b}}}
+            {with {a {+ (-3) (-3)}}
+                {with {b {+ a a}}
+                    {foo 1}}}}}}
+    \end{lstlisting}
+    \begin{itemize}
+        \item Evaluación glotona y alcance estático. \textbf{(2 puntos)}
+        \item Evaluación glotona y alcance dinámico. \textbf{(2 puntos)}
+        \item Evaluación perezosa y alcance estático. \textbf{(2 puntos)}
+        \item Evaluación perezosa y alcance dinámico. \textbf{(2 puntos)}
+    \end{itemize}
+\end{enumerate}
+
+\end{document}
