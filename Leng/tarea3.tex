@@ -8,6 +8,9 @@
 \usepackage{graphicx}
 \usepackage{xurl}
 \usepackage{listings}
+\usepackage{tikz}
+\usepackage{xcolor}
+\usetikzlibrary{decorations.pathreplacing, calc}
 
 \geometry{letterpaper, margin=2cm}
 
@@ -53,8 +56,51 @@
                     {foo -3}}}}}}
     \end{lstlisting}
     \begin{itemize}
-        \item Alcance estático. \textbf{(1 punto)}
-        \item Alcance dinámico. \textbf{(1 punto)}
+        \item Alcance estático. \textbf{(1 punto)}\\
+            Empezamos construyendo la lista del ambiente:\\
+            \hspace*{-0.5cm}
+            \begin{tikzpicture}
+                \node (list) at (0,0) {( (y \, (+ x x)) \, (x \, (+ (-13) (- 3 6))) \, (foo \, (fun (a) (- x y))) \, (y \, (- x x)) \, (x \, (- 13 (* 5 8))) )};
+                \draw[red, thick, decoration={brace, mirror}, decorate]
+                    ($(list.south west)+(-0.1,0)$) -- ($(list.south east)+(0.1,0)$);
+                \node[red] at ($($(list.south west)+(-0.2,0)$)!0.5!($(list.south east)+(0.2,0)$)$) [below=2pt] {\large Env};
+            \end{tikzpicture}\\
+            Ahora evaluamos el cuerpo del with que esta más adentro, es decir, la expresión \texttt{(foo -3)}. Para esto, buscamos el valor de \texttt{foo} en el ambiente y obtenemos la función \texttt{(fun (a) (- x y))}.\\ 
+            Dado que el parámetro de la función \texttt{foo} es \texttt{a} y el argumento para la aplicación de la función es \texttt{-3}, entonces, añadimos el par \texttt{(a -3)} al ambiente, justo después de la función \texttt{foo} dado que es alcance estático.\\
+            Ahora si podemos evaluar el cuerpo de la función \texttt{foo} que es \texttt{(- x y)}. Para esto, buscamos el valor de \texttt{x} en el ambiente y obtenemos \texttt{(- 13 (* 5 8))}. Evaluamos esta expresión y obtenemos que \texttt{x = (- 13 40) = -27}.\\
+            Entonces buscamos el valor de \texttt{y} en el ambiente y obtenemos \texttt{(- x x)}. Evaluamos esta expresión usando el valor de \texttt{x} que acabamos de obtener, y nos queda que, \texttt{y = (- -27 -27) = 0}.\\
+            Y por último, evaluamos la expresión \texttt{(- x y)} usando los valores que obtuvimos antes: \texttt{(- -27 0) = -27}. Por lo tanto, el resultado final es \textbf{-27}.\\
+            El ambiente final quedo:\\
+            \hspace*{-1cm}
+            \begin{tikzpicture}
+                \node (list) at (0,0) {( (y \, (+ x x)) \, (x \, (+ (-13) (- 3 6))) \, (foo \, (fun (a) (- x y))) \, (a \, -3) \, (y \, (- x x)) \, (x \, (- 13 (* 5 8))) )};
+                \draw[red, thick, decoration={brace, mirror}, decorate]
+                    ($(list.south west)+(-0.1,0)$) -- ($(list.south east)+(0.1,0)$);
+                \node[red] at ($($(list.south west)+(-0.2,0)$)!0.5!($(list.south east)+(0.2,0)$)$) [below=2pt] {\large Env};
+            \end{tikzpicture}
+        \item Alcance dinámico. \textbf{(1 punto)}\\
+            Como en el caso anterior, empezamos construyendo la lista del ambiente:\\
+            \hspace*{-0.5cm}
+            \begin{tikzpicture}
+                \node (list) at (0,0) {( (y \, (+ x x)) \, (x \, (+ (-13) (- 3 6))) \, (foo \, (fun (a) (- x y))) \, (y \, (- x x)) \, (x \, (- 13 (* 5 8))) )};
+                \draw[red, thick, decoration={brace, mirror}, decorate]
+                    ($(list.south west)+(-0.1,0)$) -- ($(list.south east)+(0.1,0)$);
+                \node[red] at ($($(list.south west)+(-0.2,0)$)!0.5!($(list.south east)+(0.2,0)$)$) [below=2pt] {\large Env};
+            \end{tikzpicture}\\
+            Ahora evaluamos la aplicación de la función \texttt{(foo -3)}. Para esto, buscamos el valor de \texttt{foo} en el ambiente y obtenemos la función \texttt{(fun (a) (- x y))}.\\
+            Asignamos el valor \texttt{-3} al parámetro \texttt{a} de la función \texttt{foo}, pero en este caso, dado que es alcance dinámico, añadimos el par \texttt{(a -3)} al inicio del ambiente.\\
+            Entonces, evaluamos el cuerpo de la función \texttt{foo} que es \texttt{(- x y)}. Para esto, buscamos el valor de \texttt{x} en el ambiente desde el inicio de la lista que es \texttt{(+ -13 (- 3 6))}.\\
+            Así, \texttt{x = (+ -13 (- 3 6)) = -16}.\\
+            Luego, buscamos el valor de \texttt{y} en el ambiente y obtenemos \texttt{(+ x x)}. Evaluamos esta expresión usando el valor de \texttt{x} que acabamos de obtener, y nos queda que, \texttt{y = (+ -16 -16) = -32}.\\
+            Nos queda evaluar la función \texttt{(- x y)} usando los valores que obtuvimos antes: \texttt{(- -16 -32) = 16}. Por lo tanto, el resultado final es \textbf{16}.\\
+            El ambiente final quedaría así:\\
+            \hspace*{-1cm}
+            \begin{tikzpicture}
+                \node (list) at (0,0) {( (a \, -3) \, (y \, (+ x x)) \, (x \, (+ (-13) (- 3 6))) \, (foo \, (fun (a) (- x y))) \, (y \, (- x x)) \, (x \, (- 13 (* 5 8))) )};
+                \draw[red, thick, decoration={brace, mirror}, decorate]
+                    ($(list.south west)+(-0.1,0)$) -- ($(list.south east)+(0.1,0)$);
+                \node[red] at ($($(list.south west)+(-0.2,0)$)!0.5!($(list.south east)+(0.2,0)$)$) [below=2pt] {\large Env};
+            \end{tikzpicture}
     \end{itemize}
     \item Evalúa las siguientes expresiones usando el régimen de evaluación y alcance especificado en cada inciso. En cada inciso coloca el ambiente \textbf{en forma de pila}, con el cual se evaluó la expresión.
     \begin{lstlisting}
