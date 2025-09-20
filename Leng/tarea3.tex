@@ -112,8 +112,75 @@
                     {foo 1}}}}}}
     \end{lstlisting}
     \begin{itemize}
-        \item Evaluación glotona y alcance estático. \textbf{(2 puntos)}
+        \item Evaluación glotona y alcance estático. \textbf{(2 puntos)}\\
+        Primero realizamos el ambiente en forma de pila, donde el tope de la pila es el par más reciente que se añadió al ambiente.\\
+        Además, de acuerdo a que es evaluación glotona, las expresiones se evalúan tan pronto como sea posible.\\
+        Por lo que mostraremos a continuación el ambiente de forma final, es decir, cuando ya es posible evaluar la expresión completa, en este caso, la expresión \texttt{(foo 1)}.\\
+        \begin{center}
+            
+        \begin{tikzpicture}
+            % Dibujar la pila
+            \draw (0,0) -- (0,6.6) -- (4.5,6.6) -- (4.5,0); % Contorno de la pila
+            \draw (0,0) -- (4.5, 0);
+            \draw (0,1.1) -- (4.5,1.1);
+            \draw (0,2.2) -- (4.5,2.2);
+            \draw (0,3.3) -- (4.5,3.3);
+            \draw (0,4.4) -- (4.5,4.4);
+            \draw (0,5.5) -- (4.5,5.5);
+
+            % Insertar el texto dentro de la pila (de abajo hacia arriba)
+            \node at (2.25,0.55) {a \qquad ( 0 )};
+            \node at (2.25,1.65) {b \qquad ( - a a )};
+            \node at (2.25,2.75) {x \qquad ( 1 )};
+            \node at (2.25,3.85) {foo \quad (fun (x) (- a b))};
+            \node at (2.25,4.95) {a \qquad ( -6 )};
+            \node at (2.25,6.05) {b \qquad ( + a a )};
+            \node at (2.25,6.6) {};
+        \end{tikzpicture}
+        \end{center}
+
+        Una vez hecho la evaluación glotona y obtenido el ambiente final, procedemos a evaluar la expresión \texttt{(foo 1)}.\\
+        Buscamos el valor de \texttt{foo} en el ambiente y obtenemos la función \texttt{(fun (x) (- a b))}.\\
+        Asignamos el valor \texttt{1} al parámetro \texttt{x} de la función \texttt{foo}, pero en este caso, dado que es alcance estático, añadimos el par \texttt{(x 1)} justo después de la función \texttt{foo} en el ambiente de la pila, por eso mismo dicha \texttt{x} ya aparece en la pila pues es el ambiente final el que mostramos.\\
+        Entonces, evaluamos el cuerpo de la función \texttt{foo} que es \texttt{(- a b)}. Para esto, buscamos el valor de \texttt{a} con alcanze estático en el ambiente y obtenemos que la \texttt{a = 0}.\\ 
+        Luego, buscamos el valor de \texttt{b} en el ambiente y obtenemos que la \texttt{b = - a a} por lo que nuevamente buscamos el valor de \texttt{a} en el ambiente y obtenemos que la \texttt{a = 0}. Entonces, evaluamos la expresión \texttt{- a a} usando el valor de \texttt{a} que acabamos de obtener, y nos queda que, \texttt{b = - a a = - 0 a = - 0 0 = 0}.\\
+        Nos queda evaluar la función \texttt{(- a b)} usando los valores que obtuvimos antes: \texttt{(- 0 0) = 0}. Por lo tanto, el resultado final es \textbf{0}.\\
+
         \item Evaluación glotona y alcance dinámico. \textbf{(2 puntos)}
+        
+        Primero realizamos el ambiente en forma de pila, donde el tope de la pila es el par más reciente que se añadió al ambiente.\\
+        Además, de acuerdo a que es evaluación glotona, las expresiones se evalúan tan pronto como sea posible.\\
+        Por lo que mostraremos a continuación el ambiente de forma final, es decir, cuando ya es posible evaluar la expresión completa, en este caso, la expresión \texttt{(foo 1)}.\\
+        \begin{center}
+            
+        \begin{tikzpicture}
+            % Dibujar la pila
+            \draw (0,0) -- (0,6.6) -- (4.5,6.6) -- (4.5,0); % Contorno de la pila
+            \draw (0,0) -- (4.5, 0);
+            \draw (0,1.1) -- (4.5,1.1);
+            \draw (0,2.2) -- (4.5,2.2);
+            \draw (0,3.3) -- (4.5,3.3);
+            \draw (0,4.4) -- (4.5,4.4);
+            \draw (0,5.5) -- (4.5,5.5);
+
+            % Insertar el texto dentro de la pila (de abajo hacia arriba)
+            \node at (2.25,0.55) {a \qquad ( 0 )};
+            \node at (2.25,1.65) {b \qquad ( - a a )};
+            \node at (2.25,2.75) {foo \quad (fun (x) (- a b))};
+            \node at (2.25,3.85) {a \qquad ( -6 )};
+            \node at (2.25,4.95) {b \qquad ( - a a )};
+            \node at (2.25,6.05) {x \qquad ( 1 )};
+        \end{tikzpicture}
+        \end{center}
+
+        Ya dimos el ambiente final, procedemos a evaluar la expresión \texttt{(foo 1)}.\\
+        Buscamos el valor de \texttt{foo} en el ambiente y obtenemos la función \texttt{(fun (x) (- a b))}.\\
+        Asignamos el valor \texttt{1} al parámetro \texttt{x} de la función \texttt{foo}, pero en este caso, dado que es alcance dinámico, añadimos el par \texttt{(x 1)} al tope de la pila, la pila que mostramos ya es el ambiente final por lo que dicha \texttt{x} ya aparece en la pila.\\
+        Entonces, evaluamos el cuerpo de la función \texttt{foo} que es \texttt{(- a b)}. Para esto, buscamos el valor de \texttt{a} con alcanze dinámico en el ambiente y obtenemos primero que la \texttt{a = -6}.\\ 
+        Luego, buscamos el valor de \texttt{b} en el ambiente y obtenemos que la \texttt{b = - a a} por lo que nuevamente buscamos el valor de \texttt{a} en el ambiente y obtenemos que la \texttt{a = -6}. Entonces, evaluamos la expresión \texttt{- a a} usando el valor de \texttt{a} que acabamos de obtener, y nos queda que, \texttt{b = + a a = + -6 a = + -6 -6 = -12}.\\
+        Nos queda evaluar la función \texttt{(- a b)} usando los valores que obtuvimos antes: \texttt{(- -6 -12) = 6}. Por lo tanto, el resultado final es \textbf{6}.\\
+
+
         \item Evaluación perezosa y alcance estático. \textbf{(2 puntos)}
         \item Evaluación perezosa y alcance dinámico. \textbf{(2 puntos)}
     \end{itemize}
