@@ -91,7 +91,73 @@ Supón que tenemos un algoritmo en el cual vamos a utilizar pilas (Stacks) pero 
 \section*{Ejercicio 4}
 Investiga en qué consiste el método (o teorema) maestro.\\
 Ilustra su aplicación con algunos ejemplos.\\
-Nota: NO es necesario presentar la demostración del teorema en esta tarea, pero sí es deseable que la revisen y comenten de manera general.
+Nota: NO es necesario presentar la demostración del teorema en esta tarea, pero sí es deseable que la revisen y comenten de manera general.\\
+El método maestro proporciona una manera de resolver recurrencias de la forma:
+\[
+    T(n) = aT\left(n/b\right) + f(n)
+\]
+con $a \geq 1$ y $b > 1$ constantes, y $f(n)$ una función asintóticamente positiva. Una recurrencia de esta forma caracteriza un algoritmo del tipo "divide y vencerás", en el cual un problema de tamaño $n$ se divide en $a$ subproblemas, cada uno de tamaño $n/b$, los $a$ subproblemas se resuelven recursivamente cada uno en tiempo $T\left(n/b\right)$, y la función $f(n)$ es el tiempo que se tarda en dividir el problema y combinar los resultados de los subproblemas.\\
+En el teorema maestro, tenemos además que $T(n)$ está definida en los enteros no negativos por la recurrencia e interpretamos $n/b$ como $\lfloor n/b \rfloor$ o $\lceil n/b \rceil$.\\
+Así, $T(n)$ tiene las siguientes cotas asintóticas, los tres casos:
+\begin{enumerate}
+    \item Si $f(n) = O(n^{\log_b a - \epsilon})$ para alguna constante $\epsilon > 0$, entonces $T(n) = \Theta(n^{\log_b a})$.
+    \item Si $f(n) = \Theta(n^{\log_b a})$, entonces $T(n) = \Theta(n^{\log_b a} \lg n)$.
+    \item Si $f(n) = \Omega(n^{\log_b a + \epsilon})$ para alguna constante $\epsilon > 0$, y si $af(n/b) \leq cf(n)$ para alguna constante $c < 1$ y para todo $n$ suficientemente grande, entonces $T(n) = \Theta(f(n))$.
+\end{enumerate}
+En los tres casos se compara la función $f(n)$ con la función $n^{\log_b a}$, intiutivamente, la solución a la recurrencia está determinada por la función mayor.\\
+Los casos que tiene el método maestro no cubre todas las posibilidades. Existe una diferencia entre los casos 1 y 2 cuando $f(n)$ es más pequeño que $n^{\log_b a}$ pero no polinomialmente menor, también entre los casos 2 y 3 cuando $f(n)$ es más grande que $n^{\log_b a}$ pero no polinomialmente mayor.\\
+En el caso de que $f(n)$ entre en alguno de esos huecos o que la condición de regularidad del caso 3 no se cumpla, el método maestro no es aplicable.\\
+Algunos ejemplos:
+\begin{enumerate}
+    \item \textbf{Merge Sort}\\
+    La recurrencia para el algoritmo Merge Sort es:
+    \[
+        T(n) = 2T\left(n/2\right) + \Theta(n)
+    \]
+    Aquí, $a = 2$, $b = 2$ y $f(n) = \Theta(n)$. Calculamos $n^{\log_b a} = n^{\log_2 2} = n^1 = n$.\\
+    Como $f(n) = \Theta(n)$, entonces, $f(n) = \Theta(n^{\log_b a})$, lo que corresponde al caso 2 del teorema maestro. Por lo tanto, la solución es:
+    \[
+        T(n) = \Theta(n \lg n)
+    \]
+    \item \textbf{Algoritmo de Strassen para multiplicación de matrices}\\
+    La recurrencia para el algoritmo de Strassen es:
+    \[
+        T(n) = 7T\left(n/2\right) + \Theta(n^2)
+    \]
+    Aquí, $a = 7$, $b = 2$ y $f(n) = \Theta(n^2)$. Calculamos $n^{\log_b a} = n^{\log_2 7} \approx n^{2.81}$.\\
+    Como $f(n) = \Theta(n^2)$, entonces, $f(n) = O(n^{\log_b a - \epsilon})$ para $\epsilon \approx 0.81$, lo que corresponde al caso 1 del teorema maestro. Por lo tanto, la solución es:
+    \[
+        T(n) = \Theta(n^{\log_2 7}) \approx \Theta(n^{2.81})
+    \]
+    \item \textbf{$f(n)$ dominante}\\
+    Consideremos la siguiente recurrencia:
+    \[
+        T(n) = 3T\left(n/4\right) + n \lg n
+    \]
+    Aquí, $a = 3$, $b = 4$ y $f(n) = n \lg n$. Calculamos $n^{\log_b a} = n^{\log_4 3} \approx n^{0.79}$.\\
+    Como $f(n) = \Omega(n^{\log_b a + \epsilon})$ para $\epsilon \approx 0.21$, y si verificamos la condición de regularidad: Para $n$ suficientemente grande, $af(n/b) \leq c f(n)$ para alguna constante $c < 1$.
+    \begin{align*}
+        af(n/b) = 3f(n/4) &= 3(n/4) \lg(n/4)\\
+        &= (3/4)n(\lg n - \lg 4) = (3/4)n \lg n - (3/2)n \lg 4\\
+        &\leq (3/4)n \lg n
+    \end{align*}
+    Con $c = 3/4 < 1$, la condición se cumple. Entonces, por el caso 3 del teorema maestro, la solución es:
+    \[
+        T(n) = \Theta(n \lg n)
+    \]
+    \item \textbf{Caso no cubierto por el teorema maestro}\\
+    Consideremos la siguiente recurrencia:
+    \[
+        T(n) = 2T\left(n/2\right) + n \lg n
+    \]
+    Aquí, $a = 2$, $b = 2$ y $f(n) = n \lg n$. Calculamos $n^{\log_b a} = n^{\log_2 2} = n^1 = n$.\\
+    En este caso, $f(n)$ no es polinomialmente menor ni mayor que $n^{\log_b a}$, ya que $f(n) = n \lg n$ crece más rápido que $n$ pero más lento que cualquier $n^{1+\epsilon}$ para $\epsilon > 0$. Por lo tanto, el teorema maestro no es aplicable aquí.
+\end{enumerate}
+La demostración se divide en dos partes: La primera parte analiza la recurrencia maestra, bajo el supuesto de que $T(n)$ se define solo para potencias exactas de $b > 1$.\\
+A su vez, esta parte se divide en tres lemas, el primero reduce la solución de la recurrencia a evaluar una expresión que contiene una suma utilizando la técnica de árbol de recurrencia.\\
+El segundo lema determina los límites asintóticos de la suma, en este lema se prueban los tres casos del teorema maestro.\\
+El tercer lema es la combinación de los dos lemas anteriores, para demostrar una versión del teorema maestro que se aplica a potencias exactas de $b$, entonces, evalúa la suma del primer lema utilizando los límites asintóticos del segundo lema para los tres casos del teorema maestro.\\
+La segunda parte de la demostración analiza las situaciones donde aparecen pisos y techos en la recurrencia, así que esté definida para todos los enteros y no solo las potencias exactas de $b$, obteniendo un límite inferior para la recurrencia con techo y un límite superior para la recurrencia con piso, en esta parte también se utiliza el árbol de recurrencia.
 \section*{Ejercicio 5}
 Para este problema, considera que un subárbol de un árbol binario es cualquier subgráfo conexo. Un árbol binario es completo sí todos los nodos internos tienen dos hijos y cada hoja tiene exactamente la misma profundidad.\\
 Describe un algoritmo para calcular el subárbol completo más grande (mayor número de nodos). El algoritmo debería devolver el nodo (o referencia) al subárbol y la altura correspondiente.
@@ -100,7 +166,7 @@ Describe un algoritmo para calcular el subárbol completo más grande (mayor nú
     \item[5.B] Realiza el análisis de complejidad en tiempo
     \item[5.C] Realiza el análisis de correctitud
 \end{itemize}
-\begin{figure}
+\begin{figure}[H]
     \centering
     \includegraphics[width=0.7\textwidth]{subárbol.png}
     \caption{Ejemplo de un subárbol binario completo.\\
