@@ -72,15 +72,93 @@ Considera el siguiente algoritmo:\\
     \item[1.D] Realiza el análisis de complejidad de tiempo. Plantea y resuelve la ecuación de recurrencia. Concluye mencionando la complejidad asintótica.
     \item[1.E] Si cambiamos $m = \lceil 2n/3 \rceil$ por $m = \lfloor 2n/3 \rfloor$, ¿el algoritmo aún es correcto? Justifica
 \end{itemize}
+
 \section*{Ejercicio 2}
 Se tienen dos arreglos $A, B$ de longitudes $m, n$ respectivamente. Diseña un algoritmo de tiempo $O(m + n)$ que construya un arreglo $C$ con los elementos en común entre $A$ y $B$, sin elementos repetidos.
 \begin{itemize}
-    \item[2.A] Da el pseudocódigo
-    \item[2.B] Realiza el análisis de correctitud
-    \item[2.C] Realiza el análisis de complejidad en tiempo
-    \item[2.D] Realiza el análisis de complejidad en espacio
-    \item[2.E] Menciona algunos casos interesantes (incluyendo un mejor y peor caso). Ilustra con ejemplos concretos.
+    \item[2.A] Da el pseudocódigo\\
+    \textbf{Solución:}\\
+    A continuación mostraremos un pseudocódigo que realiza lo pedido en el enunciado.\\
+\begin{algorithm}[H]
+    \caption{Elementos en común entre dos arreglos}
+    \KwIn{Dos arreglos $A$ y $B$ de tamaños $m$ y $n$ respectivamente}
+    \KwOut{Un arreglo $C$ con los elementos en común entre $A$ y $B$, sin elementos repetidos}
+
+    Crear un conjunto vacío $conjunto\_A$ \tcp{para almacenar elementos del arreglo $A$}
+    Crear un conjunto vacío $conjunto\_C$
+
+    \For{$i \gets 1$ \KwTo $m$}{
+        Agregar $A[i]$ en $conjunto\_A$
+    }
+
+    \For{$i \gets 1$ \KwTo $n$}{
+        \If{$B[i] \in conjunto\_A$}{
+            Agregar $B[i]$ en $conjunto\_C$
+        }
+    }
+    Convertir $conjunto\_C$ a un arreglo $C$
+
+    Retornar $C$
+\end{algorithm}
+
+
+    \item[2.B] Realiza el análisis de correctitud\\
+    \textbf{Solución:}\\
+    Para demostrar la correctitud del algoritmo procedemos a proponer un invariante tal que se mantenga a lo largo de la ejecución del mismo y se cumpla para para el \textbf{segundo ciclo} for del pseudocódigo al final de su ejecución.\\
+    Proponemos el siguiente invariante para el segundo ciclo for, donde dicho ciclo se encarga de llenar el conjunto $conjunto\_C$ con los elementos en común entre los arreglos $A$ y $B$, sin elementos repetidos.\\
+    \textbf{Invariante:} Al inicio de cada iteración del segundo ciclo for, el conjunto $conjunto\_C$ contiene los elementos en común entre los elementos de $A$ y los primeros $i-1$ elementos de $B$, sin elementos repetidos.\\
+    \textbf{Inicialización:} Antes de la primera iteración del segundo ciclo for, tenemos que $i=1$ y el conjunto $conjunto\_C$ está vacío. Dado que no hemos procesado ningún elemento de $B$, el invariante se cumple trivialmente.\\
+    \textbf{Mantenimiento:} Supongamos que el invariante se cumple al inicio de la $i$-ésima iteración del segundo ciclo for. Durante esta iteración, verificamos si el elemento $B[i]$ está en el conjunto $conjunto\_A$. Si es así, agregamos $B[i]$ al conjunto $conjunto\_C$. Dado que $conjunto\_C$ ya contenía los elementos en común entre $A$ y los primeros $i-1$ elementos de $B$, al agregar $B[i]$, el conjunto $conjunto\_C$ ahora contiene los elementos en común entre $A$ y los primeros $i$ elementos de $B$, sin elementos repetidos. Si $B[i]$ no está en $A$, entonces el conjunto $conjunto\_C$ permanece sin cambios, y el invariante sigue siendo válido.\\
+    \textbf{Terminación:} Al finalizar el segundo ciclo for, hemos procesado todos los elementos de $B$. Según el invariante, el conjunto $conjunto\_C$ contiene los elementos en común entre $A$ y todos los elementos de $B$, sin elementos repetidos. Finalmente, convertimos el conjunto $conjunto\_C$ a un arreglo y lo retornamos. Por lo tanto, el algoritmo es correcto.\\
+
+    También demostraremos que el \textbf{primer ciclo} for del pseudocódigo es correcto por si las dudas pero se observa que dicho ciclo realiza la operación de agregar elementos a un conjunto, proponemos un segundo invariante para el primer ciclo for donde dicho ciclo se encarga de llenar el conjunto $conjunto\_A$ con los elementos del arreglo $A$, sin elementos repetidos. Propondremos también un invariante para este ciclo.\\
+    \textbf{Invariante:} Al inicio de cada iteración del primer ciclo for, el conjunto $conjunto\_A$ contiene los primeros $i-1$ elementos del arreglo $A$, sin elementos repetidos.\\
+    \textbf{Inicialización:} Antes de la primera iteración del primer ciclo for, tenemos que $i=1$ y el conjunto $conjunto\_A$ está vacío. Dado que no hemos procesado ningún elemento del arreglo $A$, el invariante se cumple trivialmente.\\
+    \textbf{Mantenimiento:} Supongamos que el invariante se cumple al inicio de la $i$-ésima iteración del primer ciclo for. Durante esta iteración, agregamos el elemento $A[i]$ al conjunto $conjunto\_A$. Dado que $conjunto\_A$ ya contenía los primeros $i-1$ elementos del arreglo $A$, al agregar $A[i]$, el conjunto $conjunto\_A$ ahora contiene los primeros $i$ elementos del arreglo $A$, sin elementos repetidos.\\
+    \textbf{Terminación:} Al finalizar el primer ciclo for, hemos procesado todos los elementos del arreglo $A$. Según el invariante, el conjunto $conjunto\_A$ contiene todos los elementos del arreglo $A$, sin elementos repetidos. Por lo tanto, el conjunto $conjunto\_A$ está correctamente construido para su uso en el segundo ciclo for.\\
+    Con ambos invariantes demostrados, concluimos que el algoritmo es correcto mediante el uso del análisis de correctitud basado en invariantes de ciclo.\\
+    \qed
+
+
+    \item[2.C] Realiza el análisis de complejidad en tiempo\\
+    \textbf{Solución:}\\
+    Analicemos la complejidad en tiempo del algoritmo propuesto:\\
+    Crear un conjunto vacío $A$ y un conjunto vacío $C$ toma tiempo constante, es decir, $O(1)$ cada uno.\\
+    El primer ciclo for itera $m$ veces, y en cada iteración, agregar un elemento a un conjunto toma tiempo promedio $O(1)$ (para esto estamos considerando que los conjuntos usados están implementados mediante tablas hash para garantizar un tiempo de acceso constante). Por lo tanto, la complejidad del primer ciclo for es $O(m)$.\\
+    El segundo ciclo for itera $n$ veces. En cada iteración, verificar si un elemento está en un conjunto toma tiempo promedio $O(1)$, y agregar un elemento a un conjunto también toma tiempo promedio $O(1)$. Por lo tanto, la complejidad del segundo ciclo for es $O(n)$.\\
+    Convertir el conjunto $C$ a un arreglo toma tiempo $O(|C|)$, donde $|C|$ es el número de elementos en el conjunto $C$. En el peor de los casos, todos los elementos de $B$ podrían estar en $A$, por lo que $|C|$ podría ser tan grande como $min(m, n)$. Sin embargo, dado que $|C|$ es como máximo $n$ (el tamaño del arreglo $B$), podemos considerar esta operación como $O(n)$ en el análisis asintótico.\\
+    Finalmente, retornar el arreglo $C$ toma tiempo constante, es decir, $O(1)$.\\
+    Sumando todas estas contribuciones, la complejidad total en tiempo del algoritmo es:
+
+    \[
+    O(1) + O(m) + O(n) + O(|C|) + O(1) = O(m + n)
+    \]
+    Por lo tanto, la complejidad en tiempo del algoritmo es $O(m + n)$, como se requería.\\
+    \item[2.D] Realiza el análisis de complejidad en espacio\\
+    \textbf{Solución:}\\
+    Analicemos la complejidad en espacio del algoritmo propuesto:\\
+    Necesitamos espacio para almacenar los conjuntos $A$ y $C$. En el peor de los casos, el conjunto $A$ podría contener todos los elementos del arreglo $A$, lo que requiere espacio $O(m)$. El conjunto $C$ podría contener hasta $min(m, n)$ elementos en el peor de los casos pero lo podemos poner como $O(n)$ para el análisis asintótico.\\
+    Finalmente, convertir el conjunto $C$ a un arreglo requiere espacio adicional $O(|C|)$, que en el peor de los casos es $O(n)$.\\
+    Sumando todas estas contribuciones, la complejidad total en espacio del algoritmo es:
+    \[
+    O(m) + O(n) = O(m + n)
+    \]
+    Por lo tanto, la complejidad en espacio del algoritmo es $O(m + n)$.\\
+    \\
+    \item[2.E] Menciona algunos casos interesantes (incluyendo un mejor y peor caso). Ilustra con ejemplos concretos.\\
+    \textbf{Solución:}\\
+    Los casos que pueden ser los interesantes para probarlo con este algoritmo son los siguientes:
+    \begin{itemize}
+        \item \textbf{Mejor caso:} Cuando no hay elementos en común entre los dos arreglos. Por ejemplo, si $A = [1, 2, 3]$ y $B = [4, 5, 6]$, el conjunto $C$ resultante estará vacío. En este caso, el algoritmo aún recorrerá ambos arreglos completamente, pero no realizará ninguna inserción en el conjunto $C$.
+        \item \textbf{Peor caso:} Cuando todos los elementos de uno de los arreglos están presentes en el otro. Por ejemplo, si $A = [1, 2, 3]$ y $B = [1, 2, 3]$, el conjunto $C$ resultante contendrá todos los elementos de $A$. En este caso, el algoritmo realizará la máxima cantidad de inserciones en el conjunto $C$.
+        \item \textbf{Caso intermedio:} Cuando algunos elementos están en común y otros no. Por ejemplo, si $A = [1, 2, 3]$ y $B = [2, 3, 4]$, el conjunto $C$ resultante será $[2, 3]$. Este caso es representativo de situaciones más generales donde hay una mezcla de elementos comunes y no comunes.
+        \item \textbf{Caso con elementos repetidos:} Si los arreglos contienen elementos repetidos, el algoritmo debe asegurarse de que el conjunto $C$ no tenga duplicados (cosa que sucede pues usamos conjuntos). Si $A = [1, 2, 2, 3]$ y $B = [2, 2, 4]$, el conjunto $C$ resultante será $[2]$.
+        \item \textbf{Caso con arreglos vacíos:} Si uno o ambos arreglos están vacíos, el conjunto $C$ también estará vacío. Si $A = []$ y $B = [1, 2, 3]$, entonces $C = []$. Si ambos están vacíos, $A = []$ y $B = []$, entonces $C = []$.
+        \item \textbf{Caso con un arreglo mayor que el otro:} Si uno de los arreglos es significativamente más grande que el otro, el rendimiento del algoritmo sigue siendo $O(m + n)$, pero la cantidad de elementos en común puede variar. Por ejemplo, si $A = [3, 5, 7]$ y $B = [1, 2, 3, 4, 5, 6, 7, 8, 9]$, el conjunto $C$ resultante será $[3, 5, 7]$.
+        \item \textbf{Caso con arreglos con elementos no ordenados:} El algoritmo no depende del orden de los elementos en los arreglos. Por ejemplo, si $A = [3, 1, 4]$ y $B = [4, 2, 3]$, el conjunto $C$ resultante será $[3, 4]$, independientemente del orden en que aparezcan los elementos en los arreglos originales.
+    \end{itemize}
 \end{itemize}
+
 \section*{Ejercicio 3}
 Supón que tenemos un algoritmo en el cual vamos a utilizar pilas (Stacks) pero no conocemos el máximo de elementos a almacenar. Usando arreglos dinámicos, propón una estrategia para trabajar con pilas.
 \begin{itemize}
