@@ -93,7 +93,8 @@ Considera el siguiente algoritmo:\\
     \item[1.C] ¿El algoritmo utiliza es $in$ - place (utiliza memoria constante) ?
     Si obviamos la pila de llamadas, sí. El algoritmo no reserva espacios adicionales como extender el arreglo o crear nuevos. Solo ocupa memoria para llevar el control de las llamadas. Pero como la cantidad de llamadas hechas dependen de n, la complejidad de este algoritmo no es constante.
     \item[1.D] Realiza el análisis de complejidad de tiempo. Plantea y resuelve la ecuación de recurrencia. Concluye mencionando la complejidad asintótica.\\
-    Planteamos la ecuación de recurrencia: $T(n) = 3T(2n/3) + O(1)$\\ Si la entrada es mayor a dos, se hacen tres llamadas recursivas con aproximadamente dos tercios del arreglo original cada una. Más el primer if que verifica la longitud del arreglo, compara los elementos y luego los intercambia si es pertinente.\\
+    Planteamos la ecuación de recurrencia y posteriormente utilizaremos el teorema maestro, del cuál se detalla más su uso en el ejercicio 4:\\
+    $T(n) = 3T(2n/3) + O(1)$\\ Si la entrada es mayor a dos, se hacen tres llamadas recursivas con aproximadamente dos tercios del arreglo original cada una. Más el primer if que verifica la longitud del arreglo, compara los elementos y luego los intercambia si es pertinente.\\
     El teorema maestro ocupa la forma: $T(n) = A \cdot T(n/B) + O(n^C)$, Aquí, $A = 3$, $B = 3 / 2$, $C = 0$.\\
     Nos da un valor que dependiende de la relación tricotómica entre $log_B(A)$ y $C$.\\
     En este caso $log_B(A) = log_\frac{3}{2}3 \approx 2.71$.\\
@@ -316,9 +317,76 @@ La segunda parte de la demostración analiza las situaciones donde aparecen piso
 Para este problema, considera que un subárbol de un árbol binario es cualquier subgráfo conexo. Un árbol binario es completo sí todos los nodos internos tienen dos hijos y cada hoja tiene exactamente la misma profundidad.\\
 Describe un algoritmo para calcular el subárbol completo más grande (mayor número de nodos). El algoritmo debería devolver el nodo (o referencia) al subárbol y la altura correspondiente.
 \begin{itemize}
-    \item[5.A] Da el pseudocódigo
-    \item[5.B] Realiza el análisis de complejidad en tiempo
-    \item[5.C] Realiza el análisis de correctitud
+    \item[5.A] Da el pseudocódigo\\
+    \begin{algorithm}[H]
+        \caption{maxSubTree}
+        \KwIn{La raíz de un árbol, r}
+        \KwOut{La raíz del subárbol lleno más grande contenido en la raíz de entrada, junto con su altura.}
+
+        \If{r == null}{\Return $(null, 0)$}
+
+        \If{r.izquierdo == null AND r.derecho == null}{\Return $(r, 1)$}
+
+        (izquierdo, alturaIzq) = maxSubTree(r.izquierdo)\\
+        (derecho, alturaDer) = maxSubTree(r.derecho)\\
+
+        \If{r.izquierdo == izquierdo AND r.derecho == derecho \&
+        alturaIzq == Alturader}
+        {\Return $(r, 1 + alturaIzq)$}
+
+        \If{alturaIzq $>$ alturaDer}{\Return $(izquierdo, alturaIzq)$}
+        \Return $(derecho, alturaDer)$
+    \end{algorithm}
+    \item[5.B] Realiza el análisis de complejidad en tiempo\\
+    Haremos el análisis de complejidad sobre n, que es el número de nodos del árbol, esto es correcto, ya no se especifica que el árbol de entrada
+    sea balanceado, por lo que la altura de un árbol podría ser n.\\
+    Las primeras dos condiciones solamente comparan al nodo raíz y a los hijos de este, respectivamente
+    y en ambos casos se hace un retorno. Esto tiene complejidad $O(1)$.\\
+    Después, Se hacen dos llamadas recursivas. En cada una, se obtiene el subárbol máximo, es decir, se recorre cada subárbol completamente.\\
+    Sumando las dos llamadas recursivas, se recorren n-1 nodos y un árbol puede estar cargado a hacia un lado y vacío en el otro. Por lo que
+    tiene esto es $O(n)$.
+    Después, se hacen dos condicionales más, pero se comparan valores ya guardados en variables.
+    Sucede lo mismo con los retornos, se devuelve r, derecho o izquierdo, a los cuáles podemos acceder en tiempo constante junto con su altura respectiva, que a lo más involucra la suma de una constante con una valor guardado. Esto es $O(1)$.\\
+
+    Como la complejidad mayor obtenida fue $O(n)$, el algoritmo $\in O(n)$.\\
+
+    \item[5.C] Realiza el análisis de correctitud\\
+    Demostraremos por inducción estructural sobre el árbol que el algoritmo
+    \texttt{maxSubTree(r)} devuelve la raíz del subárbol binario completo(lleno) más
+    grande contenido en el árbol con raíz $r$, junto con su altura.
+
+    \textbf{Casos base:}
+    Si $r = null$, el algoritmo devuelve $(null,0)$, lo cual es verdadero
+    porque un árbol vacío no contiene subárboles llenos.
+
+    Si $r$ es una hoja (hijos null), el algoritmo devuelve $(r,1)$.
+    Esto es correcto ya que una hoja es un árbol lleno de altura $1$.
+
+    \textbf{Hipótesis de inducción:}
+    Supongamos que para cada subárbol de $r$ (es decir, para $r.izquierdo$
+    y $r.derecho$), la llamada recursiva a \texttt{maxSubTree} devuelve
+    correctamente la raíz y la altura del subárbol lleno máximo allí contenido.
+
+    \textbf{Paso inductivo:}
+    Consideremos el árbol con raíz $r$. El algoritmo distingue dos casos:
+
+    \begin{itemize}
+        \item Si las llamadas recursivas devuelven que los subárboles llenos
+        máximos de $r.izquierdo$ y $r.derecho$ coinciden con estos hijos y
+        además tienen la misma altura, entonces $r$ puede convertirse en la raíz
+        de un árbol lleno que une ambos subárboles. El algoritmo devuelve
+        $(r,1+\text{alturaIzq})$, lo cual es correcto, porque alturaIzq y alturaDer valen lo mismo, y con el 1, se ajusta a la altura de r.
+
+        \item En caso contrario, el subárbol lleno máximo de $r$ está
+        completamente contenido en alguno de sus hijos. Por hipótesis inductiva,
+        las llamadas recursivas ya devolvieron correctamente estos subárboles,
+        y el algoritmo selecciona el de mayor altura, lo cual también es correcto.
+    \end{itemize}
+
+    En todos los casos, el algoritmo devuelve la raíz y la altura del subárbol
+    binario lleno máximo contenido en el árbol con raíz $r$. Por inducción
+    estructural sobre la definición de árbol binario, el algoritmo es correcto.
+
 \end{itemize}
 \begin{figure}[H]
     \centering
