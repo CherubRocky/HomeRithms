@@ -1,5 +1,6 @@
 \documentclass[12pt]{article}
 \usepackage[utf8]{inputenc}
+\usepackage[spanish,es-noshorthands]{babel}
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{amsthm}
@@ -160,16 +161,58 @@ Se tienen dos arreglos $A, B$ de longitudes $m, n$ respectivamente. Diseña un a
 \end{itemize}
 
 \section*{Ejercicio 3}
-Supón que tenemos un algoritmo en el cual vamos a utilizar pilas (Stacks) pero no conocemos el máximo de elementos a almacenar. Usando arreglos dinámicos, propón una estrategia para trabajar con pilas.
+Supón que tenemos un algoritmo en el cual vamos a utilizar pilas (Stacks) pero no conocemos el máximo de elementos a almacenar. Usando arreglos dinámicos, propón una estrategia para trabajar con pilas.\\
+\textbf{Estrategia:}\\
+Implementamos una pila con un arreglo dinámico, donde inicialmente el arreglo tiene un tamaño fijo, después, cada que se intenta hacer \textit{push} y la pila se encuentra llena, entonces, se crea un nuevo arreglo con el doble de tamaño y todos los elementos del arreglo original se copian al nuevo arreglo y se agrega al final el nuevo elemento, entonces, al hacer \textit{pop} se elimina el último elemento del arreglo.\\
+Además, ocupamos una variable para tener el índice del tope de la pila, es decir, el índice del último elemento del arreglo, de modo que al hacer \textit{push} se incrementa el índice del tope y al hacer \textit{pop} se decrementa el índice del tope.\\
+En dado caso de que la pila este vacía, entonces, el índice del tope será -1.
 \begin{itemize}
-    \item[3.A] Realiza el análisis de la complejidad de tiempo y espacio para las operaciones de la pila (push, pop)
-    \item[3.B] Supón que queremos ahorrar el espacio que no se está utilizando, por lo cual se propone reducir el tamaño máximo de la pila a la mitad, cada que la pila reduzca su tamaño a la mitad de elementos. ¿Cómo se modifica el análisis de complejidad del inciso anterior?
-    \item[3.C] ¿Cómo se modificaría las respuestas a los incisos anteriores si en vez de una pila consideramos una cola?
+    \item[3.A] Realiza el análisis de la complejidad de tiempo y espacio para las operaciones de la pila (push, pop)\\
+    \textbf{Solución:}
+    \begin{itemize}
+        \item \textbf{Push:}
+        \begin{itemize}
+            \item \textbf{Complejidad en tiempo:} Si la pila no está llena, entonces, la operación push solo toma tiempo constante $O(1)$, pero si la pila ya está llena, entonces, debemos de aumentar el tamaño de la pila, así que se crea un nuevo arreglo con el doble de tamaño y se copian los elementos de la pila al nuevo arreglo, por lo cual, la complejidad se vuelve $O(n)$, donde $n$ es el número de elementos de la pila, pero dado que esto no ocurre cada vez que se realiza \textit{push} porque la pila no siempre va a estar llena, entonces, la complejidad de hacer \textit{push} es $O(1)$ amortizado.
+            \item \textbf{Complejidad en espacio:} Sucede algo parecido con la complejidad en tiempo, si la pila no está llena, entonces, la complejidad es $O(1)$, pero si la pila si está llena, entonces, al crear el nuevo arreglo con más tamaño, la complejidad se vuelve $O(n)$ donde $n$ es el número de elementos de la pila, pero dado que esto no ocurre cada vez que se realiza \textit{push} porque la pila no siempre va a estar llena, entonces, la complejidad de hacer \textit{push} es $O(1)$ amortizado también.
+        \end{itemize}
+        \item \textbf{Pop:}
+        \begin{itemize}
+            \item \textbf{Complejidad en tiempo:} La operación pop siempre toma tiempo constante $O(1)$, ya que solo se elimina el elemento superior de la pila (el último en el arreglo) y no se requiere mover otros elementos.
+            \item \textbf{Complejidad en espacio:} Similar a la complejidad en tiempo, la operación pop no requiere espacio adicional, por lo que la complejidad en espacio es $O(1)$.
+        \end{itemize}
+    \end{itemize}
+    \item[3.B] Supón que queremos ahorrar el espacio que no se está utilizando, por lo cual se propone reducir el tamaño máximo de la pila a la mitad, cada que la pila reduzca su tamaño a la mitad de elementos. ¿Cómo se modifica el análisis de complejidad del inciso anterior?\\
+    \textbf{Solución:}
+    \begin{itemize}
+        \item \textbf{Push:}\\
+        Al hacer la operación push, tanto la complejidad en tiempo como la complejidad en espacio no se ven afectadas por la estrategia para ahorrar el espacio, ya que no se va a reducir el tamaño de la pila al hacer push, entonces, la complejidad en tiempo y espacio sigue siendo $O(1)$ amortizado. 
+        \item \textbf{Pop:}
+        \begin{itemize}
+            \item \textbf{Complejidad en tiempo:} Al hacer la operación pop, si la pila no se reduce a la mitad, entonces, la complejidad en tiempo sigue siendo $O(1)$, pero si la pila se reduce a la mitad, entonces, se crea un nuevo arreglo con la mitad del tamaño y se copian los elementos de la pila al nuevo arreglo, por lo cual, la complejidad se vuelve $O(n)$, donde $n$ es el número de elementos de la pila, pero dado que esto no ocurre cada vez que se realiza \textit{pop} porque la pila no siempre va a reducir su tamaño a la mitad, entonces, la complejidad de hacer \textit{pop} es $O(1)$ amortizado.
+            \item \textbf{Complejidad en espacio:} Parecido a la complejidad en tiempo, si la pila no se reduce a la mitad, entonces, la complejidad sigue siendo $O(1)$ y no se modifica, pero si la pila si se tiene que reducir a la mitad, entonces, al crear el nuevo arreglo la complejidad se vuelve $O(n)$ donde $n$ es el número de elementos en la pila, pero dado que esto no ocurre cada vez que se realiza \textit{pop} porque la pila no siempre va a reducir su tamaño a la mitad, entonces, la complejidad de hacer \textit{pop} es $O(1)$ amortizado también. 
+        \end{itemize}
+    \end{itemize}
+    \item[3.C] ¿Cómo se modificaría las respuestas a los incisos anteriores si en vez de una pila consideramos una cola?\\
+    \textbf{Solución:}\\
+    Si consideramos una cola en vez de una pila, las operaciones serían \textit{enqueue} (agregar un elemento al final de la cola) es como \textit{push} y \textit{dequeue} (eliminar el elemento al frente de la cola) que es como \textit{pop}, siguiendo así el método FIFO.
+    \begin{itemize}
+        \item \textbf{Enqueue:}\\
+        Al hacer la operación enqueue, tanto la complejidad en tiempo como la complejidad en espacio se quedan exactamente igual que en el caso de la pila, conserva las mismas complejidades de hacer \textit{push} en la pila, es decir, la complejidad en tiempo y espacio sigue siendo $O(1)$ amortizado.
+        \item \textbf{Dequeue:}\\
+        Esta operación si cambia la complejidad en tiempo y la complejidad en espacio, ya que cada que se hace \textit{dequeue} se elimina el elemento al principio de la cola, es decir, el elemento que está en la primera posición del arreglo y como no puede haber espacios vacíos en el arreglo, entonces, todos los elementos del arreglo se tienen que mover una posición a la izquierda, de modo que no queden espacios vacíos en el arreglo y vuelva a estar un elemento como cabeza de la cola.
+        \begin{itemize}
+            \item \textbf{Complejidad en tiempo:} La complejidad es $O(n)$ donde $n$ es el número de elementos en la cola, ya que como mencionamos antes, se deben mover todos los elementos del arreglo una posición a la izquierda.\\
+            Aunque se siga la estrategia del inciso B para ahorrar espacio, la complejidad en tiempo sigue siendo $O(n)$, aunque no siempre se reduzca el tamaño de la cola a la mitad, pero aún se deben mover todos los elementos del arreglo una posición a la izquierda.
+            \item \textbf{Complejidad en espacio:} Cuando se hace \textit{dequeue} en la cola, no se requiere espacio adicional, ya que solo se elimina el primer elemento y los demás se mueven una posición a la izquierda, por lo cual, la complejidad en espacio es $O(1)$.\\
+            Pero si se sigue la estrategia del inciso B para ahorrar espacio, entonces, la complejidad en espacio se vuelve $O(n)$ donde $n$ es el número de elementos en la cola, ya que al reducir el tamaño de la cola a la mitad, se crea un nuevo arreglo con la mitad del tamaño y se copian los elementos de la cola al nuevo arreglo, pero dado que esto no ocurre cada vez que se realiza \textit{dequeue} porque la cola no siempre va a reducir su tamaño a la mitad, entonces, la complejidad de hacer \textit{dequeue} es $O(1)$ amortizado.
+        \end{itemize}
+    \end{itemize}
 \end{itemize}
 \section*{Ejercicio 4}
 Investiga en qué consiste el método (o teorema) maestro.\\
 Ilustra su aplicación con algunos ejemplos.\\
 Nota: NO es necesario presentar la demostración del teorema en esta tarea, pero sí es deseable que la revisen y comenten de manera general.\\
+\textbf{Solución:}\\
 El método maestro proporciona una manera de resolver recurrencias de la forma:
 \[
     T(n) = aT\left(n/b\right) + f(n)
@@ -251,4 +294,8 @@ Describe un algoritmo para calcular el subárbol completo más grande (mayor nú
     En amarillo se indican los nodos correspondientes al subárbol completo más grande.}
 \end{figure}
 
+\begin{thebibliography}{99}
+    \bibitem{Introduction to algorithms}
+    Cormen, T. H., Leiserson, C. E., Rivest, R. L., \& Stein, C. (2009). \textit{Introduction to algorithms} (3rd ed.). The MIT Press.
+\end{thebibliography}
 \end{document}
