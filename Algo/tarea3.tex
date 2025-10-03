@@ -323,15 +323,15 @@ Describe un algoritmo para calcular el subárbol completo más grande (mayor nú
         \KwIn{La raíz de un árbol, r}
         \KwOut{La raíz del subárbol lleno más grande contenido en la raíz de entrada, junto con su altura.}
 
-        \If{r == null}{\Return $(null, 0)$}
+        \If{r == null}{\Return $(null, -1)$}
 
-        \If{r.izquierdo == null AND r.derecho == null}{\Return $(r, 1)$}
+        \If{r.izquierdo == null AND r.derecho == null}{\Return $(r, 0)$}
 
         (izquierdo, alturaIzq) = maxSubTree(r.izquierdo)\\
         (derecho, alturaDer) = maxSubTree(r.derecho)\\
 
-        \If{r.izquierdo == izquierdo AND r.derecho == derecho \&
-        alturaIzq == Alturader}
+        \If{r.izquierdo == izquierdo AND r.derecho == derecho AND
+        alturaIzq == alturader}
         {\Return $(r, 1 + alturaIzq)$}
 
         \If{alturaIzq $>$ alturaDer}{\Return $(izquierdo, alturaIzq)$}
@@ -356,11 +356,11 @@ Describe un algoritmo para calcular el subárbol completo más grande (mayor nú
     grande contenido en el árbol con raíz $r$, junto con su altura.
 
     \textbf{Casos base:}
-    Si $r = null$, el algoritmo devuelve $(null,0)$, lo cual es verdadero
+    Si $r = null$, el algoritmo devuelve $(null, -1)$, lo cual es verdadero
     porque un árbol vacío no contiene subárboles llenos.
 
-    Si $r$ es una hoja (hijos null), el algoritmo devuelve $(r,1)$.
-    Esto es correcto ya que una hoja es un árbol lleno de altura $1$.
+    Si $r$ es una hoja (hijos null), el algoritmo devuelve $(r,0)$.
+    Esto es correcto ya que una hoja es un árbol lleno de altura $0$.
 
     \textbf{Hipótesis de inducción:}
     Supongamos que para cada subárbol de $r$ (es decir, para $r.izquierdo$
