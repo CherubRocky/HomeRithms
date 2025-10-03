@@ -67,11 +67,44 @@ Considera el siguiente algoritmo:\\
     }
 \end{algorithm}
 \begin{itemize}
-    \item[1.A] Prueba que el algoritmo es correcto (ordena correctamente la salida)
-    \item[1.B] ¿El algoritmo es estable?
+    \item[1.A] Prueba que el algoritmo es correcto (ordena correctamente la salida)\\
+    Para probar la correctitud de este algoritmo, dado que es un algoritmo recursivo, procecemos a demostrarlo por inducción sobre el tamaño de este.
+    \textbf{Caso Base:}\\
+    Empezamos con longitud cero. En este caso, el arreglo, por vacuidad está ordenado.\\
+    Seguimos con $n = 1$, como consta de solo un elemento, está ordenado por defecto. Es el máximo y el mínimo.\\
+    Con $n = 2$, si $A[0] > A[1]$, se intercambian los elementos, por lo que $A[1] > A[0]$. Está ordenado.\\
+    Si $A[0] \leq A[1]$, el algoritmo no hace nada y el arreglo está ordenado.\\\\
+    \textbf{Hipótesis de Inducción:}\\
+    Sea $x \leq n$. El algoritmo ordenamientoMisterioso, ordena correctamente un arreglo de tamaño $x$.
+
+    \textbf{Paso inductivo:}\\
+    Supongamos un arreglo con tamaño $n + 1$, entra en Elseif.\\
+    Tenemos $m = \lceil 2(n + 1)/3\rceil$, aproximadamente dos tercios del arreglo. Diremos que el arreglo está dividido en tres segmentos: de $A[0..n-m]$, de $A[(n+1)-m..m-1]$ y de $A[m..n]$.
+    Luego, el algoritmo hace ordenamientoMisterioso($A[0..m-1]$). Por la hipótesis de inducción, como $m < n + 1$, y este subarreglo es de longitud $m$, el subarreglo $A[0..m-1]$ está ordenado.\\
+    Después, se ejecuta ordenamientoMisterioso($A[(n + 1) - m..n]$). En este caso, el subarreglo es de tamaño a lo más $2(n + 1)/3 + 1$, lo cuál es menor a $n + 1$ para $ n + 1 \geq 3$. Por lo que, por la hipótesis de inducción, nos da que el subarreglo $A[(n+1)-m..n]$ está ordenado.
+    Esta segunda llamada solapa con el final del primer subarreglo. Como resultado, cualquier elemento que estuviera fuera de lugar dentro de la región solapada se coloca correctamente dentro de esa porción, mientras que el último segmento del arreglo ya queda totalmente ordenado después de esta llamada.
+\\
+    Después, el algoritmo ejecuta de nuevo ordenamientoMisterioso($A[0..m-1]$), y por la hipótesis de inducción, este subarreglo queda ordenado. Como explicamos en el caso anterior, todo elemento de este subarreglo es menor que cualquier elemento del último segmento, que ya está ordenado. Por lo que el arreglo con $n + 1$ elementos fue totalmente ordenado por el algoritmo.\\
+    Por lo tanto, este algoritmo ordena cualquier arreglo.
+
+    \item[1.B] ¿El algoritmo es estable?\\
+    Sí, debido a la condición de que se intercambian solo cuando el elemento de la izquierda es mayor que el de la derecha.
+    Si tenemos dos elementos iguales contiguos, nunca se intercambiarán, por lo que se preserva el orden de los elementos repetidos y por lo tanto, es estable.
     \item[1.C] ¿El algoritmo utiliza es $in$ - place (utiliza memoria constante) ?
-    \item[1.D] Realiza el análisis de complejidad de tiempo. Plantea y resuelve la ecuación de recurrencia. Concluye mencionando la complejidad asintótica.
-    \item[1.E] Si cambiamos $m = \lceil 2n/3 \rceil$ por $m = \lfloor 2n/3 \rfloor$, ¿el algoritmo aún es correcto? Justifica
+    Si obviamos la pila de llamadas, sí. El algoritmo no reserva espacios adicionales como extender el arreglo o crear nuevos. Solo ocupa memoria para llevar el control de las llamadas. Pero como la cantidad de llamadas hechas dependen de n, la complejidad de este algoritmo no es constante.
+    \item[1.D] Realiza el análisis de complejidad de tiempo. Plantea y resuelve la ecuación de recurrencia. Concluye mencionando la complejidad asintótica.\\
+    Planteamos la ecuación de recurrencia: $T(n) = 3T(2n/3) + O(1)$\\ Si la entrada es mayor a dos, se hacen tres llamadas recursivas con aproximadamente dos tercios del arreglo original cada una. Más el primer if que verifica la longitud del arreglo, compara los elementos y luego los intercambia si es pertinente.\\
+    El teorema maestro ocupa la forma: $T(n) = A \cdot T(n/B) + O(n^C)$, Aquí, $A = 3$, $B = 3 / 2$, $C = 0$.\\
+    Nos da un valor que dependiende de la relación tricotómica entre $log_B(A)$ y $C$.\\
+    En este caso $log_B(A) = log_\frac{3}{2}3 \approx 2.71$.\\
+    En este caso, el logaritmo es mayor que el coeficiente, por lo que el teorema maestro nos indica que la complejidad es $O(n^{log_BA})$.
+
+    Es decir, aproximadamente $O(n^{2.71})$.
+    \item[1.E] Si cambiamos $m = \lceil 2n/3 \rceil$ por $m = \lfloor 2n/3 \rfloor$, ¿el algoritmo aún es correcto? Justifica.\\
+    No. Por ejemplo, con el arreglo [4,2,1,0,-3]. Los subarreglos quedan de [0..2] y de [2..4].\\
+    Al resolver [0..2], nos queda: [1,2,4, 0, -3]. Al resolver [2..4] tenemos: [1,2,-3,0,4].\\
+    Al resolver de nuevo [0..2], tenemos: [-3,1,2,0,4]. Vemos que en este caso, cero debería estar en el índice 1 pero termina en el tres.\\
+    Por lo tanto, el algoritmo no es correcto si en vez de usar techo, usamos piso.
 \end{itemize}
 
 \section*{Ejercicio 2}
@@ -185,11 +218,11 @@ En dado caso de que la pila este vacía, entonces, el índice del tope será -1.
     \textbf{Solución:}
     \begin{itemize}
         \item \textbf{Push:}\\
-        Al hacer la operación push, tanto la complejidad en tiempo como la complejidad en espacio no se ven afectadas por la estrategia para ahorrar el espacio, ya que no se va a reducir el tamaño de la pila al hacer push, entonces, la complejidad en tiempo y espacio sigue siendo $O(1)$ amortizado. 
+        Al hacer la operación push, tanto la complejidad en tiempo como la complejidad en espacio no se ven afectadas por la estrategia para ahorrar el espacio, ya que no se va a reducir el tamaño de la pila al hacer push, entonces, la complejidad en tiempo y espacio sigue siendo $O(1)$ amortizado.
         \item \textbf{Pop:}
         \begin{itemize}
             \item \textbf{Complejidad en tiempo:} Al hacer la operación pop, si la pila no se reduce a la mitad, entonces, la complejidad en tiempo sigue siendo $O(1)$, pero si la pila se reduce a la mitad, entonces, se crea un nuevo arreglo con la mitad del tamaño y se copian los elementos de la pila al nuevo arreglo, por lo cual, la complejidad se vuelve $O(n)$, donde $n$ es el número de elementos de la pila, pero dado que esto no ocurre cada vez que se realiza \textit{pop} porque la pila no siempre va a reducir su tamaño a la mitad, entonces, la complejidad de hacer \textit{pop} es $O(1)$ amortizado.
-            \item \textbf{Complejidad en espacio:} Parecido a la complejidad en tiempo, si la pila no se reduce a la mitad, entonces, la complejidad sigue siendo $O(1)$ y no se modifica, pero si la pila si se tiene que reducir a la mitad, entonces, al crear el nuevo arreglo la complejidad se vuelve $O(n)$ donde $n$ es el número de elementos en la pila, pero dado que esto no ocurre cada vez que se realiza \textit{pop} porque la pila no siempre va a reducir su tamaño a la mitad, entonces, la complejidad de hacer \textit{pop} es $O(1)$ amortizado también. 
+            \item \textbf{Complejidad en espacio:} Parecido a la complejidad en tiempo, si la pila no se reduce a la mitad, entonces, la complejidad sigue siendo $O(1)$ y no se modifica, pero si la pila si se tiene que reducir a la mitad, entonces, al crear el nuevo arreglo la complejidad se vuelve $O(n)$ donde $n$ es el número de elementos en la pila, pero dado que esto no ocurre cada vez que se realiza \textit{pop} porque la pila no siempre va a reducir su tamaño a la mitad, entonces, la complejidad de hacer \textit{pop} es $O(1)$ amortizado también.
         \end{itemize}
     \end{itemize}
     \item[3.C] ¿Cómo se modificaría las respuestas a los incisos anteriores si en vez de una pila consideramos una cola?\\
