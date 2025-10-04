@@ -1,0 +1,70 @@
+\documentclass[11pt]{article}
+\usepackage[spanish]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath, amssymb}
+\usepackage{geometry}
+\usepackage{setspace}
+\usepackage{enumitem}
+\usepackage{graphicx}
+\usepackage{xurl}
+\usepackage{listings}
+\usepackage{tikz}
+\usepackage{xcolor}
+\usetikzlibrary{decorations.pathreplacing, calc}
+
+\geometry{letterpaper, margin=2cm}
+
+\begin{document}
+\begin{titlepage}
+    \centering
+    \vspace{2cm}
+    {\includegraphics[height=3.2cm]{../logo_unam.png}}
+    \hfill
+    {\includegraphics[height=3.2cm]{../logo_fc.png}\par}
+    \vspace{1cm}
+    {\bfseries\LARGE UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO \par}
+    \vspace{0.7cm}
+    {\scshape\Large FACULTAD DE CIENCIAS \par}
+    \vspace{1cm}
+    {\itshape\Large Lenguajes de programación \par}
+    \vspace{0.5cm}
+    {\itshape\Large Semestre 2026-1 \par}
+    \vspace{2cm}
+    {\scshape\Huge Tarea 4 \par}
+    \vspace{1cm}
+    {\itshape\Large Fecha de entrega: 20 de octubre de 2025 \par}
+    \vspace{2cm}
+    {\Large Autores: \par}
+    \vspace{0.4cm}
+    {\Large Escobar Gonzalez Isaac Giovani \hspace{1cm} 321336400 \par}
+    {\Large Garduño Escobar Kevin Jonathan \hspace{0.5cm} 321070629 \par}
+    {\Large Zaldivar Alanis Rodrigo \hspace{2.75cm} 424029605 \par}
+\end{titlepage}
+\section*{Instrucciones}
+\noindent Resolver los siguientes ejercicios de forma clara y ordenada de acuerdo a los lineamientos de entrega de tareas disponibles en la página del curso.\\
+\section*{Ejercicios}
+
+\begin{enumerate}[leftmargin=0.8cm]
+    \item Currifica cada uno de los siguientes términos y coloca los paréntesis necesarios de acuerdo a la asociatividad de la aplicación.
+    \begin{enumerate}
+        \item $\lambda$abc.abc
+        \item $\lambda$abc.$\lambda$cde.acbdce
+        \item $\lambda$a.(($\lambda$ab.b)($\lambda$cd.d))($\lambda$ef.f)
+    \end{enumerate}
+    \item Aplica $\alpha$-conversiones en cada expresión para obtener una expresión equivalente a la original.
+    \begin{enumerate}
+        \item $\lambda$a.$\lambda$b.(($\lambda$b.v) ($\lambda$v.b))
+        \item $\lambda$a.(a($\lambda$b.(($\lambda$a.a) b)a))
+        \item $\lambda$a.(($\lambda$b.a) $\lambda$b.($\lambda$a.a b))
+    \end{enumerate}
+    \item Aplica $\beta$-reducciones a las siguientes expresiones para llegar a una Forma Normal, en caso de que no tenga forma normal justifica tu respuesta. Además indica en cada paso el \textit{reducto} y el \textit{redex}.\\
+    \\l $= _{def}\lambda$x.x\\
+    $K = _{def}\lambda$x.$\lambda$y.x\\
+    $\Omega = _{def}$($\lambda$x.xx)($\lambda$x.xx)
+    \begin{enumerate}
+        \item $\lambda$x.((xK)$\Omega$)
+        \item ($\lambda$x.x(l l))z
+    \end{enumerate}
+\end{enumerate}
+
+\end{document}
