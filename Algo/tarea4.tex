@@ -1,0 +1,105 @@
+\documentclass[12pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish,es-noshorthands]{babel}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{fullpage}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{algorithm2e}
+\usepackage{float}
+%% Sets page size and margins
+\usepackage[a4paper,top=2.5cm,bottom=2.5cm,left=2cm,right=2cm]{geometry}
+
+
+%% Title
+\title{
+		\vspace{-0.7in}
+		\usefont{OT1}{bch}{b}{n}
+		\begin{minipage}{3cm}
+        \vspace{-0.5in}
+    	\begin{center}
+    		\includegraphics[height=3.2cm]{../logo_unam.png}
+    	\end{center}
+    \end{minipage}\hfill
+    \begin{minipage}{10.7cm}
+
+    	\begin{center}
+\normalfont \normalsize \textsc{UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO \\ FACULTAD DE CIENCIAS \\ Análisis de Algoritmos } \\
+		\huge Tarea 4
+    	\end{center}
+
+    \end{minipage}\hfill
+    \begin{minipage}{3.2cm}
+    \vspace{-0.5in}
+    	\begin{center}
+    		\includegraphics[height=3.2cm]{../logo_fc.png}
+    	\end{center}
+    \end{minipage}
+
+\author{Escobar Gonzalez Isaac Giovani \hspace{1cm} 321336400\\
+        Garduño Escobar Kevin Jonathan \hspace{0.5cm} 321070629\\
+        Zaldivar Alanis Rodrigo \hspace{2.75cm} 424029605 }
+\date{}
+}
+
+\begin{document}
+
+\maketitle
+
+\section*{Ejercicio 1}
+\noindent Investiga en qué consiste el Algoritmo de Strassen
+\begin{itemize}
+    \item ¿Qué problema resuelve?
+    \item ¿Por qué es importante?\\
+    ¿cuál sería la alternativa ”trivial” para el problema que se resuelve?
+    \item Escribe el pseudocódigo
+    \item ¿Qué técnica de diseño de algoritmos utiliza?
+    \item Ilustra la ejecución del algoritmo (en papel) con un ejemplar pequeño
+\end{itemize}
+
+\section*{Ejercicio 2}
+\noindent Para cada uno de los siguientes ejercicios, propón el algoritmo, indica que técnica de diseño de algoritmos se utiliza, realiza el análisis de complejidad de tiempo e ilustra la ejecución con un ejemplar pequeño.
+\begin{enumerate}
+    \item[2.A] Dado un árbol binario, supón que los nodos solo contienen la información del padre, los hijos, y el valor actual, sin posibilidad de guardar información extra. Queremos determinar si el árbol es o no AVL.
+    \item[2.B] Dado un arreglo de $n$ números, queremos encontrar la pareja ($i, j$) que maximiza la suma de los elementos desde la posición $i$ hasta la posición $j$; el algoritmo debería tener complejidad $O(n)$.
+    \item[2.C] Dada una malla de tamaño $s \times t$, que contiene números no negativos, queremos encontrar una ruta desde la esquina superior izquierda hasta la esquina inferior derecha que minimice la suma de todos los números en la ruta. Los únicos movimientos permitidos son moverse hacia abajo o hacia la derecha.\\
+    Nota: No es válida la solución con el algoritmo de Dijkstra, se debe usar una técnica basada en inducción.
+\end{enumerate}
+
+\section*{Ejercicio 3}
+\noindent Queremos almacenar $n$ programas, $P_1, P_2, \ldots, P_n$ $n$, en una unidad de almacenamiento con capacidad máxima $D$. Para cada programa $P_i$, se conoce su tamaño $s_i$, y se sabe que no es posible almacenar todos los programas (al mismo tiempo) en la unidad de almacenamiento.
+\begin{enumerate}
+    \item[3.A] ¿Un algoritmo que almacena los programas seleccionando en orden no decreciente $s_i$ maximiza el número de programas que se pueden mantener en la unidad? Prueba o da un contraejemplo.
+    \item[3.B] ¿Un algoritmo que selecciona en orden no creciente $s_i$ utiliza la mayor capacidad del disco? Prueba o da un contraejemplo.
+\end{enumerate}
+
+\section*{Ejercicio 4}
+\noindent Considera un país cuyas monedas son emitidas en denominaciones de $\{ d_1, \ldots, d_k $. Queremos un algoritmo para obtener una cantidad $monto$ utilizando el mínimo número de monedas.
+\begin{enumerate}
+    \item[4.A] Considera un algoritmo que selecciona siempre la moneda más grande que no sea mayor que la cantidad que debe ser entregada, repitiendo el proceso hasta llegar a cero. Muestra que dicho algoritmo no siempre utiliza el mínimo número de monedas, ejemplificando con un caso con las siguientes denominaciones: $ \{ 1, 6, 10 \}$
+    \item[4.B] Propón un algoritmo eficiente que determine correctamente el mínimo número de monedas que se necesitan para obtener una cantidad $n$ utilizando las denominaciones dadas.\\
+    Menciona que técnica de diseño se utiliza y analiza la complejidad de tiempo
+    \item[4.C] Da un algoritmo eficiente para calcular $C(n)$: el número de formas distintas de obtener una cantidad $monto$ con las denominaciones dadas.
+\end{enumerate}
+
+\section*{Ejercicio 5}
+\noindent Sea $A$ una colección de objetos. Describe un algoritmo eficiente para convertir $A$ en un conjunto; se deben eliminar todos los elementos duplicados de $A$. Da el análisis de complejidad de tiempo.
+
+\section*{Ejercicio 6}
+\noindent Sean $A, B$ dos arreglos arbitrarios, de tamaño $m, n$ respectivamente. Una subsecuencia común de $A$ y $B$ es una secuencia que aparece en $A$ y en $B$.\\
+Por ejemplo, $C$, $GRAM$, $OAIO$, \textit{P ROGRAM ACION} son subsecuencias de la cadena\\
+$PROGRAMACION$
+\begin{enumerate}
+    \item[6.A] Describe un algoritmo recursivo (utilizando backtracking) para determinar si $X$ es una subsecuencia de $Y$
+    \item[6.B] Da una definición recursiva simple para la función $lcs(A, B)$ que calcula la longitud de la subsecuencia común más grande de $A$ y $B$
+    \item[6.C] Describe un algoritmo eficiente para calcular la longitud de la subsecuencia común más larga de $A$ y $B$. ¿Qué técnica de diseño se utiliza? Da el análisis de complejidad de tiempo
+    \item[6.D] Una supersecuencia común de $A, B$ es otra secuencia que contiene las secuencias $A$ y $B$ como subsecuencias. Describe un algoritmo eficiente para calcular la longitud de la supersecuencia común más corta de $A$ y $B$. ¿Qué técnica de diseño se utiliza? Da el análisis de complejidad de tiempo
+\end{enumerate}
+
+\section*{Ejercicio 7}
+\noindent Sea $S$ un arreglo de $n$ números en la cual se tiene definida una relación de orden total. Una \textbf{inversión} en $S$ es un par de elementos $(i, j)$ tales que $i < j$ pero $S[i] > S[j]$. Describe un algoritmo eficiente para determinar el número de inversiones que hay en $S$. Da el análisis de complejidad e ilustra la ejecución de tu algoritmo con un ejemplar pequeño. ¿Qué técnica de diseño se utiliza?
+
+\end{document}
