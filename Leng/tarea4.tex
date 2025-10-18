@@ -47,9 +47,33 @@
 \begin{enumerate}[leftmargin=0.8cm]
     \item Currifica cada uno de los siguientes términos y coloca los paréntesis necesarios de acuerdo a la asociatividad de la aplicación.
     \begin{enumerate}
-        \item $\lambda$abc.abc
-        \item $\lambda$abc.$\lambda$cde.acbdce
-        \item $\lambda$a.(($\lambda$ab.b)($\lambda$cd.d))($\lambda$ef.f)
+        \item $\lambda$abc.abc\\
+        Primero hacemos la currificación:
+        \[
+            \lambda\text{abc.abc} \equiv _{curry} \lambda \text{a.}\lambda \text{b.}\lambda \text{c.abc}
+        \]
+        Ahora colocamos los paréntesis necesarios:
+        \[
+            \lambda \text{a.}(\lambda \text{b.}(\lambda \text{c.}((\text{ab})\text{c})))
+        \]
+        \item $\lambda$abc.$\lambda$cde.acbdce\\
+        Primero hacemos la currificación:
+        \[
+            \lambda\text{abc.}\lambda\text{cde.acbdce} \equiv _{curry} \lambda \text{a.}\lambda \text{b.}\lambda \text{c.}\lambda \text{c.}\lambda \text{d.}\lambda \text{e.acbdce}
+        \]
+        Ahora colocamos los paréntesis necesarios:
+        \[
+            \lambda \text{a.}(\lambda \text{b.}(\lambda \text{c.}(\lambda \text{c.}(\lambda \text{d.}(\lambda \text{e.}(((((\text{ac})\text{b})\text{d})\text{c})\text{e}))))))
+        \]
+        \item $\lambda$a.(($\lambda$ab.b)($\lambda$cd.d))($\lambda$ef.f)\\
+        Primero hacemos la currificación:
+        \[
+            \lambda\text{a.}((\lambda\text{ab.b})(\lambda\text{cd.d}))(\lambda\text{ef.f}) \equiv _{curry} \lambda \text{a.}((\lambda \text{a.}\lambda \text{b.b})(\lambda \text{c.}\lambda \text{d.d}))(\lambda \text{e.}\lambda \text{f.f})
+        \]
+        Ahora colocamos los paréntesis necesarios:
+        \[
+            \lambda \text{a.}((\lambda \text{a.}(\lambda \text{b.b}))(\lambda \text{c.}(\lambda \text{d.d})))(\lambda \text{e.}(\lambda \text{f.f}))
+        \]
     \end{enumerate}
     \item Aplica $\alpha$-conversiones en cada expresión para obtener una expresión equivalente a la original.
     \begin{enumerate}
