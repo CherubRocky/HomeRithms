@@ -82,12 +82,61 @@
         \item $\lambda$a.(($\lambda$b.a) $\lambda$b.($\lambda$a.a b))
     \end{enumerate}
     \item Aplica $\beta$-reducciones a las siguientes expresiones para llegar a una Forma Normal, en caso de que no tenga forma normal justifica tu respuesta. Además indica en cada paso el \textit{reducto} y el \textit{redex}.\\
-    \\l $= _{def}\lambda$x.x\\
-    $K = _{def}\lambda$x.$\lambda$y.x\\
+    \\
+    $l = _{def}\lambda$x.x\\
     $\Omega = _{def}$($\lambda$x.xx)($\lambda$x.xx)
     \begin{enumerate}
-        \item $\lambda$x.((xK)$\Omega$)
-        \item ($\lambda$x.x(l l))z
+        \item $\lambda$x.((xK)$\Omega$)\\
+        \textbf{Solución:}\\
+        De acuerdo con las reglas de la $\beta$-reducción procedemos a reducir la expresión dada y a dar el redex y reducto en cada paso, empezamos por sustituir $K$ y $\Omega$ en la expresión original:
+
+        \begin{align*}
+            & \lambda x.((xK)\Omega)= \lambda x. ((x(\lambda x.\lambda y.x)) (\lambda x.xx) (\lambda x.xx))
+        \end{align*}
+
+        Vemos e identificamos que a partir de la sustitución de la definición de $\Omega$ es posible realizar una $\beta$-reducción, pues tenemos una aplicación de la forma $(\lambda x.xx)$, por lo que procedemos a realizar la reducción:
+
+        \begin{align*}
+            & \lambda x.((x(\lambda x.\lambda y.x)) (\lambda x.xx) (\lambda x.xx)) \xrightarrow{\beta} \lambda x.((x(\lambda x.\lambda y.x)) (\lambda x.xx)(\lambda x.xx))\\
+            & \text{Redex: } ((\lambda x.xx)(\lambda x.xx))\\
+            & \text{Reducto: } xx[x:= (\lambda x.xx)]
+        \end{align*} 
+
+        Como observamos, nuevamente tenemos una nueva aplicación de la forma $(\lambda x.xx)$, por lo que podemos realizar otra $\beta$-reducción:
+
+        \begin{align*}
+            & \lambda x.((x(\lambda x.\lambda y.x)) ((\lambda x.xx)(\lambda x.xx)))\xrightarrow{\beta} \lambda x.((x(\lambda x.\lambda y.x)) (\lambda x.xx)(\lambda x.xx))\\
+            & \text{Redex: } ((\lambda x.xx)(\lambda x.xx))\\
+            & \text{Reducto: } xx[x:= (\lambda x.xx)] 
+        \end{align*}
+
+        Nuevamente, tenemos la misma situación, por lo que podemos observar que este proceso se repite indefinidamente, es decir, siempre tendremos un redex de la forma $((\lambda x.xx)(\lambda x.xx))$ y su respectivo reducto $xx[x:= (\lambda x.xx)]$.\\
+
+        Por lo tanto, la expresión no tiene forma normal pues, como mostramos, la reducción continúa indefinidamente gracias a como está definido $\Omega$: un combinador $\Omega$ nunca llega a una forma normal. 
+
+
+        \item ($\lambda$x.x(l l))z \\
+        \textbf{Solución:}\\
+        De acuerdo con las reglas de la $\beta$-reducción procedemos a reducir la expresión dada y a dar el redex y reducto en cada paso, empezamos por sustituir $l$ en la expresión original:
+        \begin{align*}
+            & (\lambda x.x(l l))z = (\lambda x.x((\lambda x.x)(\lambda x.x)))z
+        \end{align*}
+        Miramos que es posible realizar una $\beta$-reducción, de dos formas posibles, una es aplicando la función externa y la otra es aplicando la función interna. Procedemos a realizar la reducción aplicando la función externa:
+        \begin{align*}
+            & (\lambda x.x((\lambda x.x)(\lambda x.x)))z \xrightarrow{\beta} z((\lambda x.x)(\lambda x.x))\\
+            & \text{Redex: } (\lambda x.x((\lambda x.x)(\lambda x.x)))z\\
+            & \text{Reducto: } x((\lambda x.x)(\lambda x.x))[x:=z]
+        \end{align*}
+        Ahora, en la nueva expresión obtenida, podemos realizar otra $\beta$-reducción:
+        \begin{align*}
+            & z((\lambda x.x)(\lambda x.x)) \xrightarrow{\beta} z(\lambda x.x)\\
+            & \text{Redex: } (\lambda x.x)(\lambda x.x)\\
+            & \text{Reducto: } x[x:= (\lambda x.x)]
+        \end{align*}
+        Finalmente, en la nueva expresión obtenida, no es posible realizar más $\beta$-reducciones.\\
+        Por lo tanto, la forma normal de la expresión es $z(\lambda x.x)$.
+        
+
     \end{enumerate}
 \end{enumerate}
 
