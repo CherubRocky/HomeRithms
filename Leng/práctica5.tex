@@ -1,0 +1,64 @@
+\documentclass[11pt]{article}
+\usepackage[spanish]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath, amssymb}
+\usepackage{geometry}
+\usepackage{setspace}
+\usepackage{enumitem}
+\usepackage{graphicx}
+\usepackage{xurl}
+\usepackage{listings}
+\usepackage{tikz}
+\usepackage{xcolor}
+\usetikzlibrary{decorations.pathreplacing, calc}
+
+\geometry{letterpaper, margin=2cm}
+
+\begin{document}
+\begin{titlepage}
+    \centering
+    \vspace{2cm}
+    {\includegraphics[height=3.2cm]{../logo_unam.png}}
+    \hfill
+    {\includegraphics[height=3.2cm]{../logo_fc.png}\par}
+    \vspace{1cm}
+    {\bfseries\LARGE UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO \par}
+    \vspace{0.7cm}
+    {\scshape\Large FACULTAD DE CIENCIAS \par}
+    \vspace{1cm}
+    {\itshape\Large Lenguajes de programación \par}
+    \vspace{0.5cm}
+    {\itshape\Large Semestre 2026-1 \par}
+    \vspace{2cm}
+    {\scshape\Huge Práctica 5 \par}
+    \vspace{1cm}
+    {\itshape\Large Fecha de entrega: 22 de octubre de 2025 \par}
+    \vspace{2cm}
+    {\Large Autores: \par}
+    \vspace{0.4cm}
+    {\Large Escobar Gonzalez Isaac Giovani \hspace{1cm} 321336400 \par}
+    {\Large Garduño Escobar Kevin Jonathan \hspace{0.5cm} 321070629 \par}
+    {\Large Zaldivar Alanis Rodrigo \hspace{2.75cm} 424029605 \par}
+\end{titlepage}
+\section{Objetivos}
+Analizar las implementaciones dadas en los archivos \texttt{\textbf{grammars.rkt}}, \texttt{\textbf{parser.rkt}}, \texttt{\textbf{desugar.rkt}} e \texttt{\textbf{interp.rkt}} para el lenguaje \textbf{CFWBAE} y realizar los siguientes ejercicios.
+
+\section{Ejercicios}
+\subsection{Parser}
+\begin{enumerate}
+    \item (0.5 pts.) ¿Por qué es importante representar el programa como un árbol de sintaxis abstracta?
+    \item (1 pts.) Explica cómo el parser reconoce una expresión \texttt{if} y la diferencia respecto al antiguo \texttt{if0}.
+    \item (0.5 pts.) De acuerdo a la implementación en el archivo \texttt{ \textbf{parser.rkt}} ¿Qué ocurre si el parser recibe una expresión con paréntesis mal colocados o una forma desconocida?
+    \subsection{Desugar}
+    \item (1 pts.) ¿Qué significa “desazúcar” una expresión? Da un ejemplo.
+    \item (1 pts.) ¿Cómo traduce cond una cascada de condiciones en una serie de if anidados? ¿Qué ocurre si no hay un else final?
+    \item (1 pts.) ¿Qué pasaría si olvidas aplicar desugar recursivamente dentro de las subexpresiones (por ejemplo, en el cuerpo de un with)?
+    \item (1 pts.) Si agregas un nuevo azúcar como \texttt{\textbf{when}}, ¿qué regla de traducción definirías en \texttt{\textbf{desugar.rkt}}?
+    \item (1 pts.) ¿Por qué desugar siempre debe producir una expresión válida del lenguaje base \texttt{\textbf{(CFWBAE)}}?
+    \subsection{Interp}
+    \item (1 pts.) ¿Qué papel cumple el ambiente \texttt{\textbf{(DefrdSub)}} en la evaluación de expresiones con variables?
+    \item (1 pts.) ¿Qué diferencias encuentras entre evaluar with directamente y evaluar la versión desazucarada \texttt{\textbf{(como app(fun ...))}}?
+    \item (1 pts.) De acuerdo a la implementación dada en el archivo \texttt{\textbf{interp.rkt}} ¿Qué estrategia de evaluación usa el intérprete: estricta o perezosa? Justifica tu respuesta.
+\end{enumerate}
+
+\end{document}
