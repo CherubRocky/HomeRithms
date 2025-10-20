@@ -77,9 +77,25 @@
     \end{enumerate}
     \item Aplica $\alpha$-conversiones en cada expresión para obtener una expresión equivalente a la original.
     \begin{enumerate}
-        \item $\lambda$a.$\lambda$b.(($\lambda$b.v) ($\lambda$v.b))
-        \item $\lambda$a.(a($\lambda$b.(($\lambda$a.a) b)a))
-        \item $\lambda$a.(($\lambda$b.a) $\lambda$b.($\lambda$a.a b))
+        \item $\lambda$a.$\lambda$b.(($\lambda$b.v) ($\lambda$v.b))\\
+        Tomemos la expresión $\lambda b.v$. Podemos hacer $[b:=c]$, ya que $c$ no está presente como variable libre en la expresión.\\
+        Por lo que tenemos que $\lambda b.v \equiv_\alpha \lambda c.v$.\\
+        Asímismo, también se puede realizar $v:= e$ en $\lambda v.b$. $e$ no aparece en la expresión original.\\
+        Tenemos: $\lambda v.b \equiv_\alpha \lambda e.b$\\
+        Por lo que tenemos que $\lambda a.\lambda b.((\lambda b.v) (\lambda v.b)) \equiv_\alpha \lambda a.\lambda b.((\lambda c.v) (\lambda e.b)$ es una alfa-conversión válida.
+        
+        \item $\lambda$a.(a($\lambda$b.(($\lambda$a.a) b)a))\\
+        Tomemos la expresión $\lambda a.a$, esto es alfa-equivalente a $\lambda c.c$, ya que c no aparece como
+        variable libre en la expresión. Aún más, no aparece libre en toda la expresión original, por lo que tenemos que:\\
+        $\lambda a.(a(\lambda b.((\lambda a.a) b)a)) \equiv_\alpha \lambda a.(a(\lambda b.((\lambda c.c) b)a))$
+        
+        \item $\lambda$a.(($\lambda$b.a) $\lambda$b.($\lambda$a.a b))\\
+        Tomemos la expresión $\lambda a.a$, esto es alfa-equivalente a $\lambda c.c$, ya que c no aparece como
+        variable libre en la expresión. Aún más, no aparece libre en toda la expresión original, por lo que tenemos que:\\
+        $\lambda b.(\lambda a.a\: b) \equiv_\alpha \lambda b.(\lambda c.c\: b)$.\\
+        Ahora, también podemos observar que $\lambda b.(\lambda c.c\: b) \equiv_\alpha \lambda d.(\lambda c.c\: d)$.\\
+        Por lo que tenemos que:\\
+        $\lambda$a.(($\lambda$b.a) $\lambda$b.($\lambda$a.a b)) $\equiv_\alpha \lambda a.((\lambda b.a)\, \lambda d.(\lambda c.c \; d))$
     \end{enumerate}
     \item Aplica $\beta$-reducciones a las siguientes expresiones para llegar a una Forma Normal, en caso de que no tenga forma normal justifica tu respuesta. Además indica en cada paso el \textit{reducto} y el \textit{redex}.\\
     \\
