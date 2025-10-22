@@ -46,9 +46,16 @@ Analizar las implementaciones dadas en los archivos \texttt{\textbf{grammars.rkt
 \section{Ejercicios}
 \subsection{Parser}
 \begin{enumerate}
-    \item (0.5 pts.) ¿Por qué es importante representar el programa como un árbol de sintaxis abstracta?
-    \item (1 pts.) Explica cómo el parser reconoce una expresión \texttt{if} y la diferencia respecto al antiguo \texttt{if0}.
-    \item (0.5 pts.) De acuerdo a la implementación en el archivo \texttt{ \textbf{parser.rkt}} ¿Qué ocurre si el parser recibe una expresión con paréntesis mal colocados o una forma desconocida?
+    \item (0.5 pts.) ¿Por qué es importante representar el programa como un árbol de sintaxis abstracta?\\
+    El representar el programa como un árbol de sintaxis abstracta es importante porque esto hace que el código en texto plano se transforme en una estructura de datos, un árbol, de este modo es más fácil para la computadora procesar el código y entender su estructura.\\
+    Además, al representar el programa como un árbol de sintaxis abstracta, elimina cosas no necesarias para la ejecución del programa, como por ejemplo, los espacios en blanco, los comentarios, etc. Y permite detectar errores de sintaxis más fácilmente.
+    \item (1 pts.) Explica cómo el parser reconoce una expresión \texttt{if} y la diferencia respecto al antiguo \texttt{if0}.\\
+    De acuerdo a la expresión de entrada, el parser detecta una lista en la que el primer elemento sea el simbolo \texttt{'if} y que contenga exactamente tres elementos más, que van a representar la condición, el cuerpo del \texttt{then} y la parte del \texttt{else}.\\
+    Posteriormente, crea el nodo \texttt{ifS} del árbol de sintaxis abstracta y hace recursión sobre las tres subexpresiones restantes para poderlas procesar.\\
+    La diferencia con el antiguo \texttt{if0} es que este ejecuta la rama \texttt{then} si la condición da 0 y la rama \texttt{else} si la condición da un número diferente, mientras que el nuevo \texttt{if} ejecuta la rama \texttt{then} si la condición es verdadera y la rama \texttt{else} si la condición es falsa, es decir, trabaja con valores booleanos en lugar de números.
+    \item (0.5 pts.) De acuerdo a la implementación en el archivo \texttt{\textbf{parser.rkt}} ¿Qué ocurre si el parser recibe una expresión con paréntesis mal colocados o una forma desconocida?\\
+    Suponiendo que pudo llegar una expresión con paréntesis mal colocados o una forma desconocida al parser, este caería en el caso del \texttt{else} lo que mandaría que hubo un error en el parse de una expresión no válida, además hay otros casos en los que se lanza un error, como por ejemplo si un with tiene identificadores repetidos, una función tiene parámetros repetidos, el cond no tiene casos o la sintaxis es incorrecta o si se entra en el caso de op y resulta que no se recoce el operador.
+    De este modo, si el parser recibe una expresión incorrecta lanzará un error indicando que la expresión no es válida.
     \subsection{Desugar}
     \item (1 pts.) ¿Qué significa “desazúcar” una expresión? Da un ejemplo.
     \item (1 pts.) ¿Cómo traduce cond una cascada de condiciones en una serie de if anidados? ¿Qué ocurre si no hay un else final?
