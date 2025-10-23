@@ -92,9 +92,34 @@ Analizar las implementaciones dadas en los archivos \texttt{\textbf{grammars.rkt
     Por lo que la función \texttt{desugar} nos debe garantizar devolver una expresión válida del lenguaje base \textbf{CFWBAE} para que el interprete pueda evaluar correctamente la expresión sin problemas.
 
     \subsection{Interp}
-    \item (1 pts.) ¿Qué papel cumple el ambiente \texttt{\textbf{(DefrdSub)}} en la evaluación de expresiones con variables?
-    \item (1 pts.) ¿Qué diferencias encuentras entre evaluar with directamente y evaluar la versión desazucarada \texttt{\textbf{(como app(fun ...))}}?
-    \item (1 pts.) De acuerdo a la implementación dada en el archivo \texttt{\textbf{interp.rkt}} ¿Qué estrategia de evaluación usa el intérprete: estricta o perezosa? Justifica tu respuesta.
+    \item (1 pts.) ¿Qué papel cumple el ambiente \texttt{\textbf{(DefrdSub)}} en la evaluación de expresiones con variables?\\
+    Cada id que se interpreta se busca en el ambiente. Y si existe en este, se devuelve su valor.\\
+    Al interpretar una función, el ambiente hasta ese momento, pasa a formar parte del ambiente integrado del closure.\\
+    Este se usa para guardar los bindings en las aplicaciones de funciones.
+    Además de que para interpretar una expresión, siempre se pasa el ambiente para que se tenga contexto de lo que envuelve la función a interpretar.
+    \item (1 pts.) ¿Qué diferencias encuentras entre evaluar with directamente y evaluar la versión desazucarada \texttt{\textbf{(como app(fun ...))}}?\\
+    Desde un punto de vista teórico, al evaluar el with directamente, como se hizo en la práctica 3, se utiliza el algoritmo de sustitución. Se sustituyen las variables de ligado en el encabezado del with en su cuerpo.\\
+    En el caso de la versión desazucarada de esta práctica, se utiliza un ambiente en el que se guardan los bindings (el parámetro formal y el parámetro real). Al llegar la hora de procesar un id con interp, se busca en el ambiente y se sustituye.
+    \item (1 pts.) De acuerdo a la implementación dada en el archivo \texttt{\textbf{interp.rkt}} ¿Qué estrategia de evaluación usa el intérprete: estricta o perezosa? Justifica tu respuesta.\\
+      Estricta (glotona).
+      Solo se extiende el ambiente (se agregan registros) al hacer una aplicación de función.\\En el primer let de cuando se procesa (caso app), se interpretan los argumentos de la aplicación (\textit{arg-vals}). La función interp regresa CFWBAE-Value y ya después en la creación de \textit{new-env}, se agregan estos parámetros \textit{params} con los \textit{arg-vals}. Al crear el ambiente, ya se tienen valores concretos.\\\\
+      Para ilustrar de mejor manera lo que se acaba de explicar, dejamos el caso \texttt{app}.
+      \begin{verbatim}
+        [app (fun-expr arg-exprs)  
+         (let ([fun-val (interp fun-expr env)]  ; Evalúa función
+               [arg-vals (map (λ (a) (interp a env)) arg-exprs)])  ;
+           (if (closure? fun-val)  
+               (if (= (length (closure-params fun-val)) (length arg-vals))
+                   (let* ([params (closure-params fun-val)]
+                   [env0 (closure-env fun-val)]
+                   [new-env (foldr (λ (p v acc) (aSub p v acc))
+                       env0
+                       params
+                       arg-vals)])
+                     (interp (closure-body fun-val) new-env))
+                   (error 'interp "Número incorrecto de argumentos"))
+               (error 'interp "Intento de aplicar no-función")))]
+      \end{verbatim}
 \end{enumerate}
 
 \end{document}
