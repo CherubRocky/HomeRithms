@@ -57,11 +57,40 @@ Analizar las implementaciones dadas en los archivos \texttt{\textbf{grammars.rkt
     Suponiendo que pudo llegar una expresión con paréntesis mal colocados o una forma desconocida al parser, este caería en el caso del \texttt{else} lo que mandaría que hubo un error en el parse de una expresión no válida, además hay otros casos en los que se lanza un error, como por ejemplo si un with tiene identificadores repetidos, una función tiene parámetros repetidos, el cond no tiene casos o la sintaxis es incorrecta o si se entra en el caso de op y resulta que no se recoce el operador.
     De este modo, si el parser recibe una expresión incorrecta lanzará un error indicando que la expresión no es válida.
     \subsection{Desugar}
-    \item (1 pts.) ¿Qué significa “desazúcar” una expresión? Da un ejemplo.
-    \item (1 pts.) ¿Cómo traduce cond una cascada de condiciones en una serie de if anidados? ¿Qué ocurre si no hay un else final?
-    \item (1 pts.) ¿Qué pasaría si olvidas aplicar desugar recursivamente dentro de las subexpresiones (por ejemplo, en el cuerpo de un with)?
-    \item (1 pts.) Si agregas un nuevo azúcar como \texttt{\textbf{when}}, ¿qué regla de traducción definirías en \texttt{\textbf{desugar.rkt}}?
-    \item (1 pts.) ¿Por qué desugar siempre debe producir una expresión válida del lenguaje base \texttt{\textbf{(CFWBAE)}}?
+    \item (1 pts.) ¿Qué significa “desazúcar” una expresión? Da un ejemplo.\\
+    Se refiere a transformar una expresión que utiliza azúcares sintácticos en una expresión equivalente que utiliza únicamente las construcciones básicas del lenguaje, es decir, pasar de tener una expresión la cual es más fácil de leer y escribir para los humanos a una expresión que es más simple y directa para que la máquina la pueda interpretar.\\
+    Por ejemplo, podemos mostrar a la expresión \texttt{(+ 4 7)} la cual esta dado de acuerdo a la sintaxis del lenguaje Racket, ahora bien su forma azucarada de acuerdo a la gramática de \textbf{SCFWBAE} sería la siguiente: \texttt{(opS + (list (numS 4) (numS 7)))} el cual es generado por el parser. Ahora bien, al desazucar esta expresión obtenemos la siguiente expresión: \texttt{(op + (list (num 4) (num 7)))} la cual ya no contiene azúcares sintácticos luego de pasar por la función \texttt{desugar} y utiliza únicamente las construcciones básicas del lenguaje \textbf{CFWBAE}. 
+
+    \item (1 pts.) ¿Cómo traduce cond una cascada de condiciones en una serie de if anidados? ¿Qué ocurre si no hay un else final?\\
+    De acuerdo a como está implementando en los archivos de la práctica, vemos que para cada cond, el cual tiene su respectiva condición y expresión asociada, termina siendo convertido en una expresión if anidada de acuerdo a como está implementado en la función \texttt{desugar}.\\
+    Para cada if generado a partir de un cond, tenemos que la condición del cond se convierte en la condición del if, y la expresión asociada al cond se convierte en la rama "then" del if. Ahora bien, si existen más condiciones en el cond, tenemos se anida un if dentro del caso "else" del if actual el cual evalúa la siguiente condición del cond y así sucesivamente hasta que se hayan evaluado todas las condiciones del cond. Finalmente, si hay un else este automatícamente se convierte en el else final del último if anidado.\\
+    Primero pasa por la función parse para convertir la expresión cond en una lista de condiciones y expresiones asociadas, después pasa por la función desugar-cond la cual se encarga de convertir cada par condición-expresión en una expresión if anidada.\\
+    Para el caso en que no se reciba un else final, entonces lo que sucede es que el último if anidado, generados a partir de las condiciones del cond, no tendría su rama else definida como mencionamos, lo cual llevaria un error en tiempo de ejecución al tratar de evaluar una expresión if sin su respectiva rama else.
+
+    \item (1 pts.) ¿Qué pasaría si olvidas aplicar desugar recursivamente dentro de las subexpresiones (por ejemplo, en el cuerpo de un with)?\\
+    Lo que sucedería es que el interprete no podrá ser capaz de evaluar correctamente la expresión, pues sabemos que el interprete solo puede aceptar expresiones que pertenecen a la gramática del lenguaje base \textbf{CFWBAE}, y en un inicio las expresiones se encuentran formadas mediante la gramática \textbf{SCFWBAE} la cual, como su abreviación lo indica, contiene azúcares sintácticos, los cuales no son reconocidos por el interprete.\\
+    Por lo que es importante que de manera recursiva se aplique la función desugar a todas las expresiones y a su vez a todas las subexpresiones que pueda llegar a tener una expresión, esto con el objetivo de garantizar que todas las expresiones y subexpresiones sean convertidas a su forma desazucarada, es decir, a una expresión que solo contenga las construcciones básicas del lenguaje \textbf{CFWBAE}, para que así el interprete pueda evaluar correctamente la expresión.\\
+    Por ejemplo, considerando al caso con el \texttt{with}, si no se aplica desugar recursivamente al cuerpo del with, entonces si el cuerpo contiene alguna construcción con azúcar sintáctico, esta no será convertida a su forma desazucarada, y por lo tanto el interprete no podrá evaluar correctamente la expresión resultante del with.
+
+    \item (1 pts.) Si agregas un nuevo azúcar como \texttt{\textbf{when}}, ¿qué regla de traducción definirías en \texttt{\textbf{desugar.rkt}}?\\
+    Si agregaramos ese nuevo azúcar sintáctico \texttt{when}, primero interpretamos lo que tendría que hacer esta construcción. Por intuición, podemos decir que la construcción \texttt{when} evalúa una condición y si esta es verdadera, entonces evalúa una expresión asociada, de lo contrario no hace nada o retorna algún valor por defecto.\\
+    Ahora bien, para definirlo y agregarlo en nuestro archivo \texttt{desugar.rkt}, podemos definirlo como un caso más dentro de la función \texttt{desugar} de la siguiente manera:\\
+    \begin{lstlisting}
+    [(whenS cond body)
+        (if (desugar cond)
+            (desugar body)
+            (bool false))] 
+    \end{lstlisting}
+
+    Donde \texttt{whenS} representa la construcción con azúcar sintáctico, y dentro de la regla de traducción, convertimos la expresión \texttt{when} en una expresión \texttt{if}, donde la condición del \texttt{if} es la condición del \texttt{when}, la rama "then" del \texttt{if} es el cuerpo del \texttt{when}, y la rama "else" del \texttt{if} siempre retorna un valor por defecto, en caso de que la condición sea falsa.\\
+    Dado por como funciona \texttt{when}, optamos por usar el if ya que este nos permite evaluar una condición y ejecutar una expresión solo si la condición es verdadera, que es precisamente lo que queremos lograr con \texttt{when}.\\
+    Nos aseguramos de aplicar la función \texttt{desugar} tanto a la condición como al cuerpo, para garantizar que cualquier azúcar sintáctico dentro de estas subexpresiones también sea desazucarado correctamente para que así el interprete pueda evaluarlo sin problemas.
+
+    \item (1 pts.) ¿Por qué desugar siempre debe producir una expresión válida del lenguaje base \texttt{\textbf{(CFWBAE)}}?\\
+    Esto se debe a que como el interprete está diseñado para evaluar expresiones que pertenecen únicamente a la gramática del lenguaje base \textbf{CFWBAE}, es fundamental que la función \texttt{desugar} transforme cualquier expresión con azúcar sintáctico en una expresión que solo contenga las construcciones básicas del lenguaje, es decir, se tiene que aplicar la función \texttt{desugar} a todas las expresiones y subexpresiones que pertenezcan a la gramática \textbf{SCFWBAE}, para garantizar que el interprete pueda evaluar correctamente la expresión resultante.\\
+    En caso de que el interprete pueda llegar a recibir una expresión que no pertenezca a la gramática del lenguaje base \textbf{CFWBAE}, entonces el interprete no podrá evaluar correctamente la expresión y podría generar errores en tiempo de ejecución.\\
+    Por lo que la función \texttt{desugar} nos debe garantizar devolver una expresión válida del lenguaje base \textbf{CFWBAE} para que el interprete pueda evaluar correctamente la expresión sin problemas.
+
     \subsection{Interp}
     \item (1 pts.) ¿Qué papel cumple el ambiente \texttt{\textbf{(DefrdSub)}} en la evaluación de expresiones con variables?
     \item (1 pts.) ¿Qué diferencias encuentras entre evaluar with directamente y evaluar la versión desazucarada \texttt{\textbf{(como app(fun ...))}}?
