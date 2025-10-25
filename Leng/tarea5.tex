@@ -1,0 +1,108 @@
+\documentclass[11pt]{article}
+\usepackage[spanish]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath, amssymb}
+\usepackage{geometry}
+\usepackage{setspace}
+\usepackage{enumitem}
+\usepackage{graphicx}
+\usepackage{xurl}
+\usepackage{listings}
+\usepackage{tikz}
+\usepackage{xcolor}
+\usetikzlibrary{decorations.pathreplacing, calc}
+
+\geometry{letterpaper, margin=2cm}
+
+\begin{document}
+\begin{titlepage}
+    \centering
+    \vspace{2cm}
+    {\includegraphics[height=3.2cm]{../logo_unam.png}}
+    \hfill
+    {\includegraphics[height=3.2cm]{../logo_fc.png}\par}
+    \vspace{1cm}
+    {\bfseries\LARGE UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO \par}
+    \vspace{0.7cm}
+    {\scshape\Large FACULTAD DE CIENCIAS \par}
+    \vspace{1cm}
+    {\itshape\Large Lenguajes de programación \par}
+    \vspace{0.5cm}
+    {\itshape\Large Semestre 2026-1 \par}
+    \vspace{2cm}
+    {\scshape\Huge Tarea 4 \par}
+    \vspace{1cm}
+    {\itshape\Large Fecha de entrega: 20 de octubre de 2025 \par}
+    \vspace{2cm}
+    {\Large Autores: \par}
+    \vspace{0.4cm}
+    {\Large Escobar Gonzalez Isaac Giovani \hspace{1cm} 321336400 \par}
+    {\Large Garduño Escobar Kevin Jonathan \hspace{0.5cm} 321070629 \par}
+    {\Large Zaldivar Alanis Rodrigo \hspace{2.75cm} 424029605 \par}
+\end{titlepage}
+\section*{Instrucciones}
+\noindent Resolver los siguientes ejercicios de forma clara y ordenada de acuerdo a los lineamientos de entrega de tareas disponibles en la página del curso.\\
+\section*{Ejercicios}
+
+\begin{enumerate}[leftmargin=0.8cm]
+    \item Utiliza el paso de parámetros que se indica para evaluar la siguiente expresión.\\
+    \begin{enumerate}
+        \item Paso de parámetros por valor.
+        \item Paro de parámetros por referencia.\\
+    \end{enumerate}
+    \begin{lstlisting}
+{multi-with {{a 8} {b -8}
+    {swap {fun {x y}
+        {multi-with {{tmp x}} {seqn {set x y} 
+                                    {set y tmp}}}}}}
+    
+    {seqn {swap a b}
+            {-a {+ b a}}}}
+    \end{lstlisting}
+    \item Utiliza el paso de parámetros que se indica para evaluar la siguiente expresión.
+    \begin{enumerate}
+        \item Paso de parámetros por nombre.
+        \item Paro de parámetros por necesidad.\\
+    \end{enumerate}
+    \begin{lstlisting}
+{multi-with {{a 1
+    foo {fun {x}
+        {seqn {set a {+ {* x -2} a}} a}}}}
+            {{fun {y}{+ y {- y y}}}{foo 3}}}
+    \end{lstlisting}
+    \item Define las siguientes funciones de manera recursiva.
+    \begin{enumerate}
+        \item La función flatMap cuya entrada es una lista de listas y la salida una lista, el objetivo de la función es aplanar una lista, es decir, unir las listas que estén adentro de una lista en una sola. Por ejemplo:\\
+        $>$ (\texttt{flatMap} '((3 5 8) (5 2 1 2 2 0 3)))\\
+        $>$ '(3 5 8 5 2 1 2 2 0 3)
+        \item La función Tribonnaci cuya entrada es un número y la salida el respectivo resultado de Tribonnaci de ese número. Recordando que el Tribonnaci se define formalmente como:
+        \[
+            T(n) = \left\{ \begin{array}{ll}
+                0, & \text{si } n= 0,\\
+                1, & \text{si } n= 1,\\
+                1, & \text{si } n= 2,\\
+                T(n-1) + T(n-2) + T(n-3), & \text{si } n > 2.
+            \end{array}\right.
+        \]
+        Es decir en Tribonacci se suman los tres números anteriores para obtener el número a calcular. Por ejemplo:\\
+        $>$ (\texttt{Tribonnaci} 5)\\
+        $>$ 7\\
+    \end{enumerate}
+    \item A partir de las funciones realizadas en el Ejercicio 3, muestra como se verían los registros de activación generados con los siguientes ejemplares.
+    \begin{enumerate}
+        \item flatMap\\
+        $>$ (\texttt{flatMap} '((1 2 3) (1 2))) 
+        \item Tribonnaci\\
+        $>$ (\texttt{Tribonnaci} 4)\\
+    \end{enumerate}
+    \item Usando la técnica de recursión de cola optimiza las funciones del Ejercicio 3. Toda función auxiliar que utilices debe ser optimizada también utilizando esta misma técnica
+    \item A partir de las funciones optimizadas realizadas en el Ejercicio 3, muestra como se verían los registros de activación generados con los siguientes ejemplares.
+    \begin{enumerate}
+        \item flatMap\\
+        $>$ (\texttt{flatMap} '((1 2 3) (1 2)))
+        \item Tribonnaci\\
+        $>$ (\texttt{Tribonnaci} 4)\\
+    \end{enumerate}
+\end{enumerate}
+
+\end{document}
