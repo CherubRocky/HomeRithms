@@ -74,8 +74,15 @@
     \begin{enumerate}
         \item La función flatMap cuya entrada es una lista de listas y la salida una lista, el objetivo de la función es aplanar una lista, es decir, unir las listas que estén adentro de una lista en una sola. Por ejemplo:\\
         $>$ (\texttt{flatMap} '((3 5 8) (5 2 1 2 2 0 3)))\\
-        $>$ '(3 5 8 5 2 1 2 2 0 3)
-        \item La función Tribonnaci cuya entrada es un número y la salida el respectivo resultado de Tribonnaci de ese número. Recordando que el Tribonnaci se define formalmente como:
+        $>$ '(3 5 8 5 2 1 2 2 0 3)\\
+        La función quedaría definida como:
+        \begin{lstlisting}
+(define (flatMap list)
+    (if (empty? list)
+        '()
+        (append (first list) (flatMap (cdr list)))))
+        \end{lstlisting}
+        \item La función Tribonacci cuya entrada es un número y la salida el respectivo resultado de Tribonacci de ese número. Recordando que el Tribonacci se define formalmente como:
         \[
             T(n) = \left\{ \begin{array}{ll}
                 0, & \text{si } n= 0,\\
@@ -85,23 +92,54 @@
             \end{array}\right.
         \]
         Es decir en Tribonacci se suman los tres números anteriores para obtener el número a calcular. Por ejemplo:\\
-        $>$ (\texttt{Tribonnaci} 5)\\
+        $>$ (\texttt{Tribonacci} 5)\\
         $>$ 7\\
+        La función quedaría definida como:
+        \begin{lstlisting}
+(define (Tribonacci n)
+  (cond
+    [(zero? n) 0]
+    [(or (= n 2) (= n 1)) 1]
+    [else (+ (Tribonacci (sub1 n)) 
+          (+ (Tribonacci (- n 2)) (Tribonacci (- n 3))))]))
+        \end{lstlisting}
     \end{enumerate}
     \item A partir de las funciones realizadas en el Ejercicio 3, muestra como se verían los registros de activación generados con los siguientes ejemplares.
     \begin{enumerate}
         \item flatMap\\
         $>$ (\texttt{flatMap} '((1 2 3) (1 2))) 
-        \item Tribonnaci\\
-        $>$ (\texttt{Tribonnaci} 4)\\
+        \item Tribonacci\\
+        $>$ (\texttt{Tribonacci} 4)\\
     \end{enumerate}
-    \item Usando la técnica de recursión de cola optimiza las funciones del Ejercicio 3. Toda función auxiliar que utilices debe ser optimizada también utilizando esta misma técnica
+    \item Usando la técnica de recursión de cola optimiza las funciones del Ejercicio 3. Toda función auxiliar que utilices debe ser optimizada también utilizando esta misma técnica.\\
+    \begin{enumerate}
+        \item flatMap con recursión de cola.
+        \begin{lstlisting}
+(define (flatMap list)
+  (flatMapAux list '()))
+(define (flatMapAux list acc)
+  (if (empty? list)
+      acc
+      (flatMapAux (cdr list) (append acc (first list)))))
+        \end{lstlisting}
+        \item Tribonacci con recursión de cola.
+        \begin{lstlisting}
+(define (Tribonacci n)
+  (TribonacciAux n 0 1 1))
+(define (TribonacciAux n acc1 acc2 acc3)
+  (cond
+    [(zero? n) acc1]
+    [(= n 1) acc2]
+    [(= n 2) acc3]
+    [else (TribonacciAux (sub1 n) acc2 acc3 (+ acc1 (+ acc2 acc3)))]))
+        \end{lstlisting}
+    \end{enumerate}
     \item A partir de las funciones optimizadas realizadas en el Ejercicio 3, muestra como se verían los registros de activación generados con los siguientes ejemplares.
     \begin{enumerate}
         \item flatMap\\
         $>$ (\texttt{flatMap} '((1 2 3) (1 2)))
-        \item Tribonnaci\\
-        $>$ (\texttt{Tribonnaci} 4)\\
+        \item Tribonacci\\
+        $>$ (\texttt{Tribonacci} 4)\\
     \end{enumerate}
 \end{enumerate}
 
