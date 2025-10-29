@@ -30,9 +30,9 @@
     \vspace{0.5cm}
     {\itshape\Large Semestre 2026-1 \par}
     \vspace{2cm}
-    {\scshape\Huge Tarea 4 \par}
+    {\scshape\Huge Tarea 5 \par}
     \vspace{1cm}
-    {\itshape\Large Fecha de entrega: 20 de octubre de 2025 \par}
+    {\itshape\Large Fecha de entrega: 29 de octubre de 2025 \par}
     \vspace{2cm}
     {\Large Autores: \par}
     \vspace{0.4cm}
@@ -59,6 +59,39 @@
     {seqn {swap a b}
             {-a {+ b a}}}}
     \end{lstlisting}
+
+    \textbf{a) Paso de parámetros por valor:}\\
+    Recordemos que en el paso de parámetros por valor, los argumentos se evalúan antes de ser pasados a la función, y cualquier cambio realizado en los parámetros dentro de la función no afecta a las variables originales fuera de la función, es decir, se realiza una copia de los valores dentro de la función dados sus parámetros formales con los valores de los parámetros reales.\\
+    Teniendo esto en cuenta, procedemos a evaluar la expresión dada paso a paso (no haremos uso de pilas pues se menciono en clase que no son necesarias).\\
+    Tenemos que las variables \textbf{a} y \textbf{b} se inicializan con los valores \textbf{8} y \textbf{-8} respectivamente.\\
+    Luego, se llama a la función swap con los valores de a y b, es decir, swap(8, -8).\\
+    Internamente, se crea una copia de \textbf{x} y \textbf{y}, donde x = 8 y y = -8.\\
+    Luego, se hace el intercambio de valores entre x e y dentro de la función swap, resultando en x = -8 y y = 8.\\
+    Ahora bien, al finalizar la función swap, se hace la siguiente operación: \{-a \{+ b a\}\}.\\
+    Dado que los únicos valores que fueron intercambiados fueron las copias de x e y dentro de la función swap, los valores originales de a y b permanecen sin cambios.\\
+    Por lo tanto, la variable a sigue siendo 8 y la variable b sigue siendo -8.\\
+    Evaluamos la expresión \{-a \{+ b a\}\}:
+    \begin{center}
+        \{- a \{+ b a\}\} = \{- 8 \{+ b a\}\} = \{- 8 \{+ -8 a\}\} = \{- 8 \{+ -8 8\}\} = \{- 8 0\} = 8
+    \end{center}
+    Por lo tanto, el resultado final de la expresión es \textbf{8} mediante \textbf{paso de parámetros por valor.}\\
+    
+
+    \textbf{b) Paso de parámetros por referencia:}\\
+    En el paso de parámetros por referencia, en lugar de pasar los valores de los argumentos a la función, se pasan referencias (o direcciones) a las variables originales. Esto significa que cualquier cambio realizado en los parámetros dentro de la función afectará directamente a las variables originales fuera de la función.\\
+    Procedemos a evaluar la expresión dada paso a paso.\\
+    Tenemos que las variables \textbf{a} y \textbf{b} se inicializan con los valores \textbf{8} y \textbf{-8} respectivamente.\\
+    Luego, se llama a la función swap con las referencias de a y b, es decir, swap(\&a, \&b).\\
+    Internamente, se utilizan las direcciones de memoria de a y b, por lo que cualquier cambio en x e y dentro de la función swap afectará directamente a las variables originales, es decir, x apunta a a y y apunta a b.\\
+    Durante el intercambio de valores, x que apunta a a toma el valor de y (que es -8), y y que apunta a b toma el valor de x (que es 8).\\
+    Por lo tanto, después de la llamada a swap, la variable \textbf{a} ahora tiene el valor -8 y la variable \textbf{b} tiene el valor 8.\\
+    Ahora evaluamos la expresión \{-a \{+ b a\}\} con los nuevos valores de a y b:
+    \begin{center}    
+        \{- a \{+ b a\}\} = \{- -8 \{+ b a\}\} = \{- -8 \{+ 8 a\}\} = \{- -8 \{+ 8 -8\}\} = \{- -8 0\} = -8
+    \end{center}
+    Por lo tanto, el resultado final de la expresión es \textbf{-8} mediante \textbf{paso de parámetros por referencia.}\\
+    
+
     \item Utiliza el paso de parámetros que se indica para evaluar la siguiente expresión.
     \begin{enumerate}
         \item Paso de parámetros por nombre.
@@ -70,6 +103,62 @@
         {seqn {set a {+ {* x -2} a}} a}}}}
             {{fun {y}{+ y {- y y}}}{foo 3}}}
     \end{lstlisting}
+
+    \textbf{a) Paso de parámetros por nombre:}\\
+    Recordando que en el paso de parámetros por nombre, cada vez que se utiliza un parámetro dentro de la función, se reemplaza por la expresión completa del argumento real. Esto significa que la expresión actual se re-evaluará cada vez que se use el parámetro, lo que puede llevar a diferentes resultados.\\
+    Procedemos a desarrollar la evaluación paso a paso.\\
+    Tenemos que la variable \textbf{a} se inicializa con el valor 1 y a la función \textbf{foo} está definida como: \{ seqn \{set a \{+ \{* x -2\} a\}\} a \}, todo esto dentro del entorno multi-with.\\
+    Ahora bien, observemos que la función anónima \{fun \{y\}\{+ y \{- y y\}\}\} se llama con el argumento \textbf{foo 3}, por tanto, quiere decir que y se reemplaza por foo 3 en la expresión \{+ y \{- y y\}\} quedando de la siguiente manera: \{+ \{foo 3\} \{- \{foo 3\} \{foo 3\}\}\}.\\
+    Por tanto procedemos a evaluar la expresión \{+ \{foo 3\} \{- \{foo 3\} \{foo 3\}\}\}.\\
+    Por lo que tenemos que realizar la llamada a foo con x = 3 tres veces, una por cada aparición de foo en la expresión, y como estamos utilizando paso de parámetros por nombre cada vez que se llama a foo, se re-evalúa la función, en nuestro caso un total de 3 veces lo que afectara al valor de \textbf{a} 3 veces.\\
+    Empezamos con la \textbf{primera llamada} a foo con x = 3, el foo que se encuentra más a la izquierda en la expresión: 
+    \begin{center}
+        \{ foo 3\} = \{ seqn \{set a \{+ \{* 3 -2\} a\}\} a \} = \{ seqn \{set a \{+ -6 1\}\} a \} = \{ seqn \{set a -5\} a \} = -5
+    \end{center}
+    Por tanto tenemos que el valor de la expresión ahora es \{+ -5 \{- \{foo 3\} \{foo 3\}\}\}, pues llegados a este punto \textbf{a = -5} \\
+
+    Ahora procedemos a evaluar la \textbf{segunda llamada} a foo con x = 3, el foo que se encuentra en el medio en la expresión:
+    \begin{center}
+        \{ foo 3\} = \{ seqn \{set a \{+ \{* 3 -2\} a\}\} a \} = \{ seqn \{set a \{+ -6 -5\}\} a \} = \{ seqn \{set a -11\} a \} = -11
+    \end{center}
+    Por tanto tenemos que el valor de la expresión ahora es \{+ -5 \{- -11 {foo 3}\}\}, pues llegados a este punto \textbf{a = -11} \\
+
+    Ahora procedemos a evaluar la \textbf{tercera llamada} a foo con x = 3, el foo que se encuentra más a la derecha en la expresión:
+    \begin{center}
+        \{ foo 3\} = \{ seqn \{set a \{+ \{* 3 -2\} a\}\} a \} = \{ seqn \{set a \{+ -6 -11\}\} a \} = \{ seqn \{set a -17\} a \} = -17
+    \end{center}
+    Por tanto tenemos que el valor de la expresión ahora es \{+ -5 \{- -11 -17\}\}, pues llegados a este punto \textbf{a = -17} \\
+
+    Como vemos, el valor de a se ha modificado en cada llamada a foo hasta un total de 3 veces, terminando con un valor de a = -17, esto por como funciona el paso de parámetros por nombre.\\
+
+    Finalmente, evaluamos la expresión \{+ -5 \{- -11 -17\}\}:
+    \begin{center}
+        \{+ -5 \{- -11 -17\}\} = \{+ -5 6\} = 1
+    \end{center}
+    Por tanto, el resultado final de la expresión es \textbf{1} mediante \textbf{paso de parámetros por nombre.}\\
+
+
+    \textbf{b) Paso de parámetros por necesidad:}\\
+    Nos referimos al paso de parámetros por necesidad como una variante del paso de parámetros por nombre, en la cual los argumentos se evalúan solo cuando se utilizan por primera vez dentro de la función. Una vez evaluados, los resultados se almacenan y se reutilizan en llamadas posteriores, evitando así múltiples evaluaciones de la misma expresión.\\
+    Procedemos a desarrollar la evaluación paso a paso.\\
+    Tenemos que la variable a se inicializa con el valor 1 y a la función foo está definida como: \{ seqn \{set a \{+ \{* x -2\} a\}\} a \}, todo esto dentro del entorno multi-with.\\
+    Ahora bien, observemos que la función anónima \{fun \{y\}\{+ y \{- y y\}\}\} se llama con el argumento foo 3, por tanto, quiere decir que y se reemplaza por foo 3 en la expresión \{+ y \{- y y\}\} quedando de la siguiente manera: \{+ \{foo 3\} \{- \{foo 3\} \{foo 3\}\}\}.\\
+    Por tanto procedemos a evaluar la expresión \{+ \{foo 3\} \{- \{foo 3\} \{foo 3\}\}\}.\\
+    Empezamos con la primera llamada a foo con x = 3, el foo que se encuentra más a la izquierda en la expresión:
+    \begin{center}
+        \{ foo 3\} = \{ seqn \{set a \{+ \{* 3 -2\} a\}\} a \} = \{ seqn \{set a \{+ -6 1\}\} a \} = \{ seqn \{set a -5\} a \} = -5
+    \end{center}
+    Por tanto tenemos que el valor de la expresión ahora es \{+ -5 \{- \{foo 3\} \{foo 3\}\}\}.\\
+
+    Ahora procedemos a evaluar la segunda llamada a foo con x = 3, pero en este caso, como estamos utilizando paso de parámetros por necesidad, el valor ya fue evaluado previamente en la primera llamada a foo, especificamente el valor de a ya fue calculado y modificado a -5, por lo que no se vuelve a evaluar la función foo, sino que se utiliza el valor ya fue calculado y almacenado de a gracias a la primera llamada a foo realizada, por tanto tenemos que al final el valor de a sigue siendo -5.\\ 
+    Para la tercera llamada a foo con x = 3, sucede lo mismo que en la segunda llamada, el valor ya fue evaluado previamente en la primera llamada a foo, por tanto tenemos que al final el valor de a sigue siendo -5.\\
+
+    Finalmente, evaluamos la expresión \{+ -5 \{- -5 -5\}\}:
+    \begin{center}
+        \{+ -5 \{- -5 -5\}\} = \{+ -5 0\} = -5
+    \end{center}
+    Por tanto, el resultado final de la expresión es \textbf{-5} mediante \textbf{paso de parámetros por necesidad.}\\
+
     \item Define las siguientes funciones de manera recursiva.
     \begin{enumerate}
         \item La función flatMap cuya entrada es una lista de listas y la salida una lista, el objetivo de la función es aplanar una lista, es decir, unir las listas que estén adentro de una lista en una sola. Por ejemplo:\\
