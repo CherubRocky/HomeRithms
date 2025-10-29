@@ -193,12 +193,16 @@
           (+ (Tribonacci (- n 2)) (Tribonacci (- n 3))))]))
         \end{lstlisting}
     \end{enumerate}
+    \newpage
     \item A partir de las funciones realizadas en el Ejercicio 3, muestra como se verían los registros de activación generados con los siguientes ejemplares.
     \begin{enumerate}
         \item flatMap\\
-        $>$ (\texttt{flatMap} '((1 2 3) (1 2))) 
+        $>$ (\texttt{flatMap} '((1 2 3) (1 2)))\\\\
+        \includegraphics[height=15cm]{flatmap_normal.png}
         \item Tribonacci\\
-        $>$ (\texttt{Tribonacci} 4)\\
+        \newpage
+        $>$ (\texttt{Tribonacci} 3)\\
+        \includegraphics[height=13cm]{Tribonacci_normal.png}
     \end{enumerate}
     \item Usando la técnica de recursión de cola optimiza las funciones del Ejercicio 3. Toda función auxiliar que utilices debe ser optimizada también utilizando esta misma técnica.\\
     \begin{enumerate}
@@ -226,9 +230,11 @@
     \item A partir de las funciones optimizadas realizadas en el Ejercicio 3, muestra como se verían los registros de activación generados con los siguientes ejemplares.
     \begin{enumerate}
         \item flatMap\\
-        $>$ (\texttt{flatMap} '((1 2 3) (1 2)))
+        $>$ (\texttt{flatMap} '((1 2 3) (1 2)))\\\\
+        \includegraphics[height = 8cm]{flatmap_cola.png}
         \item Tribonacci\\
-        $>$ (\texttt{Tribonacci} 4)\\
+        $>$ (\texttt{Tribonacci} 3)\\
+        \includegraphics[height = 2.5in]{Tribonacci_cola.png} 
     \end{enumerate}
 \end{enumerate}
 
