@@ -56,7 +56,22 @@
 \section*{Ejercicio 1}
 \noindent Investiga en qué consiste el Algoritmo de Strassen
 \begin{itemize}
-    \item ¿Qué problema resuelve?
+    \item ¿Qué problema resuelve?\\
+    \textbf{Respuesta: }\\
+    Resuelve el problema de multiplicar dos matrices cuadradas $(n \times n)$ en un tiempo más rapido, pasando de tener una complejidad de tiempo de $O(n^3)$, a una complejidad de aproximadamente $O(n^{log_2 7}) = O(n^{2.81})$ ya que hace uso de la técnica de diseño de Divide y Vencerás para dividir las matrices en submatrices y tener que solo realizar 7 multiplicaciones de matrices en lugar de 8 como normalmente se haría, lo que reduce el número de operaciones necesarias para completar la multiplicación de las matrices.\\
+    Su tiempo de ejecución esta dado por la siguiente recurrencia:
+    \[
+    T(n) =
+    \begin{cases}
+    \Theta(n^3), & \text{si } n \text{ es pequeño} \\
+    7T(n/2) + \Theta(n^2), & \text{sino}
+    \end{cases}
+    \]
+    Si resolvemos esta recurrencia tenemos que $T(n) = \Theta(n^{log_2 7}) \approx \Theta(n^{2.81})$, lo que comentabamos anteriormente.\\
+    Por lo que este un algoritmo eficiente para multiplicar matrices grandes, sin embargo, para matrices pequeñas sigue siendo mejor utilizar el método convencional.\\
+
+    La idea general del algoritmo es dividir cada una de las matrices (Sean $A$ y $B$) en 4 submatrices de tamaño $\frac{n}{2} \times \frac{n}{2}$, y luego realizar 7 multiplicaciones de estas submatrices utilizando combinaciones lineales de las mismas $(M_1, M_2, M_3, M_4, M_5, M_6, M_7)$, para finalmente combinar los resultados de estas multiplicaciones y mediante sumas y restas entre estas obtener cada uno de los elementos de la matriz resultante $(C_{11}, C_{12}, C_{21}, C_{22})$.\\
+
     \item ¿Por qué es importante?\\
     ¿cuál sería la alternativa ”trivial” para el problema que se resuelve?
     \item Escribe el pseudocódigo
@@ -734,7 +749,12 @@ Por lo tanto, el número total de inversiones en el arreglo $S = [3, 2, 1]$ es 3
 
 \section*{Bibliografía}
 \begin{itemize}
-    \item Peláez Valdés, C. (2018). Estructuras de datos con Java moderno. Las Prensas de Ciencias.
+    \item Peláez Valdés, C. (2018). *Estructuras de datos con Java moderno*. Las Prensas de Ciencias.
+
+    \item Alberto Lira, R. E., Cortazar May, A., González García, R. A., Gómez Pérez, V. A., 
+    \& Alberto Lira, C. de J. (2017). *MulCoMa: un algoritmo concurrente para multiplicar matrices*. 
+    *Journal of Basic Sciences*, 3(7), 1--11. 
+    Recuperado de \url{https://dialnet.unirioja.es/servlet/articulo?codigo=9493660}
 \end{itemize}
 
 \end{document}
