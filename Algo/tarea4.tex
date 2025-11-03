@@ -49,6 +49,10 @@
 
 \maketitle
 
+\RestyleAlgo{ruled}
+\LinesNumbered
+\renewcommand{\algorithmcfname}{Algoritmo}
+
 \section*{Ejercicio 1}
 \noindent Investiga en qué consiste el Algoritmo de Strassen
 \begin{itemize}
@@ -63,10 +67,245 @@
 \section*{Ejercicio 2}
 \noindent Para cada uno de los siguientes ejercicios, propón el algoritmo, indica que técnica de diseño de algoritmos se utiliza, realiza el análisis de complejidad de tiempo e ilustra la ejecución con un ejemplar pequeño.
 \begin{enumerate}
-    \item[2.A] Dado un árbol binario, supón que los nodos solo contienen la información del padre, los hijos, y el valor actual, sin posibilidad de guardar información extra. Queremos determinar si el árbol es o no AVL.
-    \item[2.B] Dado un arreglo de $n$ números, queremos encontrar la pareja ($i, j$) que maximiza la suma de los elementos desde la posición $i$ hasta la posición $j$; el algoritmo debería tener complejidad $O(n)$.
+    \item[2.A] Dado un árbol binario, supón que los nodos solo contienen la información del padre, los hijos, y el valor actual, sin posibilidad de guardar información extra. Queremos determinar si el árbol es o no AVL.\\
+    \textbf{Solución}\\
+    \textbf{Algoritmo:} \\
+    A continuación se presenta el pseudocódigo del algoritmo para determinar si un árbol binario es AVL:\\
+    \begin{algorithm}[H]
+        \caption{esArbolAVL}
+        \KwIn{La raíz de un árbol binario $r$}
+        \KwOut{Un par $(balanceado, altura)$, donde balanceado indica si el árbol es AVL y altura es la altura del árbol.}
+
+        \If{$r == \text{null}$}{
+            \Return $(\text{true}, -1)$
+        }
+
+        $(izqBalanceado, alturaIzq) \gets esArbolAVL(r.\text{izquierdo})$\\
+        $(derBalanceado, alturaDer) \gets esArbolAVL(r.\text{derecho})$\\
+
+        $balanceado \gets izqBalanceado \land derBalanceado \land 
+        \lvert alturaIzq - alturaDer \rvert \leq 1$\\
+
+        $altura \gets 1 + \max(alturaIzq, alturaDer)$\\
+
+        \Return $(balanceado, altura)$
+    \end{algorithm}
+
+    Nuestro algoritmo recibe la raíz del árbol binario, tenemos dos casos en nuestro pseudocódigo:\\
+    \textbf{Caso Base: } Si el nodo actual es nulo, retornamos (true, -1), indicando que un árbol vacío es AVL y su altura es -1. Esto para el caso en cuando nos encontremos con una hoja en el árbol.\\
+    \textbf{Caso Recursivo: } Llamamos recursivamente a la función esArbolAVL para los hijos izquierdo y derecho del nodo actual (empezando desde la raíz). Obtenemos si los subárboles izquierdo y derecho son AVL y sus alturas respectivas. Luego, verificamos si el nodo actual está balanceado, es decir y por definición de árbol AVL, si la diferencia entre las alturas de los subárboles izquierdo y derecho es a lo más 1. Finalmente, calculamos la altura del nodo actual como 1 más la altura máxima entre los subárboles izquierdo y derecho. Retornamos un par que indica si el árbol es AVL y su altura.\\
+    Este proceso se repite recursivamente hasta que se hayan evaluado todos los nodos del árbol y eventualmente llegaremos al caso de los nodos hoja, desde donde se comenzará a retornar la información hacia arriba en el árbol hasta llegar nuevamente a la raíz y finalmente determinar si el árbol binario es AVL o no.\\ 
+    
+    \textbf{Técnica de diseño: }
+    Para realizar este algoritmo se hizo uso de la técnica de diseño de \textbf{Divide y Vencerás}, ya que se divide el problema en subproblemas más pequeños (los subárboles), los cuales se van resolviendo de manera recursiva desde la raíz hasta las hojas del árbol. 
+
+    \textbf{Análisis de complejidad de tiempo: }
+    % Como vemos en el pseudocódigo, la complejidad de tiempo del algoritmo es $O(n)$ donde $n$ es el número de nodos en el árbol. Esto se debe a que cada nodo del árbol se visita una vez para calcular su altura y verificar si cumple con la condición AVL. Las demás operaciones dentro de la función como comparaciones y asignaciones son de tiempo constante $O(1)$ y dado que la operacione más costosa es la llamada recursiva que se realiza para cada nodo, la complejidad total del algoritmo es lineal en relación al número de nodos del árbol. 
+
+    A partir de nuestro pseudocódigo, podemos observar que cada nodo del árbol binario se visita exactamente una vez para calcular su altura y verificar si cumple con la condición AVL. Las operaciones realizadas en cada nodo, como comparaciones y asignaciones, tienen un costo constante de tiempo $O(1)$. Dado que tenemos dos casos en nuestro algoritmo (el caso base y el caso recursivo), podemos analizar la complejidad de tiempo de la siguiente manera:
+    - En el caso base, cuando el nodo es nulo, la función retorna inmediatamente con un costo de tiempo constante $O(1)$.
+    - En el caso recursivo, la función realiza dos llamadas recursivas para los hijos izquierdo y derecho del nodo actual. Cada una de estas llamadas también tiene un costo de tiempo constante $O(1)$ para las operaciones realizadas después de las llamadas recursivas.
+    Por lo tanto, la complejidad de tiempo total del algoritmo se puede expresar mediante la siguiente relación de recurrencia:
+    \[T(n) = T(n_{izq}) + T(n_{der}) + O(1)\]
+    Pero como cada nodo se visita una vez, podemos simplificar la relación de recurrencia a:
+    \[T(n) = O(1) + O(1) + ... + O(1) \text{ (n veces)}\]
+    \[T(n) = O(n)\]
+    Donde $n$ es el número total de nodos en el árbol binario. Por lo tanto, la complejidad de tiempo del algoritmo es $O(n)$, lo que significa que el tiempo de ejecución crece linealmente con el número de nodos en el árbol.
+
+    \textbf{Ejemplo:}\\
+    Consideremos el siguiente árbol binario:
+
+\begin{verbatim}
+        5
+       / \
+      3   8
+     / \   \
+    2   4   9
+\end{verbatim}
+    
+    Aplicando el algoritmo esAVL a este árbol:
+    1. Comenzamos en la raíz (5) y llamamos esAVL en sus hijos (3 y 8).
+    2. Para el nodo (3), llamamos esAVL en sus hijos (2 y 4).
+    3. Los nodos (2) y (4) son hojas, por lo que retornan (true, 0).
+    4. Calculamos para (3): alturaIzq = 0, alturaDer = 0, balanceado = true.
+    5. Retornamos (true, 1) para el nodo (3).
+    6. Para el nodo (8), llamamos esAVL en su hijo derecho (9).
+    7. El nodo (9) es una hoja, por lo que retorna (true, 0).
+    8. Calculamos para (8): alturaIzq = -1, alturaDer = 0, balanceado = true.
+    9. Retornamos (true, 1) para el nodo (8).   
+    10. Finalmente, calculamos para la raíz (5): alturaIzq = 1, alturaDer = 1, balanceado = true.
+    11. Retornamos (true, 2) para la raíz (5), indicando que el árbol es AVL.
+
+    \item[2.B] Dado un arreglo de $n$ números, queremos encontrar la pareja ($i, j$) que maximiza la suma de los elementos desde la posición $i$ hasta la posición $j$; el algoritmo debería tener complejidad $O(n)$.\\ 
+    \textbf{Solución} \\
+    \textbf{Algoritmo: } \\
+    A continuación se presenta el pseudocódigo del algoritmo para encontrar la pareja ($i, j$) que maximiza la suma de los elementos desde la posición $i$ hasta la posición $j$ en un arreglo de $n$ números: \\
+    \begin{algorithm}[H]
+    \caption{maxSumaSubArreglo}
+    \KwIn{Un arreglo de números $A$ de tamaño $n$}
+    \KwOut{Una tupla $(i, j)$ que indica las posiciones que maximizan la suma del subarreglo}
+        
+    sumaMaxima $\gets A[0]$\\
+    sumaActual $\gets A[0]$\\
+    inicioMaximo $\gets 0$\\
+    inicioActual $\gets 0$\\
+    finMaximo $\gets 0$\\
+
+    \For{$i \gets 1$ \KwTo $A.length - 1$}{
+        \If{$A[i] > A[i] + sumaActual$}{
+            sumaActual $\gets A[i]$\\
+            inicioActual $\gets i$\\
+        } \If {$A[i] <= A[i] + sumaActual$}{
+            sumaActual $\gets A[i] + sumaActual$\\
+        }
+
+        \If{$sumaActual > sumaMaxima$}{
+            inicioMaximo $\gets inicioActual$\\
+            finMaximo $\gets i$\\
+            sumaMaxima $\gets sumaActual$\\
+        }
+    }
+
+    \Return $(inicioMaximo, finMaximo)$
+    \end{algorithm}
+    Nuestro algoritmo comienza inicializando varias variables: \textit{sumaMaxima} para llevar un registro de la suma máxima encontrada hasta el momento, \textit{sumaActual} para llevar la suma del subarreglo actual que se está evaluando dentro del ciclo, \textit{inicioMaximo} y \textit{finMaximo} para tener guardado el par de índices que maximizan la suma hasta el momento, y \textit{inicioActual} para llevar un registro del inicio del subarreglo actual.\\
+    Teniendo en cuenta que se recibe un arreglo $A$ de tamaño $n$, el algoritmo recorre el arreglo desde el índice 1 hasta el índice $n-1$ utilizando un ciclo \textbf{for}. En cada iteración, se evalúa si agregar el elemento actual $A[i]$ a la \textit{sumaActual} es más beneficioso que comenzar un nuevo subarreglo desde el índice actual. Si es mejor comenzar un nuevo subarreglo, se actualiza \textit{sumaActual} y se establece \textit{inicioActual} al índice actual. Si no, simplemente se agrega $A[i]$ a la \textit{sumaActual}.\\
+    Después de actualizar la \textit{sumaActual}, se verifica si esta suma es mayor que la \textit{sumaMaxima} registrada hasta el momento. Si es así, se actualizan \textit{finMaximo}, \textit{inicioMaximo} y \textit{sumaMaxima} con los valores correspondientes.\\
+    Al finalizar el ciclo, el algoritmo retorna la tupla (\textit{inicioMaximo}, \textit{finMaximo}), que indica las posiciones que maximizan la suma del subarreglo dentro del arreglo original.\\
+
+    \textbf{Técnica de Diseño: } Para este algoritmo se utiliza la técnica de diseño conocida como \textit{Programación Dinámica}, pues vemos que nuestro pseudocódigo mantiene un registro de la suma máxima encontrada hasta el momento y la suma actual que se está evaluando, actualizando estos valores a medida que se recorre el arreglo, lo que nos permite aprovechar las soluciones que hemos construido previamente para formar y encontrar la solución (en este caso, la pareja ($i, j$) que maximiza la suma) de manera eficiente con tan solo recorrer una vez el arreglo.\\
+
+    \textbf{Análisis de Complejidad de Tiempo: } 
+%     Dado que el algoritmo hacemos uso de un solo ciclo \textbf{for} que recorre el arreglo una vez, y también tenemos operaciones de tiempo constante como lo son las comparaciones en los condicionales y las asignaciones cuando se actualizan las variables, la complejidad de tiempo total del algoritmo vendría siendo la suma de estas operaciones:
+%     \[
+% O(n) + O(1) = O(n)
+%     \]
+%     Por lo tanto, la complejidad de tiempo del algoritmo es $O(n)$, donde $n$ es el tamaño del arreglo de entrada.\\
+
+    A partir de nuestro pseudocódigo, podemos observar que el algoritmo realiza un solo recorrido del arreglo utilizando un ciclo \textbf{for} que itera desde el índice 1 hasta el índice $n-1$, donde $n$ es el tamaño del arreglo. Durante cada iteración del ciclo, se realizan varias operaciones, como comparaciones y asignaciones, que tienen un costo constante de tiempo $O(1)$. Ademas contamos con varios casos a considerar en nuestro pseudocódigo:\\
+    - En el primer condicional, se evalúa si es mejor comenzar un nuevo subarreglo desde el índice actual o continuar con el subarreglo existente. Esta operación tiene un costo de tiempo constante $O(1)$.\\
+    - En el segundo condicional, se verifica si el elemento actual es menor o igual a la suma del elemento actual más la suma actual para poder asignar el nuevo valor a la suma actual. Esta operación también tiene un costo de tiempo constante $O(1)$.\\
+    - En el tercer condicional, se verifica si la suma actual es mayor que la suma máxima registrada hasta el momento. Esta operación también tiene un costo de tiempo constante $O(1)$.\\
+    - Finalmente, al finalizar el ciclo, se retorna la tupla que indica las posiciones que maximizan la suma del subarreglo, lo cual también tiene un costo de tiempo constante $O(1)$.\\
+    Y como estas operaciones van repitiéndose $n-1$ veces (una por cada iteración del ciclo), podemos expresar la complejidad de tiempo total del algoritmo como:
+    \[
+    T(n) = O(1) + O(1) + ... + O(1) \text{ (n-1 veces)}
+    \]
+    \[
+    T(n) = O(n)
+    \]
+    Donde $n$ es el tamaño del arreglo de entrada. \\
+
+    \textbf{Ejemplo: }\\
+    Consideremos el siguiente arreglo de números: $A = [-2, 1, -3, 4, -1, 2, 1, -5, 4]$. Aplicando el algoritmo maxSumaSubArreglo a este arreglo:
+    1. Inicializamos las variables: sumaMaxima = -2, sumaActual = -2, inicioMaximo = 0, inicioActual = 0, finMaximo = 0.\\ 
+    2. Iteramos sobre el arreglo desde el índice 1 hasta el índice 8 (el tamaño del arreglo menos uno):\\
+        - En el índice 1: A[1] = 1.\\ Actualizamos sumaActual a 1, inicioActual a 1. \\
+        Como sumaActual (1) $>$ sumaMaxima (-2), actualizamos finMaximo a 1, inicioMaximo a 1, sumaMaxima a 1. \\
+        - En el índice 2: A[2] = -3.\\ Actualizamos sumaActual a -2. No actualizamos sumaMaxima pues 1 $>$ -2. \\
+        - En el índice 3: A[3] = 4.\\ Actualizamos sumaActual a 4, inicioActual a 3. Como sumaActual (4) $>$ sumaMaxima (1), actualizamos finMaximo a 3, inicioMaximo a 3, sumaMaxima a 4. \\
+        - En el índice 4: A[4] = -1.\\ Actualizamos sumaActual a 3. No actualizamos sumaMaxima pues 4 $>$ 3. \\
+        - En el índice 5: A[5] = 2.\\ Actualizamos sumaActual a 5. Como sumaActual (5) $>$ sumaMaxima (4), actualizamos finMaximo a 5, inicioMaximo a 3, sumaMaxima a 5. \\
+        - En el índice 6: A[6] = 1.\\ Actualizamos sumaActual a 6. Como sumaActual (6) $>$ sumaMaxima (5), actualizamos finMaximo a 6, inicioMaximo a 3, sumaMaxima a 6. \\
+        - En el índice 7: A[7] = -5.\\ Actualizamos sumaActual a 1. No actualizamos sumaMaxima pues 6 $>$ 1. \\
+        - En el índice 8: A[8] = 4.\\ Actualizamos sumaActual a 5. No actualizamos sumaMaxima pues 6 $>$ 5. \\
+    3. Al finalizar la iteración, retornamos la tupla (3, 6), que indica que la subcadena que maximiza la suma es desde el índice 3 hasta el índice 6, con una suma máxima de 6, es decir, el subarreglo [4, -1, 2, 1]. \\
+    Por tanto la pareja ($i, j$) que maximiza la suma de los elementos desde la posición $i$ hasta la posición $j$ es (3, 6) de acuerdo a este ejemplo en concreto.\\
+
+
     \item[2.C] Dada una malla de tamaño $s \times t$, que contiene números no negativos, queremos encontrar una ruta desde la esquina superior izquierda hasta la esquina inferior derecha que minimice la suma de todos los números en la ruta. Los únicos movimientos permitidos son moverse hacia abajo o hacia la derecha.\\
     Nota: No es válida la solución con el algoritmo de Dijkstra, se debe usar una técnica basada en inducción.
+
+    \textbf{Solución} \\
+    \textbf{Algoritmo: } \\
+    A continuación mostramos el pseudocódigo realizado para encontrar la ruta que minimiza la suma de todos los números en una malla de tamaño $s \times t$: \\
+    \begin{algorithm}[H]
+    \caption{rutaMinima}
+    \KwIn{Una malla $M$ de tamaño $s \times t$ con números no negativos}
+    \KwOut{La suma mínima de una ruta desde la esquina superior izquierda hasta la esquina inferior derecha}
+
+    $dp[ s ][ t ]$\\
+    $dp[ 0 ][ 0 ] \gets M[ 0 ][ 0 ]$\\
+    \For{$i \gets 1$ \KwTo $s-1$}{
+        $dp[ i ][ 0 ] \gets dp[ i-1 ][ 0 ] + M[ i ][ 0 ]$\\
+    }
+    \For{$j \gets 1$ \KwTo $t-1$}{
+        $dp[ 0 ][ j ] \gets dp[ 0 ][ j-1 ] + M[ 0 ][ j ]$\\
+    }
+    \For{$i \gets 1$ \KwTo $s-1$}{
+        \For{$j \gets 1$ \KwTo $t-1$}{
+            $dp[ i ][ j ] \gets M[ i ][ j ] + \min( dp[ i-1 ][ j ], dp[ i ][ j-1 ] )$\\
+        }
+    }
+
+    \Return $dp[ s-1 ][ t-1 ]$
+
+    \end{algorithm}
+
+    Nuestro algoritmo comienza inicializando una matriz $dp$ de tamaño $s \times t$, donde cada elemento $dp[i][j]$ representará la suma mínima para llegar a la posición $(i, j)$ en la malla, la cual nos servirá para almacenar las soluciones parciales del problema y a partir de estas construir la solución final.\\
+    Luego, inicializamos la posición $dp[0][0]$ con el valor de la esquina superior izquierda de la malla. \\
+    Después empezamos por rellenar la primera fila y columna de la matriz $dp$, pues según los requisitos solamente se puede llegar a estas posiciones ya sea moviendo hacia la derecha (para la primera fila) o hacia abajo (para la primera columna). Por lo tanto, cada posición en la primera fila se calcula sumando el valor actual de la malla con el valor acumulado de la posición anterior en la misma fila, y lo mismo para la primera columna.\\
+    Una vez hecho esto, procedemos a ir construyendo el resto de la matriz $dp$. Para cada posición $(i, j)$ en la malla, calculamos la suma mínima para llegar a dicha posición obteniendo y sumando el valor de $M[i][j]$ con el mínimo entre la posición superior y la posición izquierda en la matriz $dp$. Esto se debe a que solo se puede llegar a la posición $(i, j)$ desde la posición $(i-1, j)$ (moviendo hacia abajo) o desde la posición $(i, j-1)$ (moviendo hacia la derecha).\\
+    Finalmente, una vez que hemos llenado toda la matriz $dp$, el valor en la posición $dp[s-1][t-1]$ contendrá la suma mínima para llegar a la esquina inferior derecha de la malla, pues despues de iterar por todas las posiciones, habremos considerado todas las posibles rutas minimas para llegar a cada posición en la malla y a nosotros solo nos importa la ruta minima hasta la esquina inferior derecha.\\
+
+    \textbf{Técnica de Diseño: } 
+    Para la realizacion de nuestro código, se utilizó la técnica de diseño conocida como \textbf{Programación Dinámica}, ya que el algoritmo va almacenando las soluciones y calculos parciales en una matriz $dp$, lo que nos permite aprovechar estas soluciones previas para construir la solución final a partir de estas, evitando así tener que recalcular las sumas para cada ruta posible en la malla, pues cada posición en la matriz $dp$ representa la suma mínima para llegar a esa posición específica en la malla, y al utilizar estos valores almacenados, podemos construir la solución final de manera eficiente.\\
+
+    \textbf{Análisis de Complejidad de Tiempo: }
+    Observemos que en nuestro pseudocódigo, inicializamos una matriz $dp$ de tamaño $s \times t$, donde partimos para poder llenar esta matriz con la solución del problema. Luego, tenemos dos ciclos \textbf{for} anidados que recorren la primera fila y columna de la matriz $dp$ para rellenarlas, cada uno de estos ciclos tiene un costo de tiempo de $O(s)$ y $O(t)$, o bien, $O( s + t )$ respectivamente. Finalmente, tenemos otro par de ciclos \textbf{for} anidados que recorren el resto de la matriz $dp$ para calcular las sumas mínimas para cada posición, lo cual tiene un costo de tiempo de $O(s \times t)$, pues tenemos que la recurrencia se ejecuta $s-1$ veces para la fila y $t-1$ veces para la columna.\\
+    Sumando todos estos costos de tiempo, obtenemos la complejidad total del algoritmo:
+    \[
+    O(s) + O(t) + O(s \times t) = O(s \times t)
+    \]
+    Por lo tanto, la complejidad de tiempo del algoritmo es $O(s \times t)$, donde $s$ y $t$ son las dimensiones de la malla de entrada.\\
+
+    \textbf{Ejemplo: }\\
+    Consideremos el siguiente ejemplo de una malla de tamaño $3 \times 3$ y ejecutaremos nuestro pseudocódigo en ella:
+\begin{verbatim}
+    M = [ [1, 3, 1],
+          [1, 5, 1],
+          [4, 2, 1] ]
+\end{verbatim}
+    Inicializamos la matriz $dp$ de tamaño $3 \times 3$:
+\begin{verbatim}
+    dp = [ [0, 0, 0],
+           [0, 0, 0],
+           [0, 0, 0] ]  \]
+    Establecemos la posición inicial:
+\begin{verbatim}
+    dp[0][0] = M[0][0] = 1
+    dp = [ [1, 0, 0],
+           [0, 0, 0],
+           [0, 0, 0] ]
+\end{verbatim}
+    Rellenamos la primera fila:
+\begin{verbatim}
+    dp[0][1] = dp[0][0] + M[0][1] = 1 + 3 = 4
+    dp[0][2] = dp[0][1] + M[0][2] = 4 + 1 = 5
+    dp = [ [1, 4, 5],
+           [0, 0, 0],
+           [0, 0, 0] ]
+\end{verbatim}
+    Rellenamos la primera columna:
+\begin{verbatim}
+    dp[1][0] = dp[0][0] + M[1][0] = 1 + 1 = 2
+    dp[2][0] = dp[1][0] + M[2][0] = 2 + 4 = 6
+    dp = [ [1, 4, 5],
+           [2, 0, 0],
+           [6, 0, 0] ]  
+\end{verbatim}
+    Rellenamos el resto de la matriz $dp$:
+\begin{verbatim}
+    dp[1][1] = M[1][1] + min(dp[0][1], dp[1][0]) = 5 + min(4, 2) = 7
+    dp[1][2] = M[1][2] + min(dp[0][2], dp[1][1]) = 1 + min(5, 7) = 6
+    dp[2][1] = M[2][1] + min(dp[1][1], dp[2][0]) = 2 + min(7, 6) = 8
+    dp[2][2] = M[2][2] + min(dp[1][2], dp[2][1]) = 1 + min(6, 8) = 7
+    dp = [ [1, 4, 5],
+           [2, 7, 6],
+           [6, 8, 7] ]
+\end{verbatim}
+    Finalmente, retornamos el valor en la posición $dp[2][2]$, que es 7, indicando que la suma mínima de una ruta desde la esquina superior izquierda hasta la esquina inferior derecha es 7.\\
+
 \end{enumerate}
 
 \section*{Ejercicio 3}
@@ -407,7 +646,91 @@ $PROGRAMACION$
 \end{enumerate}
 
 \section*{Ejercicio 7}
-\noindent Sea $S$ un arreglo de $n$ números en la cual se tiene definida una relación de orden total. Una \textbf{inversión} en $S$ es un par de elementos $(i, j)$ tales que $i < j$ pero $S[i] > S[j]$. Describe un algoritmo eficiente para determinar el número de inversiones que hay en $S$. Da el análisis de complejidad e ilustra la ejecución de tu algoritmo con un ejemplar pequeño. ¿Qué técnica de diseño se utiliza?
+\noindent Sea $S$ un arreglo de $n$ números en la cual se tiene definida una relación de orden total. Una \textbf{inversión} en $S$ es un par de elementos $(i, j)$ tales que $i < j$ pero $S[i] > S[j]$. Describe un algoritmo eficiente para determinar el número de inversiones que hay en $S$. Da el análisis de complejidad e ilustra la ejecución de tu algoritmo con un ejemplar pequeño. ¿Qué técnica de diseño se utiliza?\\
+\textbf{Solución: }\\
+\textbf{Algoritmo }\\
+Mostraremos nuestro pseudocódigo para contar el número de inversiones en un arreglo $S$ dado de $n$ números, a partir de un \textbf{Hint} que se nos proporcionó en clase de ayudantía:
+
+\begin{algorithm}[H]
+\caption{Inversiones}
+\KwIn{Un arreglo $S$ de $n$ números}
+\KwOut{El número total de inversiones en $S$}
+\If{$S.\text{length} \leq 1$}{
+    \Return $(S, 0)$
+}
+$corte \gets n / 2$\\
+$izquierda \gets S[0 : corte]$\\
+$derecha \gets S[corte : n]$\\
+
+$(izquierdaOrdenado, invIzq) \gets Inversiones(izquierda)$\\
+$(derechaOrdenado, invDer) \gets Inversiones(derecha)$\\
+
+$(arregloOrdenado, invCruzadas) \gets MergeInversiones(izquierdaOrdenado, derechaOrdenado)$\\
+
+\Return $(arregloOrdenado, invIzq + invDer + invCruzadas)$
+\end{algorithm}
+
+\begin{algorithm}[H]
+\caption{MergeInversiones}
+\KwIn{Dos arreglos ordenados $izquierda$ y $derecha$}
+\KwOut{El arreglo ordenado y el número de inversiones cruzadas}
+$i \gets 0$\\
+$j \gets 0$\\
+$inversiones \gets 0$\\
+$ordenado \gets [\,]$\\
+
+\While{$i < \text{longitud}(izquierda)$ \textbf{y} $j < \text{longitud}(derecha)$}{
+    \If{$izquierda[i] \leq derecha[j]$}{
+        $ordenado \gets ordenado + [\,izquierda[i]\,]$\\
+        $i \gets i + 1$\\
+    }
+    \Else{
+        $ordenado \gets ordenado + [\,derecha[j]\,]$\\
+        $inversiones \gets inversiones + \text{longitud}(izquierda) - i$\\
+        $j \gets j + 1$\\
+    }
+}
+$ordenado \gets ordenado + izquierda[i:]$\\
+$ordenado \gets ordenado + derecha[j:]$\\
+
+\Return $(ordenado, inversiones)$
+\end{algorithm}
+
+Nuestro pseudocódigo hace uso de dos funciones principales: \textbf{Inversiones} y \textbf{MergeInversiones}.\\
+Primero, la función \textbf{Inversiones} se encargara de dividir el arreglo $S$ en dos mitades recursivamente hasta que cada subarreglo tenga un tamaño de 1 o menos, momento en el cual no hay inversiones posibles y se retorna el subarreglo junto con un conteo de 0 inversiones. Luego, se llama a la función \textbf{MergeInversiones} para combinar las dos mitades ordenadas y contar las inversiones cruzadas entre ellas. \\
+Segundo, la función \textbf{MergeInversiones} toma dos arreglos ordenados (que obtiene de las llamadas recursivas) y los combina en un solo arreglo ordenado y mientras esto ocurre, cuenta las inversiones cruzadas. Si el elemento actual del arreglo izquierdo es menor o igual al elemento actual del arreglo derecho, se agrega al arreglo ordenado y se avanza en el arreglo izquierdo. Por otro lado, si el elemento del arreglo derecho es menor, se agrega al arreglo ordenado y se cuenta el número de inversiones cruzadas, que es igual a la cantidad de elementos restantes en el arreglo izquierdo (ya que todos esos elementos son mayores que el elemento actual del arreglo derecho). Finalmente, se agregan los elementos restantes de ambos arreglos al arreglo ordenado.\\
+Para al final, la función \textbf{Inversiones} retorna el arreglo ordenado junto con el conteo total de inversiones, que es la suma de las inversiones en la mitad izquierda, las inversiones en la mitad derecha y las inversiones cruzadas (si es que las hay) entre ambas mitades.\\
+
+\textbf{Técnica de Diseño: }
+Nuestros algoritmos hacen uso de la técnica de diseño conocida como \textbf{Divide y Vencerás}, pues a primera vista podemos ver que nuestro algoritmo es una variación del algoritmo de ordenamiento \textit{Merge Sort}, pues divide el problema en subproblemas más pequeños (los subarreglos), los cuales se van resolviendo de manera recursiva hasta llegar a casos base (subarreglos de tamaño 1 o menos) y luego se combinan las soluciones parciales (los arreglos ordenados) para formar la solución final (el arreglo ordenado completo y el conteo total de inversiones), solo que en este caso, además de ordenar el arreglo, también contamos las inversiones durante el proceso de combinación. \\
+
+\textbf{Análisis de Complejidad de Tiempo: }
+Dado nuestro pseudocódigo anterior, podemos ver que la función \textbf{Inversiones} divide el arreglo en dos mitades en cada llamada recursiva, lo que genera una estructura de árbol binario si lo vieramos de forma visual, donde cada nodo representa una llamada a la función y sus hijos representan las subproblems generados por esa llamada. Cada nivel del árbol corresponde a una etapa de llamadas recursivas. La profundidad de este árbol es $O(\log_2 n)$, donde $n$ es el tamaño del arreglo original.
+Ahora bien, en cada nivel del árbol, se realizan operaciones de combinación utilizando la función \textbf{MergeInversiones}. Esta función recorre ambos subarreglos (izquierdo y derecho) una vez para combinarlos en un solo arreglo ordenado y contar las inversiones cruzadas. El costo de tiempo de esta operación es $O(n)$, donde $n$ es el tamaño total de los dos subarreglos combinados. Dado que en cada nivel del árbol se realizan estas operaciones de combinación, el costo total por nivel es $O(n)$.
+Por lo tanto, la complejidad de tiempo total del algoritmo se puede expresar mediante la siguiente relación de recurrencia:
+\[T(n) = 2T\left(\frac{n}{2}\right) + O(n)\]
+Por tanto, tenemos que el árbol tiene una profundidad de $O(\log_2 n)$ y en cada nivel se realizan operaciones de costo $O(n)$. Multiplicando estos dos factores, obtenemos la complejidad total del algoritmo:
+\[T(n) = O(n \log n)\]
+Por lo tanto, la complejidad de tiempo del algoritmo para contar el número de inversiones en un arreglo de tamaño $n$ es $O(n \log n)$.
+
+\textbf{Ejemplo: }\\
+Daremos un ejemplo con un arreglo pequeño para ilustrar la ejecución del algoritmo:
+Consideremos el arreglo $S = [3, 2, 1]$. Aplicando el algoritmo \textbf{Inversiones} a este arreglo:
+1. La función \textbf{Inversiones} divide el arreglo en dos mitades: izquierda = [3] y derecha = [2, 1].\\
+2. Se llama recursivamente a \textbf{Inversiones} en la mitad izquierda [3], que retorna ([3], 0) ya que no hay inversiones posibles.\\
+3. Se llama recursivamente a \textbf{Inversiones} en la mitad derecha [2, 1].\\
+4. La función \textbf{Inversiones} divide [2, 1] en izquierda = [2] y derecha = [1].\\
+5. Se llama recursivamente a \textbf{Inversiones} en [2], que retorna ([2], 0).\\
+6. Se llama recursivamente a \textbf{Inversiones} en [1], que retorna ([1], 0).\\
+7. Ahora, se llama a \textbf{MergeInversiones} con izquierda = [2] y derecha = [1].\\
+8. En \textbf{MergeInversiones}, se compara 2 y 1. Como 1 < 2, se agrega 1 al arreglo ordenado y se cuenta una inversión cruzada (ya que 2 es mayor que 1).\\
+9. Luego, se agrega 2 al arreglo ordenado. El resultado es ([1, 2], 1).\\
+10. Ahora, se llama a \textbf{MergeInversiones} con izquierda = [3] y derecha = [1, 2].\\
+11. En \textbf{MergeInversiones}, se compara 3 con 1. Como 1 < 3, se agrega 1 al arreglo ordenado y se cuentan dos inversiones cruzadas (ya que 3 es mayor que 1 y 2).\\
+12. Luego, se compara 3 con 2. Como 2 < 3, se agrega 2 al arreglo ordenado y se cuenta una inversión cruzada más.\\
+13. Finalmente, se agrega 3 al arreglo ordenado. El resultado es ([1, 2, 3], 3).\\
+Por lo tanto, el número total de inversiones en el arreglo $S = [3, 2, 1]$ es 3, que corresponde a los pares (3, 2), (3, 1) y (2, 1).
+
 
 \section*{Bibliografía}
 \begin{itemize}
