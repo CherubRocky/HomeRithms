@@ -72,8 +72,44 @@
 \section*{Ejercicio 3}
 \noindent Queremos almacenar $n$ programas, $P_1, P_2, \ldots, P_n$ $n$, en una unidad de almacenamiento con capacidad máxima $D$. Para cada programa $P_i$, se conoce su tamaño $s_i$, y se sabe que no es posible almacenar todos los programas (al mismo tiempo) en la unidad de almacenamiento.
 \begin{enumerate}
-    \item[3.A] ¿Un algoritmo que almacena los programas seleccionando en orden no decreciente $s_i$ maximiza el número de programas que se pueden mantener en la unidad? Prueba o da un contraejemplo.
-    \item[3.B] ¿Un algoritmo que selecciona en orden no creciente $s_i$ utiliza la mayor capacidad del disco? Prueba o da un contraejemplo.
+    \item[3.A] ¿Un algoritmo que almacena los programas seleccionando en orden no decreciente $s_i$ maximiza el número de programas que se pueden mantener en la unidad? Prueba o da un contraejemplo.\\
+    \textbf{Solución:} Esta afirmación es cierta, ya que al seleccionar los programas en orden no decreciente de tamaño, se asegura que se están utilizando los espacios más pequeños primero, lo que permite almacenar la mayor cantidad posible de programas antes de alcanzar la capacidad máxima $D$ de la unidad de almacenamiento.\\
+    Daremos un algoritmo que implementa esta idea:\\
+    \RestyleAlgo{ruled}
+    \LinesNumbered
+    \renewcommand{\algorithmcfname}{Algoritmo}
+    \begin{algorithm}[H]
+        \caption{Almacena programas en orden no decreciente de tamaño y selecciona la mayor cantidad posible}
+        \KwIn{Lista de los tamaños de los programas $s_1, s_2, \ldots, s_n$ y la capacidad máxima $D$}
+        \KwOut{Número programas almacenados}
+        $numProgramas \gets 0$\\
+        $peso \gets 0$\\
+        Ordenar los tamaños de los programas en orden no decreciente\\
+        \For{$i \gets 0$ \textbf{to} $n$}{
+            \If{$peso + s_i \leq D$}{
+                $peso \gets peso + s_i$\\
+                $numProgramas \gets numProgramas + 1$\\
+            }
+            \Else{
+                \textbf{break}\\
+            } 
+        }
+        \Return $numProgramas$
+    \end{algorithm}
+    \textbf{Análisis de correctitud:}\\
+    Si tomamos como invariante que al inicio de la i-ésima iteración $numProgramas$ es el máximo número de programas que se pueden almacenar usando únicamente los primeros $i$ programas más pequeños.
+    \begin{itemize}
+        \item \textbf{Inicialización: } Antes de la primera iteración, no se ha considerado ningún programa, por lo que $numProgramas = 0$ lo que es correcto.
+        \item \textbf{Mantenimiento: } Supongamos que al inicio de la i-ésima iteración, $numProgramas$ ha almacenado la mayor cantidad posible de programas con los primeros $i-1$ tamaños. En la i-ésima iteración, si el tamaño del programa $s_i$ puede ser almacenado sin exceder la capacidad máxima $D$, entonces se almacena y se incrementa $numProgramas$ en 1, esto sigue cumpliendo la invariante ya que se ha almacenado la mayor cantidad posible de programas con los primeros $i$ tamaños para antes de la (i+1)-ésima iteración. Si el tamaño del programa $s_i$ no puede ser almacenado sin exceder la capacidad máxima $D$, entonces se detiene el proceso, ya que todos los programas restantes son más grandes y no podrán ser almacenados tampoco, por lo que $numProgramas$ sigue siendo la mayor cantidad posible de programas almacenados con los primeros $i-1$ tamaños.
+        \item \textbf{Terminación: } Si se llegua al caso donde el peso ya acumulado más el tamaño del siguiente programa excede la capacidad máxima $D$, el ciclo acaba, el algoritmo se detiene y retorna $numProgramas$, que es la mayor cantidad posible de programas almacenados sin exceder la capacidad máxima $D$, por lo que ya no hay más iteraciones que realizar y la invariante se mantiene.\\
+        Si no se llega a ese caso y se hacen todas las iteraciones del ciclo, entonces se han considerado todos los programas y se ha almacenado la mayor cantidad posible de programas sin exceder la capacidad máxima $D$, por lo que el algoritmo es correcto, aunque la el enunciado menciona que no es posible almacenar todos los programas al mismo tiempo, por lo que este caso no se da.
+    \end{itemize}
+    Por lo tanto, el algoritmo es correcto y maximiza el número de programas que se pueden mantener en la unidad de almacenamiento.
+    \item[3.B] ¿Un algoritmo que selecciona en orden no creciente $s_i$ utiliza la mayor capacidad del disco? Prueba o da un contraejemplo.\\
+    \textbf{Solución:} Esta afirmación es falsa, ya que al seleccionar los programas en orden no creciente, podemos caer en el caso de que se seleccionen programas grandes que ocupen mucho espacio pero no la mayor cantidad posible a comparación de lo que podría pasar con otra selección.\\
+    Por ejemplo, supongamos que tenemos una unidad de almacenamiento con capacidad máxima $D = 10$ y los siguientes tamaños de programas: $s_1 = 8$, $s_2 = 7$, $s_3 = 3$, $s_4 = 1$. Si aplicamos este algoritmo, seleccionariamos primero $s_1 = 8$, luego $s_2 = 7$ (no cabe), luego $s_3 = 3$ (no cabe), y finalmente $s_4 = 1$ (cabe). En total, habríamos utilizado $8 + 1 = 9$ unidades de espacio.\\
+    Mientras que si hubiéramos seleccionado $s_2 = 7$ y $s_3 = 3$, habríamos utilizado exactamente $10$ unidades de espacio, que es la capacidad máxima de la unidad de almacenamiento.\\
+    Por lo tanto, el algoritmo que selecciona en orden no creciente no garantiza utilizar la mayor capacidad del disco.
 \end{enumerate}
 
 \section*{Ejercicio 4}
@@ -231,16 +267,149 @@ Aunque en lo general, si se ocupa una función de dispersión buena y objetos al
 Por ejemplo, $C$, $GRAM$, $OAIO$, \textit{P ROGRAM ACION} son subsecuencias de la cadena\\
 $PROGRAMACION$
 \begin{enumerate}
-    \item[6.A] Describe un algoritmo recursivo (utilizando backtracking) para determinar si $X$ es una subsecuencia de $Y$
-    \item[6.B] Da una definición recursiva simple para la función $lcs(A, B)$ que calcula la longitud de la subsecuencia común más grande de $A$ y $B$
-    \item[6.C] Describe un algoritmo eficiente para calcular la longitud de la subsecuencia común más larga de $A$ y $B$. ¿Qué técnica de diseño se utiliza? Da el análisis de complejidad de tiempo
-    \item[6.D] Una supersecuencia común de $A, B$ es otra secuencia que contiene las secuencias $A$ y $B$ como subsecuencias. Describe un algoritmo eficiente para calcular la longitud de la supersecuencia común más corta de $A$ y $B$. ¿Qué técnica de diseño se utiliza? Da el análisis de complejidad de tiempo
+    \item[6.A] Describe un algoritmo recursivo (utilizando backtracking) para determinar si $X$ es una subsecuencia de $Y$.\\
+    \textbf{Solución:} El algoritmo recursivo con backtracking es el siguiente:\\
+    \RestyleAlgo{ruled}
+    \LinesNumbered
+    \renewcommand{\algorithmcfname}{Algoritmo}
+    \begin{algorithm}[H]
+        \caption{Determina si $X$ es una subsecuencia de $Y$}
+        \KwIn{Cadenas $X$ y $Y$, índices $i$ y $j$}
+        \KwOut{Verdadero si $X$ es una subsecuencia de $Y$, falso en caso contrario}
+        \If{$i < 0$}{
+            \Return \textbf{true}\\
+        }
+        \ElseIf{$j < 0 \; \&\& \; i \geq 0$}{
+            \Return \textbf{false}\\
+        }
+        \ElseIf{$X[i] == Y[j]$}{
+            \Return $isSubsequence(X, Y, i-1, j-1) || isSubsequence(X, Y, i, j-1)$\\
+        }
+        \Else{
+            \Return $isSubsequence(X, Y, i, j-1)$\\
+        }
+    \end{algorithm}
+    Ahora, un pequeño ejemplo de ejecución para poder mostrar cómo funciona el algoritmo.\\
+    Sea $X = \text{"RGR"}$ y $Y = \text{"ROGAR"}$.\\
+    Llamamos a la función $isSubsequence(X, Y, 2, 4)$, donde 2 y 4 son los índices de los últimos caracteres de $X$ y $Y$, respectivamente.
+    \begin{itemize}
+        \item $i \nless 0$ y $j \nless 0$, entonces, comparamos $X[2]$ con $Y[4]$: son iguales (R == R), llamamos a $isSubsequence(X, Y, 1, 3)$ y $isSubsequence(X, Y, 2, 3)$.
+        \item[-] Para $isSubsequence(X, Y, 1, 3)$:
+        \begin{itemize}
+            \item $i \nless 0$ y $j \nless 0$, entonces, comparamos $X[1]$ con $Y[3]$: no son iguales (G != A), llamamos a $isSubsequence(X, Y, 1, 2)$.
+            \item $i \nless 0$ y $j \nless 0$, entonces, comparamos $X[1]$ con $Y[2]$: son iguales (G == G), llamamos a $isSubsequence(X, Y, 0, 1)$ y $isSubsequence(X, Y, 1, 1)$.
+            \item[-] Para $isSubsequence(X, Y, 0, 1)$:
+            \begin{itemize}
+                \item $i \nless 0$ y $j \nless 0$, entonces, comparamos $X[0]$ con $Y[1]$: no son iguales (R != O), llamamos a $isSubsequence(X, Y, 0, 0)$.
+                \item $i \nless 0$ y $j \nless 0$, entonces, comparamos $X[0]$ con $Y[0]$: son iguales (R == R), llamamos a $isSubsequence(X, Y, -1, -1)$ y $isSubsequence(X, Y, 0, -1)$.
+                \item[-] Para $isSubsequence(X, Y, -1, -1)$:
+                \begin{itemize}
+                    \item $i < 0$, retornamos \textbf{true}.
+                \end{itemize}
+                \item[-] Para $isSubsequence(X, Y, 0, -1)$:
+                \begin{itemize}
+                    \item $j < 0$ y $i \geq 0$, retornamos \textbf{false}.
+                \end{itemize}
+            \end{itemize}
+            \item[-] Para $isSubsequence(X, Y, 1, 1)$:
+            \begin{itemize}
+                \item $i \nless 0$ y $j \nless 0$, entonces, comparamos $X[1]$ con $Y[1]$: no son iguales (G != O), llamamos a $isSubsequence(X, Y, 1, 0)$.
+                \item $i \nless 0$ y $j \nless 0$, entonces, comparamos $X[1]$ con $Y[0]$: no son iguales (G != R), llamamos a $isSubsequence(X, Y, 1, -1)$.
+                \item $j < 0$ y $i \geq 0$, retornamos \textbf{false}.
+            \end{itemize}
+        \end{itemize}
+        \item[-] Para $isSubsequence(X, Y, 2, 3)$:
+        \begin{itemize}
+            \item $i \nless 0$ y $j \nless 0$, entonces, comparamos $X[2]$ con $Y[3]$: no son iguales (R != A), llamamos a $isSubsequence(X, Y, 2, 2)$.
+            \item $i \nless 0$ y $j \nless 0$, entonces, comparamos $X[2]$ con $Y[2]$: no son iguales (R != G), llamamos a $isSubsequence(X, Y, 2, 1)$.
+            \item $i \nless 0$ y $j \nless 0$, entonces, comparamos $X[2]$ con $Y[1]$: no son iguales (R != O), llamamos a $isSubsequence(X, Y, 2, 0)$.
+            \item $i \nless 0$ y $j \nless 0$, entonces, comparamos $X[2]$ con $Y[0]$: son iguales (R == R), llamamos a $isSubsequence(X, Y, 1, -1)$ y $isSubsequence(X, Y, 2, -1)$.
+            \item[-] Para $isSubsequence(X, Y, 1, -1)$:
+            \begin{itemize}
+                \item $j < 0$ y $i \geq 0$, retornamos \textbf{false}.
+            \end{itemize}
+            \item[-] Para $isSubsequence(X, Y, 2, -1)$:
+            \begin{itemize}
+                \item $j < 0$ y $i \geq 0$, retornamos \textbf{false}.
+            \end{itemize}
+        \end{itemize}
+    \end{itemize}
+    Al final de toda la ejecución, obtenemos que $X$ es una subsecuencia de $Y$ ya que en una de las ramas del árbol de recursión se retorna \textbf{true}.
+    \item[6.B] Da una definición recursiva simple para la función $lcs(A, B)$ que calcula la longitud de la subsecuencia común más grande de $A$ y $B$.\\
+    \textbf{Solución:} En este caso, dado que estamos buscando la longitud de la subsecuencia común más larga de manera recursiva, vamos a cambiar los parámetros de la función para que pueda recibir los índices actuales en las cadenas $A$ y $B$, para que no tenga que estar copiando las cadenas en cada llamada recursiva. La definición recursiva sería la siguiente:\\
+    \[
+    lcs(A, B, i, j) =
+    \begin{cases}
+    0 & \text{si } i < 0 \text{ o } j < 0 \\
+    1 + lcs(A, B, i-1, j-1) & \text{si } A[i] = B[j] \\
+    \max(lcs(A, B, i-1, j), lcs(A, B, i, j-1)) & \text{si } A[i] \neq B[j]
+    \end{cases}
+    \]
+    \item[6.C] Describe un algoritmo eficiente para calcular la longitud de la subsecuencia común más larga de $A$ y $B$. ¿Qué técnica de diseño se utiliza? Da el análisis de complejidad de tiempo.\\
+    \textbf{Solución:} El algoritmo eficiente para calcular la longitud de la subsecuencia común más larga de $A$ y $B$ sería el siguiente:\\
+    \RestyleAlgo{ruled}
+    \LinesNumbered
+    \renewcommand{\algorithmcfname}{Algoritmo}
+    \begin{algorithm}[H]
+        \caption{Calcula la longitud de la subsecuencia común más larga de $A$ y $B$}
+        \KwIn{Cadenas $A$ y $B$}
+        \KwOut{Longitud de la subsecuencia común más larga}
+        $n \gets \text{longitud}(A)$\\
+        $m \gets \text{longitud}(B)$\\
+        $dp \gets \text{matriz}(n+1, m+1)$ \tcp*{Inicializar matriz de tamaño (n+1) x (m+1) con ceros}
+        \For{$i \gets 1$ \KwTo $n$}{
+            \For{$j \gets 1$ \KwTo $m$}{
+                \If{$A[i-1] == B[j-1]$}{
+                    $dp[i][j] \gets dp[i-1][j-1] + 1$\\
+                }
+                \Else{
+                    $dp[i][j] \gets \max(dp[i-1][j], dp[i][j-1])$\\
+                }
+            }
+        }
+        \Return $dp[n][m]$
+    \end{algorithm}
+    El algoritmo consiste en construir una matriz $dp$ donde cada entrada $dp[i][j]$ representa la longitud de la subsecuencia común más larga entre las primeras $i$ letras de $A$ y las primeras $j$ letras de $B$. Por cada fila, recorremos las columnas y si la letra coincide en ambas cadenas entonces $dp[i][j]$ sera igual a $1 + dp[i-1][j-1]$, de lo contrario sera el maximo entre $dp[i-1][j]$ y $dp[i][j-1]$. Al final, la longitud de la subsecuencia común más larga estará en $dp[n][m]$.\\
+    Este algoritmo utiliza la técnica de diseño de programación dinámica.\\
+    \textbf{Análisis de complejidad de tiempo:}\\
+    La complejidad de tiempo del algoritmo es $O(n \times m)$, donde $n$ y $m$ son las longitudes de las cadenas $A$ y $B$, respectivamente. Ya que se va a recorrer una matriz de tamaño $(n+1) \times (m+1)$, realizando operaciones constantes en cada celda para poder asignar su valor.
+    \item[6.D] Una supersecuencia común de $A, B$ es otra secuencia que contiene las secuencias $A$ y $B$ como subsecuencias. Describe un algoritmo eficiente para calcular la longitud de la supersecuencia común más corta de $A$ y $B$. ¿Qué técnica de diseño se utiliza? Da el análisis de complejidad de tiempo.\\
+    \textbf{Solución:} Para calcular la longitud de la supersecuencia común más corta de $A$ y $B$, podemos primero obtener la longitud de la subsecuencia común más larga entre $A$ y $B$, y luego utilizar eso para calcular la longitud de la supersecuencia común más corta, ya que para obtener la longitud de la supersecuencia común más corta, podemos usar la fórmula:
+    \[\text{longitud supersecuencia} = \text{len}(A) + \text{len}(B) - LCS(A, B)\]
+    Ya que, una vez obtenida la longitud de la subsecuencia común más larga, podemos restarla de la suma de las longitudes de ambas cadenas para evitar contar dos veces los caracteres que están en la subsecuencia común y simplemente agregar los caracteres restantes de ambas cadenas.\\
+    Por lo tanto, el algoritmo sería casi idéntico al del inciso anterior, quedando de la siguiente manera:\\
+    \RestyleAlgo{ruled}
+    \LinesNumbered
+    \renewcommand{\algorithmcfname}{Algoritmo}
+    \begin{algorithm}[H]
+        \caption{Calcula la longitud de la supersecuencia común más corta de $A$ y $B$}
+        \KwIn{Cadenas $A$ y $B$}
+        \KwOut{Longitud de la supersecuencia común más corta}
+        $n \gets \text{longitud}(A)$\\
+        $m \gets \text{longitud}(B)$\\
+        $dp \gets \text{matriz}(n+1, m+1)$ \tcp*{Inicializar matriz de tamaño (n+1) x (m+1) con ceros}
+        \For{$i \gets 1$ \KwTo $n$}{
+            \For{$j \gets 1$ \KwTo $m$}{
+                \If{$A[i-1] == B[j-1]$}{
+                    $dp[i][j] \gets dp[i-1][j-1] + 1$\\
+                }
+                \Else{
+                    $dp[i][j] \gets \max(dp[i-1][j], dp[i][j-1])$\\
+                }
+            }
+        }
+        \Return $ n + m - dp[n][m]$
+    \end{algorithm}
+    Como vemos, este algoritmo lo único que cambia con respecto al del inciso anterior es el return, en donde se calcula el número de caracteres que debe tener la supersecuencia común, con los caracteres que estan en ambas cadenas y los que no.\\
+    Este algoritmo también utiliza la técnica de diseño de programación dinámica.\\
+    \textbf{Análisis de complejidad de tiempo:}\\
+    La complejidad de tiempo del algoritmo es también $O(n \times m)$, donde $n$ y $m$ son las longitudes de las cadenas $A$ y $B$, respectivamente. Ya que se va a recorrer una matriz de tamaño $(n+1) \times (m+1)$, realizando operaciones constantes en cada celda para poder asignar su valor.
 \end{enumerate}
 
 \section*{Ejercicio 7}
 \noindent Sea $S$ un arreglo de $n$ números en la cual se tiene definida una relación de orden total. Una \textbf{inversión} en $S$ es un par de elementos $(i, j)$ tales que $i < j$ pero $S[i] > S[j]$. Describe un algoritmo eficiente para determinar el número de inversiones que hay en $S$. Da el análisis de complejidad e ilustra la ejecución de tu algoritmo con un ejemplar pequeño. ¿Qué técnica de diseño se utiliza?
 
-\section{Bibliografía}
+\section*{Bibliografía}
 \begin{itemize}
     \item Peláez Valdés, C. (2018). Estructuras de datos con Java moderno. Las Prensas de Ciencias.
 \end{itemize}
