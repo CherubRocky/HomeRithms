@@ -79,14 +79,152 @@
 \section*{Ejercicio 4}
 \noindent Considera un país cuyas monedas son emitidas en denominaciones de $\{ d_1, \ldots, d_k $. Queremos un algoritmo para obtener una cantidad $monto$ utilizando el mínimo número de monedas.
 \begin{enumerate}
-    \item[4.A] Considera un algoritmo que selecciona siempre la moneda más grande que no sea mayor que la cantidad que debe ser entregada, repitiendo el proceso hasta llegar a cero. Muestra que dicho algoritmo no siempre utiliza el mínimo número de monedas, ejemplificando con un caso con las siguientes denominaciones: $ \{ 1, 6, 10 \}$
-    \item[4.B] Propón un algoritmo eficiente que determine correctamente el mínimo número de monedas que se necesitan para obtener una cantidad $n$ utilizando las denominaciones dadas.\\
-    Menciona que técnica de diseño se utiliza y analiza la complejidad de tiempo
-    \item[4.C] Da un algoritmo eficiente para calcular $C(n)$: el número de formas distintas de obtener una cantidad $monto$ con las denominaciones dadas.
+    \item[4.A] Considera un algoritmo que selecciona siempre la moneda más grande que no sea mayor que la cantidad que debe ser entregada, repitiendo el proceso hasta llegar a cero. Muestra que dicho algoritmo no siempre utiliza el mínimo número de monedas, ejemplificando con un caso con las siguientes denominaciones: $ \{ 1, 6, 10 \}$\\\\
+    Proponemos la cantidad $monto = 13$.\\
+    La mayor moneda que podemos elegir es 10. Luego, solo queda completar $monto = 3$.
+    La mayor moneda que podemos elegir para completar 3 es 1. Queda completar $monto = 2$.\\
+    La mayor moneda que podemos elegir para completar 2 es 1. Queda completar $monto = 1$.\\
+    La mayor moneda que podemos elegir para completar 1 es 1. Ya no queda completar nada.\\
+    De esta manera, el algoritmo que selecciona la moneda más grande nos devuelve 4 monedas. Una de $10$ y 3 de $1$.\\
+    Sin embargo, vemos que existe otra combinación con menor cantidad de monedas que nos da el mismo monto: (6, 6, 1). Suman 13 en total.\\
+    Por lo que el algoritmo que selecciona la moneda más grande no minimiza en todos los casos la cantidad de monedas para completar un monto.
+    \newpage
+    \item[4.B] Propón un algoritmo eficiente que determine correctamente el mínimo número de monedas que se necesitan para obtener una cantidad $n$ utilizando las denominaciones dadas. Menciona que técnica de diseño se utiliza y analiza la complejidad de tiempo.\\\\
+    Proponemos el siguiente algoritmo:\\
+    ($monto$, $M$, $n$)\\
+    Donde $M$ es un arreglo que contiene las monedas con sus denominaciones y $n$ es el tamaño del arreglo.
+    \begin{algorithm}
+        \caption{Minimizar monedas}
+        \If{monto = 0}{
+            \Return 0\;
+        }
+        $m \gets monto + 1$\;
+        $T \gets$ newArray[m]\;
+        $T[0] \gets 0$\;
+        \For{$i \gets 0$ \KwTo n - 1}{
+            \If{$M[i] \leq monto$}{
+                $T[M[i]] \gets 1$\;
+            }
+        }
+    
+        \For{$i \gets 0$ \KwTo m - 1}{
+            \If{$T[i] \lneq 0$}{
+                continue\;
+            }
+            $min \gets \infty$\;
+            \For{$k \gets 0$ \KwTo n - 1}{
+                $diff \gets i - M[k]$\;
+                \If{$diff > 0$ $\And$ $T[diff] \neq 0$}{
+                    $min \gets Min(min, T[diff] + 1)$\;
+                }
+            }
+            \If{$min \neq \infty$}{
+                $T[i] \gets min$\;
+            }
+        }
+        \If{$T[monto] == 0$}{
+            \Return $-1$\;
+        }
+        \Return T[monto]\;
+    \end{algorithm}
+
+    Para este algoritmo se utilizó programación dinámica (DP).\\
+    Se utilizó un arreglo con índices desde cero hasta monto. Se va calculando la cantidad mínima de monedas requeridas para llegar al monto a partir de soluciones guardadas para montos más pequeños. Si al sumar el valor de una moneda con el índice de una cantidad ya procesada (y guardada), esta se convierte en una solución candidata para el monto original. Tenemos que encontrar la solución candidata que requiera la menor cantidad de monedas.\\\\
+    \textbf{Análisis de complejidad:}\\
+    El primer condicional es constante. Después, se crea un arreglo de longitud $monto + 1$ para guardar las soluciones a los distintos montos. Esto es $O(monto)$.\\
+    Luego, se recorre el todo arreglo de las monedas, como su cuerpo tiene complejidad $O(1)$, el ciclo en total tiene complejidad $O(n)$ porque hace $n$ iteraciones.\\
+    Luego, tenemos un ciclo que hace $monto$ iteraciones.
+    En la complejidad de su cuerpo, tenemos un condicional y una asignación que son constantes. Después, se ejecuta un ciclo anidado que se ejecuta $n$ veces. En el cuerpo del ciclo anidado, se hacen operaciones básicas, condicionales y asignaciones, por lo que el cuerpo de este tiene complejidad constante. Por lo que el ciclo anidado tiene una complejidad total de $O(n) \cdot O(1) = O/(n)$.  Después del ciclo anidado se tiene una condicional, que es constante. Por lo que el segundo ciclo del código tiene una complejidad de: $O(monto) (O(1) + O(n) + O(1)) = O(monto \cdot n)$.\\
+    Luego del segundo for, tenemos un condicional con un return y después otro return. Las son instrucciones con complejidad constante. Por lo anterior, la complejidad del algoritmo se ve acotada por la complejidad del segundo ciclo. Por lo que el algoritmo $\in$ $O(monto \cdot n)$.
+    
+    
+    \item[4.C] Da un algoritmo eficiente para calcular $C(n)$: el número de formas distintas de obtener una cantidad $monto$ con las denominaciones dadas.\\
+    Si se asume que en las formas distintas no importa el orden, tenemos el siguiente algoritmo:
+    ($monto$, $M$, $n$)\\
+    Donde $M$ es un arreglo que contiene las monedas con sus denominaciones y $n$ es el tamaño del arreglo.
+    \begin{algorithm}
+        \caption{Combinaciones}
+        $m \gets monto + 1$\;
+        $T \gets$ newArray[m]\;
+        $T[0] \gets 1$\;
+        \For{$j \gets 0$ \KwTo $n - 1$}{
+            \For{$i \gets M[j]$ \KwTo monto}{
+                $diff \gets i - M[j]$\;
+                \If{$diff \geq 0$}{
+                    $T[i] += T[diff]$
+                }
+            }
+        }
+    \end{algorithm}\\
+    Análogo al inciso anterior, este tine complejidad $O(n * monto)$ porque hay un ciclo externo que itera n veces y el interno itera $monto$ veces por cada iteración del externo. Además de que el cuerpo del ciclo externo tiene complejidad $O(1)$ y las demás instrucciones del ciclo externo también tienen complejidad $O(1)$.
+
+    Si piden permutaciones, el siguiente algoritmo resutleve el problema.\\
+    \begin{algorithm}[H]
+    \caption{Permutaciones}
+    
+    $m \gets monto + 1$\;
+    $T \gets \text{newArray}[m]$\;
+    $T[0] \gets 0$\;
+    
+    \For{$i \gets 0$ \KwTo monto}{
+        \For{$k \gets 0$ \KwTo $n - 1$}{
+            $diff \gets i - M[k]$\;
+            \If{$diff > 0$}{
+                $T[i] \gets (T[i] + T[diff])$\;
+            }
+            \If{$diff = 0$}{
+                $T[i] \gets (T[i] + 1)$\;
+            }
+        }
+    }
+
+    Análogamente al algoritmo anterior, la complejidad es $O(monto \cdot n)$, aunque en este caso, los ciclos for están "invertidos".
+    \Return $T[monto]$\;
+    \end{algorithm}
 \end{enumerate}
 
 \section*{Ejercicio 5}
-\noindent Sea $A$ una colección de objetos. Describe un algoritmo eficiente para convertir $A$ en un conjunto; se deben eliminar todos los elementos duplicados de $A$. Da el análisis de complejidad de tiempo.
+\noindent Sea $A$ una colección de objetos. Describe un algoritmo eficiente para convertir $A$ en un conjunto; se deben eliminar todos los elementos duplicados de $A$. Da el análisis de complejidad de tiempo.\\
+Se crea un arreglo del doble del tamaño de A. Después se utiliza una función de dispersión para obtener un entero en el rango a partir del objeto. Se guarda el objeto en una lista almacenada en la posición del arreglo (esto es para manejar colisiones). Para ver si el elemento es repetido, lo comparamos con los elementos (en caso de haber) de la lista. Si el objeto ya ha sido agregado, no hacemos nada. En caso contrario, se agrega al final de la lista. Además, utilizaremos otra lista(ArrayList), que será la que se devolverá como conjunto. Si y solo si se agrega un objeto en la lista subyacente del arreglo, se agrega en la lista de retorno. \\
+Primero daremos el algoritmo de la función de dispersión de Daniel J. Bernstein (Peláez Valdés, 2018).\\
+\textbf{Entrada:} (llave (arreglo de bytes))\\
+\begin{algorithm}[H]
+ \caption{Función de Dispersión de Bernstein}
+ $h \gets 5381$\;
+ 
+ \For{$i \gets 0$ \KwTo $n - 1$}{
+  $h \gets (h \cdot 33) + llave[i]$\;
+ }
+ \Return $h$\;
+\end{algorithm}
+
+\newpage
+\textbf{Entrada:} Colección de objetos A de tamaño n\\
+\textbf{Salida:} Arreglo con conjuntos\\\\
+\begin{algorithm}[H]
+ \caption{Conjuntar}
+ $m \gets \text{2n}$\; 
+ $arr \gets \text{newArray}[m]$\;
+ 
+ \For{$i \gets 0$ \KwTo $m - 1$}{
+  $arr[i] \gets \text{newLinkedList()}$\;
+ }
+ 
+ $C \gets \text{newArrayList()}$\;
+ 
+ \For{$j \gets 0$ \KwTo $n - 1$}{
+  $obj \gets A[j]$\;
+  $i \gets (\text{dispersaDJB(obj))}$ mod $ m$\;
+  \If{!arr[i].contains(obj)}{
+    arr[i].add(obj)\;
+    C.add(obj)\;
+  }
+ }
+ \Return $C$\;
+\end{algorithm}
+
+La complejidad es $O(n^2)$. En el peor caso, todos los objetos colisionan y son distintos. Para saber si el objeto ya existe en la lista en el índice del arreglo, esta se recorre completamente y se compara. En total, se harían $n(n - 1)/2$ comparaciones, por lo que es cuadrático.\\
+Aunque en lo general, si se ocupa una función de dispersión buena y objetos aleatorios, esta tiene complejidad $O(n)$ amortizado, ya que los objetos tienen bajo índice de colisión.
 
 \section*{Ejercicio 6}
 \noindent Sean $A, B$ dos arreglos arbitrarios, de tamaño $m, n$ respectivamente. Una subsecuencia común de $A$ y $B$ es una secuencia que aparece en $A$ y en $B$.\\
@@ -101,5 +239,10 @@ $PROGRAMACION$
 
 \section*{Ejercicio 7}
 \noindent Sea $S$ un arreglo de $n$ números en la cual se tiene definida una relación de orden total. Una \textbf{inversión} en $S$ es un par de elementos $(i, j)$ tales que $i < j$ pero $S[i] > S[j]$. Describe un algoritmo eficiente para determinar el número de inversiones que hay en $S$. Da el análisis de complejidad e ilustra la ejecución de tu algoritmo con un ejemplar pequeño. ¿Qué técnica de diseño se utiliza?
+
+\section{Bibliografía}
+\begin{itemize}
+    \item Peláez Valdés, C. (2018). Estructuras de datos con Java moderno. Las Prensas de Ciencias.
+\end{itemize}
 
 \end{document}
