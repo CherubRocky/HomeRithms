@@ -64,7 +64,7 @@
     T(n) =
     \begin{cases}
     \Theta(n^3), & \text{si } n \text{ es pequeño} \\
-    7T(n/2) + \Theta(n^2), & \text{sino}
+    7T(n/2) + \Theta(n^2) , & \text{si } n \text{ es grande}
     \end{cases}
     \]
     Si resolvemos esta recurrencia tenemos que $T(n) = \Theta(n^{log_2 7}) \approx \Theta(n^{2.81})$, lo que comentabamos anteriormente.\\
