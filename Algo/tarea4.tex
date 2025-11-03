@@ -58,7 +58,7 @@
 \begin{itemize}
     \item ¿Qué problema resuelve?\\
     \textbf{Respuesta: }\\
-    Resuelve el problema de multiplicar dos matrices cuadradas $(n \times n)$ en un tiempo más rapido, pasando de tener una complejidad de tiempo de $O(n^3)$, a una complejidad de aproximadamente $O(n^{log_2 7}) = O(n^{2.81})$ ya que hace uso de la técnica de diseño de Divide y Vencerás para dividir las matrices en submatrices y tener que solo realizar 7 multiplicaciones de matrices en lugar de 8 como normalmente se haría, lo que reduce el número de operaciones necesarias para completar la multiplicación de las matrices.\\
+    Resuelve el problema de multiplicar dos matrices (especialmente cuadradas) $(n \times n)$ en un tiempo más rapido, pasando de tener una complejidad de tiempo de $O(n^3)$, a una complejidad de aproximadamente $O(n^{log_2 7}) = O(n^{2.81})$ ya que solo realiza 7 multiplicaciones de matrices en lugar de 8 como normalmente se haría, lo que reduce el número de operaciones necesarias para completar la multiplicación de las matrices.\\
     Su tiempo de ejecución esta dado por la siguiente recurrencia:
     \[
     T(n) =
@@ -70,13 +70,43 @@
     Si resolvemos esta recurrencia tenemos que $T(n) = \Theta(n^{log_2 7}) \approx \Theta(n^{2.81})$, lo que comentabamos anteriormente.\\
     Por lo que este un algoritmo eficiente para multiplicar matrices grandes, sin embargo, para matrices pequeñas sigue siendo mejor utilizar el método convencional.\\
 
-    La idea general del algoritmo es dividir cada una de las matrices (Sean $A$ y $B$) en 4 submatrices de tamaño $\frac{n}{2} \times \frac{n}{2}$, y luego realizar 7 multiplicaciones de estas submatrices utilizando combinaciones lineales de las mismas $(M_1, M_2, M_3, M_4, M_5, M_6, M_7)$, para finalmente combinar los resultados de estas multiplicaciones y mediante sumas y restas entre estas obtener cada uno de los elementos de la matriz resultante $(C_{11}, C_{12}, C_{21}, C_{22})$.\\
+    La idea general del algoritmo es dividir cada una de las matrices (Sean $A$ y $B$) en 4 submatrices de tamaño $\frac{n}{2} \times \frac{n}{2}$, y luego realizar 7 multiplicaciones de estas submatrices utilizando combinaciones lineales de las mismas $(M_1, M_2, M_3, M_4, M_5, M_6, M_7)$, para finalmente combinar los resultados de estas multiplicaciones y mediante sumas y restas entre estas obtener cada uno de los elementos de la matriz resultante $(C_{11}, C_{12}, C_{21}, C_{22})$ (Manber, 1989).\\
 
     \item ¿Por qué es importante?\\
-    ¿cuál sería la alternativa ”trivial” para el problema que se resuelve?
-    \item Escribe el pseudocódigo
-    \item ¿Qué técnica de diseño de algoritmos utiliza?
-    \item Ilustra la ejecución del algoritmo (en papel) con un ejemplar pequeño
+    ¿cuál sería la alternativa ”trivial” para el problema que se resuelve?\\
+    \textbf{Respuesta:}
+    El algoritmo de Strassen es importante porque reduce la complejidad de la multiplicación de matrices, ya que la alternativa trivial tiene una complejidad de $O(n^3)$, mientras que el algoritmo de Strassen tiene una complejidad de aproximadamente $O(n^{2.81})$, porque divide las matrices en submatrices más pequeñas y utiliza recursión para multiplicarlas, lo que reduce el número de multiplicaciones necesarias y aunque usa más sumas y restas, estas son operaciones menos costosas a comparación de las multiplicaciones. Este algoritmo puede ser usado por otros problemas que involucran matrices, como la inversión de matrices, cálculos de determinantes y la resolución de sistemas de ecuaciones lineales.\\
+    La alternativa trivial para el problema de multiplicar matrices es el método tradicional, en el que cada elemento de la matriz resultado es calculado mediante la suma de los productos de los elementos correspondientes de las filas de la primera matriz y las columnas de la segunda matriz, lo que tiene una complejidad de tiempo de $O(n^3)$ para matrices de tamaño $n \times n$.
+
+    \item Escribe el pseudocódigo\\
+    \textbf{Entrada:} Dos matrices A y B\\
+    \textbf{Salida:} Una matriz, resultado del producto entre A y B.\\
+    \begin{algorithm}
+        \caption{Strassen}
+        \If{len(A) <= 2}{
+            \Return fuerza\_bruta(A, B)\\
+        }
+        a, b, c, d = separar(A)\\
+        e, f, g, h = separar(B)\\
+        p1 = strassen(a + d, e + h)\\
+        p2 = strassen(d, g - e)\\
+        p3 = strassen(a + b, h)\\
+        p4 = strassen(b - d, g + h)\\
+        p5 = strassen(a, f - h)\\
+        p6 = strassen(c + d, e)\\
+        p7 = strassen(a - c, e + f)\\
+        c11 = p1 + p2 - p3 + p4\\
+        c12 = p5 + p3\\
+        c21 = p6 + p2\\
+        c22 = p5 + p1 - p6 - p7\\
+        C $\gets$ nuevaMatriz(c11, c12, c21, c22)\\
+        \Return C\\
+    \end{algorithm}
+    \item ¿Qué técnica de diseño de algoritmos utiliza?\\
+    El algoritmo de Strassen utiliza la técnica de diseño de algoritmos: Divide y vencerás, ya que divide las matrices en submatrices de tamaño $n/2 \times n/2$ y después resuelve el problema de multiplicación de matrices en estas submatrices más pequeñas.
+    \item Ilustra la ejecución del algoritmo (en papel) con un ejemplar pequeño.\\
+    \includegraphics[width=16cm]{momos/strassen_1.jpeg}
+    \includegraphics[width=16cm]{momos/strassen_2.jpeg}
 \end{itemize}
 
 \section*{Ejercicio 2}
@@ -425,11 +455,13 @@
     Luego, se recorre el todo arreglo de las monedas, como su cuerpo tiene complejidad $O(1)$, el ciclo en total tiene complejidad $O(n)$ porque hace $n$ iteraciones.\\
     Luego, tenemos un ciclo que hace $monto$ iteraciones.
     En la complejidad de su cuerpo, tenemos un condicional y una asignación que son constantes. Después, se ejecuta un ciclo anidado que se ejecuta $n$ veces. En el cuerpo del ciclo anidado, se hacen operaciones básicas, condicionales y asignaciones, por lo que el cuerpo de este tiene complejidad constante. Por lo que el ciclo anidado tiene una complejidad total de $O(n) \cdot O(1) = O/(n)$.  Después del ciclo anidado se tiene una condicional, que es constante. Por lo que el segundo ciclo del código tiene una complejidad de: $O(monto) (O(1) + O(n) + O(1)) = O(monto \cdot n)$.\\
-    Luego del segundo for, tenemos un condicional con un return y después otro return. Las son instrucciones con complejidad constante. Por lo anterior, la complejidad del algoritmo se ve acotada por la complejidad del segundo ciclo. Por lo que el algoritmo $\in$ $O(monto \cdot n)$.
+    Luego del segundo for, tenemos un condicional con un return y después otro return. Las son instrucciones con complejidad constante. Por lo anterior, la complejidad del algoritmo se ve acotada por la complejidad del segundo ciclo. Por lo que el algoritmo $\in$ $O(monto \cdot n)$.\\
+    Es importante notar que la complejidad dada es pseudopolinomial, ya que se está haciendo el análisis sobre la magnitud de $monto$ y no sobre el
+    tamaño de monto.
     
     
     \item[4.C] Da un algoritmo eficiente para calcular $C(n)$: el número de formas distintas de obtener una cantidad $monto$ con las denominaciones dadas.\\
-    Si se asume que en las formas distintas no importa el orden, tenemos el siguiente algoritmo:
+    Si se asume que en las formas distintas no importa el orden (combinaciones), tenemos el siguiente algoritmo:
     ($monto$, $M$, $n$)\\
     Donde $M$ es un arreglo que contiene las monedas con sus denominaciones y $n$ es el tamaño del arreglo.
     \begin{algorithm}
@@ -749,7 +781,9 @@ Por lo tanto, el número total de inversiones en el arreglo $S = [3, 2, 1]$ es 3
 
 \section*{Bibliografía}
 \begin{itemize}
-    \item Peláez Valdés, C. (2018). *Estructuras de datos con Java moderno*. Las Prensas de Ciencias.
+    \item Manber, U. (1989). Introduction to Algorithms: A Creative Approach.
+
+    \item Peláez Valdés, C. (2018). \textit{Estructuras de datos con Java moderno}. Las Prensas de Ciencias.
 
     \item Alberto Lira, R. E., Cortazar May, A., González García, R. A., Gómez Pérez, V. A., 
     \& Alberto Lira, C. de J. (2017). *MulCoMa: un algoritmo concurrente para multiplicar matrices*. 
