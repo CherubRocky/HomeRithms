@@ -1,0 +1,98 @@
+\documentclass[11pt]{article}
+\usepackage[spanish]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath, amssymb}
+\usepackage{geometry}
+\usepackage{setspace}
+\usepackage{enumitem}
+\usepackage{graphicx}
+\usepackage{xurl}
+\usepackage{listings}
+\usepackage{tikz}
+\usepackage{xcolor}
+\usetikzlibrary{decorations.pathreplacing, calc}
+
+\geometry{letterpaper, margin=2cm}
+
+\begin{document}
+\begin{titlepage}
+    \centering
+    \vspace{2cm}
+    {\includegraphics[height=3.2cm]{../logo_unam.png}}
+    \hfill
+    {\includegraphics[height=3.2cm]{../logo_fc.png}\par}
+    \vspace{1cm}
+    {\bfseries\LARGE UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO \par}
+    \vspace{0.7cm}
+    {\scshape\Large FACULTAD DE CIENCIAS \par}
+    \vspace{1cm}
+    {\itshape\Large Lenguajes de programación \par}
+    \vspace{0.5cm}
+    {\itshape\Large Semestre 2026-1 \par}
+    \vspace{2cm}
+    {\scshape\Huge Tarea 7 \par}
+    \vspace{1cm}
+    {\itshape\Large Fecha de entrega: 20 de noviembre de 2025 \par}
+    \vspace{2cm}
+    {\Large Autores: \par}
+    \vspace{0.4cm}
+    {\Large Escobar Gonzalez Isaac Giovani \hspace{1cm} 321336400 \par}
+    {\Large Garduño Escobar Kevin Jonathan \hspace{0.5cm} 321070629 \par}
+    {\Large Zaldivar Alanis Rodrigo \hspace{2.75cm} 424029605 \par}
+\end{titlepage}
+\section*{Instrucciones}
+\noindent Resolver los siguientes ejercicios de forma clara y ordenada de acuerdo a los lineamientos de entrega de tareas disponibles en la página del curso.\\
+\section*{Ejercicios}
+
+\begin{enumerate}[leftmargin=0.8cm]
+    \item Observa la siguiente función
+    \begin{lstlisting}
+(define  (fun-x ls)
+     (if (null? ls)
+          0
+          (+ (car ls
+              (call/cc (lambda(k)
+                   (if (< car ls) 0)
+                        (k -100)
+                        (fun-x (cdr ls))))))))
+    \end{lstlisting}
+    \begin{enumerate}
+        \item ¿Qué hace la función \textit{fun-x}? Explica a profundidad la llamada de la continuación call/cc dentro del cuerpo de la función principal, ¿qué hace y para qué se requiere?
+        \item ¿Qué regresa la función con la entrada \textbf{’(5 8 9)}? Justifica tu respuesta
+        \item ¿Qué regresa la función con la entrada \textbf{’(-12 7 9)}? Justifica tu respuesta
+    \end{enumerate}
+    \item Observa la siguiente función
+    \begin{lstlisting}
+(define (funcion-y ls)
+   (cond
+      [(null? ls) 0]
+      [else(+ (let ((n (car ls)))
+             (let/cc k
+                (cond
+                   [(and (even? n) (> n 10)) (k 0)]
+                   [(odd? n) n]
+                   [else 0])))(funcion-y (cdr ls))])))
+    \end{lstlisting}
+    \begin{enumerate}
+        \item ¿Qué hace la función \textit{fun-y}? Explica a profundidad la llamada de la continuación let/cc dentro del cuerpo de la función principal, ¿qué hace y para qué se requiere?
+        \item ¿Qué regresa la función con la entrada \textbf{’(2 2 9)}? Justifica tu respuesta
+        \item ¿Qué regresa la función con la entrada \textbf{’(-12 24 36)}? Justifica tu respuesta
+    \end{enumerate}
+    \item Evalúa el siguiente código en el \textit{lenguaje de programación Racket.} Explica su resultado y da la continuación asociada a evaluar, usando la notación $\lambda \uparrow$.
+    \begin{lstlisting}
+> (define c #f)
+
+> (*1 (* 2 (* 3 (+ ( let / cc k ( set ! c k ) 4) 5))))
+
+> (c 0)
+    \end{lstlisting}
+    \item Utiliza la técnica de \textit{Continuation Passing Style} para modificar la siguiente función.
+    \begin{lstlisting}
+(define (flatMap lst)
+  (cond
+    [(null? lst) '()]
+    [else (append (car lst) (flatMap (cdr lst)))]))
+    \end{lstlisting}
+\end{enumerate}
+
+\end{document}
