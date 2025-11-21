@@ -14,6 +14,8 @@
 
 \geometry{letterpaper, margin=2cm}
 
+\lstset{escapeinside={(*}{*)}}
+
 \begin{document}
 \begin{titlepage}
     \centering
@@ -92,6 +94,17 @@
   (cond
     [(null? lst) '()]
     [else (append (car lst) (flatMap (cdr lst)))]))
+    \end{lstlisting}
+    La función \textit{flatMap} con la técnica de \textit{CPS} quedaría de la siguiente forma:
+    \begin{lstlisting}
+(define (flatMap lst)
+  (flatMap-cps lst ((*$\lambda$*)(x) x)))
+
+(define (flatMap-cps lst k)
+  (cond
+    [(null? lst) (k '())]
+    [else (flatMap-cps (cdr lst)
+            ((*$\lambda$*)(v) (k (append (car lst) v))))]))
     \end{lstlisting}
 \end{enumerate}
 
