@@ -59,9 +59,50 @@
                         (fun-x (cdr ls))))))))
     \end{lstlisting}
     \begin{enumerate}
-        \item ¿Qué hace la función \textit{fun-x}? Explica a profundidad la llamada de la continuación call/cc dentro del cuerpo de la función principal, ¿qué hace y para qué se requiere?
+        \item ¿Qué hace la función \textit{fun-x}? Explica a profundidad la llamada de la continuación call/cc dentro del cuerpo de la función principal, ¿qué hace y para qué se requiere?\\
+        \textbf{Solucion:}\\
+        La función \textit{fun-x} toma una lista de números y calcula la suma de sus elementos, pero solo si todos los elementos son mayores o iguales a cero. Si encuentra un elemento menor que cero, utiliza la continuación para devolver inmediatamente -100 sin continuar con la suma, pues no realiza la recursión en ese caso. La llamada a \textit{call/cc} captura la continuación actual y la usa para salir de la función prematuramente cuando se encuentra un número negativo, es decir, se utiliza para manejar el caso especial de números negativos ya que no se continua con la suma en ese caso y se retorna un valor de -100, el cual forma parte de un argumento de la suma principal, especificamente en la expresión \{+ (car ls) (call/cc ...)\}. Al llamar a la continuación k con -100, provoca que la expresión de suma se evalúe bajo el contexto de la suma principal, resultando en \{+ (car ls) -100\}, lo que lleva a que la función retorne un valor negativo inmediatamente sin evaluar los demás elementos de la lista.
+
         \item ¿Qué regresa la función con la entrada \textbf{’(5 8 9)}? Justifica tu respuesta
+        \textbf{Solucion:}\\
+        Realizaremos la aplicación de fun-x a la lista (5 8 9) paso a paso:
+        Vemos que al entrar a la función, nuestra lista no es nula (no es caso base aún), por lo que procedemos a evaluar la suma del primer elemento (car ls) con la llamada recursiva a fun-x con el resto de la lista (cdr ls).\\
+        En la \textbf{primer llamada}: (fun-x '(5 8 9))\\
+        car ls = 5 \\
+        Tenemos a \{+ 5 (call/cc ...)\} \\
+        Evaluamos (call/cc ...) con n = 5: \\
+        Dado que 5 no es menor que 0, no se llama a la continuación k con -100. \\
+        Procedemos a llamar a (fun-x '(8 9)).\\
+        En la \textbf{segunda llamada}: (fun-x '(8 9))\\
+        car ls = 8 \\
+        Tenemos a \{+ 8 (call/cc ...)\} \\
+        Evaluamos (call/cc ...) con n = 8: \\
+        Dado que 8 no es menor que 0, no se llama a la continuación k con -100. \\
+        Procedemos a llamar a (fun-x '(9)).\\
+        En la \textbf{tercera llamada}: (fun-x '(9)) \\
+        car ls = 9 \\
+        Tenemos a \{+ 9 (call/cc ...)\} \\
+        Evaluamos (call/cc ...) con n = 9: \\
+        Dado que 9 no es menor que 0, no se llama a la continuación k con -100. \\
+        Procedemos a llamar a (fun-x '()).
+        En la \textbf{cuarta llamada}: (fun-x '()) \\
+        La lista es vacía, por lo que regresamos 0. \\
+        Ahora, una vez obtenidos todos los valores, procedemos a realizar la evaluación de las sumas:\\
+        \{+ 5 \{+ 8 \{+ 9 0 \}\}\} = 22 \\ 
+        Por lo tanto, la función regresa \textbf{22} con la entrada '(5 8 9).
+
         \item ¿Qué regresa la función con la entrada \textbf{’(-12 7 9)}? Justifica tu respuesta
+        \textbf{Solucion:}\\
+        Realizaremos la aplicación de fun-x a la lista (-12 7 9) paso a paso:
+        Vemos que al entrar a la función, nuestra lista no es nula (no es caso base aún), por lo que procedemos a evaluar la suma del primer elemento (car ls) con la llamada recursiva a fun-x con el resto de la lista (cdr ls).\\
+        En la \textbf{primer llamada}: (fun-x '(-12 7 9))\\
+        car ls = -12 \\
+        Tenemos a \{+ -12 (call/cc ...)\} \\
+        Evaluamos (call/cc ...) con n = -12: \\
+        -12 es menor que 0, por lo que se llama a la continuación k con el valor -100. \\
+        Dado que la continuación k es argumento de la suma principal \{+ -12 (call/cc ...)\}, la llamada a k provoca que toda la expresión se evalúe bajo el contexto de la suma principal, resultando en: \{+ -12 -100\}. \\ Por lo tanto, la función regresa -112 inmediatamente sin evaluar los demás elementos de la lista, pues ya no se continúa con la recursión.\\
+        Por lo tanto, la función regresa \textbf{-112} con la entrada '(-12 7 9).
+
     \end{enumerate}
     \item Observa la siguiente función
     \begin{lstlisting}
@@ -76,11 +117,75 @@
                    [else 0])))(funcion-y (cdr ls))])))
     \end{lstlisting}
     \begin{enumerate}
-        \item ¿Qué hace la función \textit{fun-y}? Explica a profundidad la llamada de la continuación let/cc dentro del cuerpo de la función principal, ¿qué hace y para qué se requiere?
+        \item ¿Qué hace la función \textit{fun-y}? Explica a profundidad la llamada de la continuación let/cc dentro del cuerpo de la función principal, ¿qué hace y para qué se requiere?\\
+        \textbf{Solucion:}\\
+        La función \textit{funcion-y} toma una lista de números y va calculando la suma de algunos números los cuales cumplen ciertas condiciones. La llamada a \textit{let/cc} realiza la captura de la continuación actual y usarla para salir de la evaluación de un número específico cuando se cumple una condición particular, lo que provoca que la evaluación del bloque de \textit{let/cc} finalice.
+        Una de las dos condiciones es que si el número es par y mayor que 10, se llama a la continuación k con el valor 0, generando que la evaluación de ese número específico termine inmediatamente y se utilice 0 en su lugar para la suma. Ahora bien, otro caso pone que si el número es impar, simplemente se devuelve el número n para ser sumado. Finalmente, si ninguna de las condiciones anteriores se cumple (es decir, el número es par y menor o igual a 10), se devuelve 0 para ser sumado. En resumen, la llamada a \textit{let/cc} es utilizada para manejar el caso donde hay números pares mayores que 10, dandonos como resultado 0 para esos números, para después continuar con la evaluación de la lista, es decir, continua con la recursión.\\
+        Nos devuelve la suma de los números impares en la lista y 0 para los números pares menores o iguales a 10, mientras que los números pares mayores a 10 hacen uso de la continuación para devolver 0 inmediatamente.
+
         \item ¿Qué regresa la función con la entrada \textbf{’(2 2 9)}? Justifica tu respuesta
+        \textbf{Solucion:}\\
+        Realizaremos la aplicación de funcion-y a la lista (2 2 9) paso a paso:
+        Vemos que al entrar a la función, nuestra lista no es nula (no es caso base aún), por lo que procedemos a evaluar la suma del primer elemento (car ls) con la llamada recursiva a funcion-y con el resto de la lista (cdr ls).\\
+        En la \textbf{primer llamada}: (funcion-y '(2 2 9))\\
+        car ls = 2 \\
+        Tenemos a \{+ (let/cc ...) (funcion-y '(2 9))\} \\
+        Evaluamos (let/cc ...) con n = 2: \\
+        2 no es mayor que 10, por lo que no se llama a la continuación k. \\
+        2 es par, por lo que se devuelve 0. \\
+        Procedemos a llamar a (funcion-y '(2 9)).\\
+        En la \textbf{segunda llamada}: (funcion-y '(2 9))\\
+        car ls = 2 \\
+        Tenemos a \{+ (let/cc ...) (funcion-y '(9))\} \\
+        Evaluamos (let/cc ...) con n = 2: \\
+        2 no es mayor que 10, por lo que no se llama a la continuación k. \\
+        2 es par, por lo que se devuelve 0. \\
+        Procedemos a llamar a (funcion-y '(9)).\\
+        En la \textbf{tercera llamada}: (funcion-y '(9)) \\
+        car ls = 9 \\
+        Tenemos a \{+ (let/cc ...) (funcion-y '())\} \\
+        Evaluamos (let/cc ...) con n = 9: \\
+        9 no es mayor que 10, por lo que no se llama a la continuación k. \\
+        9 es impar, por lo que se devuelve 9. \\
+        Procedemos a llamar a (funcion-y '()).\\
+        En la \textbf{cuarta llamada}: (funcion-y '()) \\
+        La lista es nula, por lo que regresamos 0. \\
+        Ahora, retrocedemos y sumamos todos los valores que obtuvimos, evaluamos las sumas:\\
+        \{+ 0 \{+ 0 \{+ 9 0 \}\}\} = 9 \\
+        Por lo tanto, la función regresa 9 con la entrada '(2 2 9).
+
         \item ¿Qué regresa la función con la entrada \textbf{’(-12 24 36)}? Justifica tu respuesta
+        \textbf{Solucion:}\\
+        Realizaremos la aplicación de funcion-y a la lista (-12 24 36) paso a paso:
+        Vemos que al entrar a la función, nuestra lista no es nula (no es caso base aún), por lo que procedemos a evaluar la suma del primer elemento (car ls) con la llamada recursiva a funcion-y con el resto de la lista (cdr ls).\\
+        En la \textbf{primer llamada}: (funcion-y '(-12 24 36))\\
+        car ls = -12 \\
+        Tenemos a \{+ (let/cc ...) (funcion-y '(24 36))\} \\
+        Evaluamos (let/cc ...) con n = -12: \\
+        -12 no es mayor que 10, por lo que no se llama a la continuación k. \\
+        -12 es par, por lo que se devuelve 0 y no hace uso de la continuación. \\
+        Procedemos a llamar a (funcion-y '(24 36)).\\
+        En la \textbf{segunda llamada}: (funcion-y '(24 36))\\
+        car ls = 24 \\
+        Tenemos a \{+ (let/cc ...) (funcion-y '(36))\} \\
+        Evaluamos (let/cc ...) con n = 24: \\
+        24 es mayor que 10, por lo que se llama a la continuación k con 0. \\
+        Esto provoca que la evaluación de este número termine inmediatamente y se utilice 0 en su lugar para la suma. \\
+        Procedemos a llamar a (funcion-y '(36)).\\
+        En la \textbf{tercera llamada}: (funcion-y '(36)) \\
+        car ls = 36 \\
+        Tenemos a \{+ (let/cc ...) (funcion-y '())\} \\
+        Evaluamos (let/cc ...) con n = 36: \\
+        36 es mayor que 10, por lo que se llama a la continuación k con 0. \\
+        Esto provoca que la evaluación de este número termine inmediatamente y se utilice 0 en su lugar para la suma. \\
+        Procedemos a llamar a (funcion-y '()).\\
+        En la \textbf{cuarta llamada}: (funcion-y '()) \\
+                        - La lista es nula, por lo que regresamos 0. \\
+        Ahora, retrocedemos y sumamos todos los valores que obtuvimos, evaluamos las sumas:\\
+        \{+ 0 \{+ 0 \{+ 0 0 \}\}\} = 0 \\
+        Por lo tanto, la función regresa 0 con la entrada '(-12 24 36).
+
     \end{enumerate}
-    \newpage
     \item Evalúa el siguiente código en el \textit{lenguaje de programación Racket.} Explica su resultado y da la continuación asociada a evaluar, usando la notación $\lambda \uparrow$.
     \begin{verbatim}
 >(define c #f)
