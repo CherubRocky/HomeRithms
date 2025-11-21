@@ -80,14 +80,40 @@
         \item ¿Qué regresa la función con la entrada \textbf{’(2 2 9)}? Justifica tu respuesta
         \item ¿Qué regresa la función con la entrada \textbf{’(-12 24 36)}? Justifica tu respuesta
     \end{enumerate}
+    \newpage
     \item Evalúa el siguiente código en el \textit{lenguaje de programación Racket.} Explica su resultado y da la continuación asociada a evaluar, usando la notación $\lambda \uparrow$.
-    \begin{lstlisting}
-> (define c #f)
-
-> (*1 (* 2 (* 3 (+ ( let / cc k ( set ! c k ) 4) 5))))
-
-> (c 0)
-    \end{lstlisting}
+    \begin{verbatim}
+>(define c #f)
+>(*1 (* 2 (* 3 (+ (let/cc k (set! c k) 4) 5))))
+>(c 0)
+    \end{verbatim}
+En la primera línea, se asigna el valor falso a la variable c.\\
+En la segunda línea, se evalúa una expresión, en la que, la operación más anidada asigna a k la continuación en ese momento de la ejecución de la expresión. Y además, asigna $k$ a $c$. Y por último aplica 4 a $k$, tenemos la continuación de la siguiente forma:\\
+$\lambda\uparrow$ (v) (* 1 (* 2 (* 3 (+ v 5))))\\
+(($\lambda\uparrow$ (v) (* 1 (* 2 (* 3 (+ v 5))))) 4)\\ Que da como resultado:
+\begin{verbatim}
+> (* 1 (* 2 (* 3 (+ 4 5))))
+> (* 1 (* 2 (* 3 9)))
+> (* 1 (* 2 27))
+> (* 1 54)
+> 54
+\end{verbatim}
+Posteriormente, en la tercera línea, tenemos que se pasa como parámetro $0$ a $c$.
+Por lo que en la continuación que guarda c, se devuelve cero. La función queda de esta manera:\\
+$\lambda\uparrow$ (v) (* 1 (* 2 (* 3 (+ v 5))))\\
+(($\lambda\uparrow$ (v) (* 1 (* 2 (* 3 (+ v 5))))) 0)\\ Que da como resultado:
+\begin{verbatim}
+> (* 1 (* 2 (* 3 (+ 0 5))))
+> (* 1 (* 2 (* 3 5)))
+> (* 1 (* 2 15))
+> (* 1 30)
+> 30
+\end{verbatim}
+Por lo que la ejecución del programa regresa:
+\begin{verbatim}
+> 54
+> 30
+\end{verbatim}
     \item Utiliza la técnica de \textit{Continuation Passing Style} para modificar la siguiente función.
     \begin{lstlisting}
 (define (flatMap lst)
