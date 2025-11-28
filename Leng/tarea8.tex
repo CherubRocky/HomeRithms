@@ -1,0 +1,82 @@
+\documentclass[11pt]{article}
+\usepackage[spanish]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath, amssymb}
+\usepackage{geometry}
+\usepackage{setspace}
+\usepackage{enumitem}
+\usepackage{graphicx}
+\usepackage{xurl}
+\usepackage{listings}
+\usepackage{tikz}
+\usepackage{xcolor}
+\usetikzlibrary{decorations.pathreplacing, calc}
+
+\geometry{letterpaper, margin=2cm}
+
+\lstset{escapeinside={(*}{*)}}
+
+\begin{document}
+\begin{titlepage}
+    \centering
+    \vspace{2cm}
+    {\includegraphics[height=3.2cm]{../logo_unam.png}}
+    \hfill
+    {\includegraphics[height=3.2cm]{../logo_fc.png}\par}
+    \vspace{1cm}
+    {\bfseries\LARGE UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO \par}
+    \vspace{0.7cm}
+    {\scshape\Large FACULTAD DE CIENCIAS \par}
+    \vspace{1cm}
+    {\itshape\Large Lenguajes de programación \par}
+    \vspace{0.5cm}
+    {\itshape\Large Semestre 2026-1 \par}
+    \vspace{2cm}
+    {\scshape\Huge Tarea 8 \par}
+    \vspace{1cm}
+    {\itshape\Large Fecha de entrega: 01 de diciembre de 2025 \par}
+    \vspace{2cm}
+    {\Large Autores: \par}
+    \vspace{0.4cm}
+    {\Large Escobar Gonzalez Isaac Giovani \hspace{1cm} 321336400 \par}
+    {\Large Garduño Escobar Kevin Jonathan \hspace{0.5cm} 321070629 \par}
+    {\Large Zaldivar Alanis Rodrigo \hspace{2.75cm} 424029605 \par}
+\end{titlepage}
+\section*{Instrucciones}
+\noindent Resolver los siguientes ejercicios de forma clara y ordenada de acuerdo a los lineamientos de entrega de tareas disponibles en la página del curso.\\
+\section*{Ejercicios}
+
+\begin{enumerate}[leftmargin=0.8cm]
+    \item A partir de semántica operacional vista en clase realiza el árbol de derivación de la siguiente suma:\\
+    $(1+2)+(2+(2+2))$
+    \item Da el juicio de tipo para la siguiente expresion, la cual esta implementada en el lenguaje Racket.
+    \begin{lstlisting}[language=Lisp]
+(define fib
+    (lambda (n)
+        (if (<= n 1)
+            n
+            (+ (fib (- n 1)) (fib (- n 2))))))
+    \end{lstlisting}
+    \item Realiza la inferencia de tipos de la siguiente expresión, exponiendo de manera explícita los tipos que recibe y regresa la expresión al finalizar la inferencia.
+    \begin{lstlisting}[language=Lisp]
+(define foo
+    (lambda (lst item)
+        (cond
+            ((null? nlst) nempty)
+            ((equal? item (nfirst lst)) (nrest lst))
+            (else (ncons (nfirst lst) (foo (nrest lst) item))))))
+    \end{lstlisting}
+    \item Utilizando el algoritmo de unificación visto en clase en la siguiente expresión:\\
+    ((lambda (y) (* y (+ 0 0))) 1)
+    \item Define un macro que calcule el cuadrado de un número con la sintaxis vista en clases.
+\end{enumerate}
+\subsection*{Algoritmo de Unificación}
+\begin{enumerate}
+    \item Si X e Y son constante idénticas, no se hace nada.
+    \item Si X e Y son identificadores idénticos, no se hace nada.
+    \item Si X es un identificador, reemplaza todas las ocurrencias de X por Y tanto en el stack como en la sustitución, y añade X $\rightarrow$ Y en la sustitución.
+    \item Si Y es un identificador, reemplaza todas las ocurrencias de Y por X tanto en el stack como en la sustitución, y añade Y $\rightarrow$ X en la sustitución.
+    \item Si X es de la forma C($X_1$, $X_2$ ,...., $X_n$) para algun constructor C, e Y es de la forma C($Y_1$, $Y_2$, ...., $Y_n$) (i.e. tienen el mismo constructor), entonces agrega $X_i = Y_i$ para toda $1 \leq i \leq n$ en el stack.
+    \item En cualquier otro caso, X e Y no se unifican y se reporta un error.
+\end{enumerate}
+\end{document}
