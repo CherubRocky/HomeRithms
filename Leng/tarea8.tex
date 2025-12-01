@@ -11,6 +11,7 @@
 \usepackage{tikz}
 \usepackage{xcolor}
 \usepackage{longtable}
+\usepackage{ mathrsfs }
 \usetikzlibrary{decorations.pathreplacing, calc}
 
 \geometry{letterpaper, margin=2cm}
@@ -49,7 +50,14 @@
 
 \begin{enumerate}[leftmargin=0.8cm]
     \item A partir de semántica operacional vista en clase realiza el árbol de derivación de la siguiente suma:\\
-    $(1+2)+(2+(2+2))$
+    $(1+2)+(2+(2+2))$\\
+    Usando las reglas de reducción:
+    \begin{center}
+        \huge
+        $
+            \frac{\frac{1, \mathscr{E} \Rightarrow \hat{1} \quad 2, \mathscr{E} \Rightarrow \hat{2}}{(1+2), \mathscr{E} \Rightarrow \hat{1} + \hat{2} \Rightarrow \hat{3}} \qquad \frac{2, \mathscr{E} \Rightarrow \hat{2} \quad \frac{2, \mathscr{E} \Rightarrow \hat{2} \quad 2, \mathscr{E} \Rightarrow \hat{2}}{(2+2), \mathscr{E} \Rightarrow \hat{2} + \hat{2} \Rightarrow \hat{4}}}{(2+(2+2)), \mathscr{E} \Rightarrow \hat{2} + \hat{4} \Rightarrow \hat{6}}}{((1+2)+(2+(2+2))), \mathscr{E} \Rightarrow \hat{3} + \hat{6} \Rightarrow \hat{9}}
+        $
+    \end{center}
     \item Da el juicio de tipo para la siguiente expresion, la cual esta implementada en el lenguaje Racket.
     \begin{lstlisting}[language=Lisp]
 (define fib
