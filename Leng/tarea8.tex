@@ -10,6 +10,7 @@
 \usepackage{listings}
 \usepackage{tikz}
 \usepackage{xcolor}
+\usepackage{longtable}
 \usetikzlibrary{decorations.pathreplacing, calc}
 
 \geometry{letterpaper, margin=2cm}
@@ -67,7 +68,105 @@
             (else (ncons (nfirst lst) (foo (nrest lst) item))))))
     \end{lstlisting}
     \item Utilizando el algoritmo de unificación visto en clase en la siguiente expresión:\\
-    ((lambda (y) (* y (+ 0 0))) 1)
+    ((lambda (y) (* y (+ 0 0))) 1)\\
+    Obtenemos las sub-expresiones y las nombramos:\\
+    \fbox{1} ( \fbox{2} (lambda (y) \fbox{3} (* y \fbox{4} (+ \fbox{5} 0 \fbox{6} 0))) \fbox{7} 1)\\
+    Ahora generamos las restricciones de tipos a partir de las sub-expresiones obtenidas:
+    \begin{itemize}
+        \item \textlbrackdbl \ \fbox{2} \textrbrackdbl \ = \textlbrackdbl \ \fbox{7} \textrbrackdbl \ $\rightarrow$ \textlbrackdbl \ \fbox{1} \textrbrackdbl
+        \item \textlbrackdbl \ \fbox{2} \textrbrackdbl \ = \textlbrackdbl \ y \textrbrackdbl \ $\rightarrow$ \textlbrackdbl \ \fbox{3} \textrbrackdbl
+        \item \textlbrackdbl \ \fbox{3} \textrbrackdbl \ = Number
+        \item \textlbrackdbl \ y \textrbrackdbl \; \ = Number
+        \item \textlbrackdbl \ \fbox{4} \textrbrackdbl \ = Number
+        \item \textlbrackdbl \ \fbox{5} \textrbrackdbl \ = Number
+        \item \textlbrackdbl \ \fbox{6} \textrbrackdbl \ = Number
+        \item \textlbrackdbl \ \fbox{7} \textrbrackdbl \ = Number
+    \end{itemize}
+    Ejecutamos el algoritmo de unificación:\\\\
+    \begin{longtable}{|c|l|l|}
+    \hline
+    Acción & \multicolumn{1}{c|}{Stack} & \multicolumn{1}{c|}{Sustitución} \\ \hline
+    \endfirsthead
+    \hline
+    Acción & \multicolumn{1}{c|}{Stack} & \multicolumn{1}{c|}{Sustitución} \\ \hline
+    \endhead
+    Inicio & \textlbrackdbl \ \fbox{2} \textrbrackdbl \ = \textlbrackdbl \ \fbox{7} \textrbrackdbl $\rightarrow$ \textlbrackdbl \ \fbox{1} \textrbrackdbl & Vacío \\
+           & \textlbrackdbl \ \fbox{2} \textrbrackdbl \ = \textlbrackdbl \ y \textrbrackdbl $\rightarrow$ \textlbrackdbl \ \fbox{3} \textrbrackdbl & \\
+           & \textlbrackdbl \ \fbox{3} \textrbrackdbl \ = Number & \\
+           & \textlbrackdbl \ y \textrbrackdbl \; \ = Number & \\
+           & \textlbrackdbl \ \fbox{4} \textrbrackdbl \ = Number & \\
+           & \textlbrackdbl \ \fbox{5} \textrbrackdbl \ = Number & \\
+           & \textlbrackdbl \ \fbox{6} \textrbrackdbl \ = Number & \\
+           & \textlbrackdbl \ \fbox{7} \textrbrackdbl \ = Number & \\ \hline
+    Paso 3 & \textlbrackdbl \ \fbox{7} \textrbrackdbl \ $\rightarrow$ \textlbrackdbl \ \fbox{1} \textrbrackdbl = \textlbrackdbl \ y \textrbrackdbl \ $\rightarrow$ \textlbrackdbl \ \fbox{3} \textrbrackdbl & \textlbrackdbl \ \fbox{2} \textrbrackdbl \ $\mapsto$ (\textlbrackdbl \ \fbox{7} \textrbrackdbl \ $\rightarrow$ \textlbrackdbl \ \fbox{1} \textrbrackdbl) \\
+           & \textlbrackdbl \ \fbox{3} \textrbrackdbl \ = Number & \\
+           & \textlbrackdbl \ y \textrbrackdbl \; \ = Number & \\
+           & \textlbrackdbl \ \fbox{4} \textrbrackdbl \ = Number & \\
+           & \textlbrackdbl \ \fbox{5} \textrbrackdbl \ = Number & \\
+           & \textlbrackdbl \ \fbox{6} \textrbrackdbl \ = Number & \\
+           & \textlbrackdbl \ \fbox{7} \textrbrackdbl \ = Number & \\ \hline
+    Paso 5 & \textlbrackdbl \ \fbox{7} \textrbrackdbl \ = \textlbrackdbl \ y \textrbrackdbl & \textlbrackdbl \ \fbox{2} \textrbrackdbl \ $\mapsto$ (\textlbrackdbl \ \fbox{7} \textrbrackdbl \ $\rightarrow$ \textlbrackdbl \ \fbox{1} \textrbrackdbl) \\
+           & \textlbrackdbl \ \fbox{1} \textrbrackdbl \ = \textlbrackdbl \ \fbox{3} \textrbrackdbl & \\
+           & \textlbrackdbl \ \fbox{3} \textrbrackdbl \ = Number & \\
+           & \textlbrackdbl \ y \textrbrackdbl \; \ = Number & \\
+           & \textlbrackdbl \ \fbox{4} \textrbrackdbl \ = Number & \\
+           & \textlbrackdbl \ \fbox{5} \textrbrackdbl \ = Number & \\
+           & \textlbrackdbl \ \fbox{6} \textrbrackdbl \ = Number & \\
+           & \textlbrackdbl \ \fbox{7} \textrbrackdbl \ = Number & \\ \hline
+    Paso 3 & \textlbrackdbl \ \fbox{1} \textrbrackdbl \ = \textlbrackdbl \ \fbox{3} \textrbrackdbl & \textlbrackdbl \ \fbox{2} \textrbrackdbl \ $\mapsto$ (\textlbrackdbl \ y \textrbrackdbl \ $\rightarrow$ \textlbrackdbl \ \fbox{1} \textrbrackdbl) \\
+           & \textlbrackdbl \ \fbox{3} \textrbrackdbl \ = Number & \textlbrackdbl \ \fbox{7} \textrbrackdbl \ $\mapsto$ \textlbrackdbl \ y \textrbrackdbl \\
+           & \textlbrackdbl \ y \textrbrackdbl \; \ = Number & \\
+           & \textlbrackdbl \ \fbox{4} \textrbrackdbl \ = Number & \\
+           & \textlbrackdbl \ \fbox{5} \textrbrackdbl \ = Number & \\
+           & \textlbrackdbl \ \fbox{6} \textrbrackdbl \ = Number & \\
+           & \textlbrackdbl \ y \textrbrackdbl \; \ = Number & \\ \hline
+    Paso 3 & \textlbrackdbl \ \fbox{3} \textrbrackdbl \ = Number & \textlbrackdbl \ \fbox{2} \textrbrackdbl \ $\mapsto$ (\textlbrackdbl \ y \textrbrackdbl \ $\rightarrow$ \textlbrackdbl \ \fbox{3} \textrbrackdbl) \\
+           & \textlbrackdbl \ y \textrbrackdbl \; \ = Number & \textlbrackdbl \ \fbox{7} \textrbrackdbl \ $\mapsto$ \textlbrackdbl \ y \textrbrackdbl \\
+           & \textlbrackdbl \ \fbox{4} \textrbrackdbl \ = Number & \textlbrackdbl \ \fbox{1} \textrbrackdbl \ $\mapsto$ \textlbrackdbl \ \fbox{3} \textrbrackdbl \\
+           & \textlbrackdbl \ \fbox{5} \textrbrackdbl \ = Number & \\
+           & \textlbrackdbl \ \fbox{6} \textrbrackdbl \ = Number & \\
+           & \textlbrackdbl \ y \textrbrackdbl \; \ = Number & \\ \hline
+    Paso 3 & \textlbrackdbl \ y \textrbrackdbl \; \ = Number & \textlbrackdbl \ \fbox{2} \textrbrackdbl \ $\mapsto$ (\textlbrackdbl \ y \textrbrackdbl \ $\rightarrow$ Number) \\
+           & \textlbrackdbl \ \fbox{4} \textrbrackdbl \ = Number & \textlbrackdbl \ \fbox{7} \textrbrackdbl \ $\mapsto$ \textlbrackdbl \ y \textrbrackdbl \\
+           & \textlbrackdbl \ \fbox{5} \textrbrackdbl \ = Number & \textlbrackdbl \ \fbox{1} \textrbrackdbl \ $\mapsto$ Number \\
+           & \textlbrackdbl \ \fbox{6} \textrbrackdbl \ = Number & \textlbrackdbl \ \fbox{3} \textrbrackdbl \ $\mapsto$ Number \\
+           & \textlbrackdbl \ y \textrbrackdbl \; \ = Number & \\ \hline
+    Paso 3 & \textlbrackdbl \ \fbox{4} \textrbrackdbl \ = Number & \textlbrackdbl \ \fbox{2} \textrbrackdbl \ $\mapsto$ (Number \ $\rightarrow$ Number) \\
+           & \textlbrackdbl \ \fbox{5} \textrbrackdbl \ = Number & \textlbrackdbl \ \fbox{7} \textrbrackdbl \ $\mapsto$ Number \\
+           & \textlbrackdbl \ \fbox{6} \textrbrackdbl \ = Number & \textlbrackdbl \ \fbox{1} \textrbrackdbl \ $\mapsto$ Number \\
+           & Number = Number & \textlbrackdbl \ \fbox{3} \textrbrackdbl \ $\mapsto$ Number \\ 
+           &  & \textlbrackdbl \ y \textrbrackdbl \; \ $\mapsto$ Number \\ \hline
+    Paso 3 & \textlbrackdbl \ \fbox{5} \textrbrackdbl \ = Number & \textlbrackdbl \ \fbox{2} \textrbrackdbl \ $\mapsto$ (Number \ $\rightarrow$ Number) \\
+           & \textlbrackdbl \ \fbox{6} \textrbrackdbl \ = Number & \textlbrackdbl \ \fbox{7} \textrbrackdbl \ $\mapsto$ Number \\
+           & Number = Number & \textlbrackdbl \ \fbox{1} \textrbrackdbl \ $\mapsto$ Number \\ 
+           &  & \textlbrackdbl \ \fbox{3} \textrbrackdbl \ $\mapsto$ Number \\
+           &  & \textlbrackdbl \ y \textrbrackdbl \; \ $\mapsto$ Number \\
+           &  & \textlbrackdbl \ \fbox{4} \textrbrackdbl \ $\mapsto$ Number \\ \hline
+    Paso 3 & \textlbrackdbl \ \fbox{6} \textrbrackdbl \ = Number & \textlbrackdbl \ \fbox{2} \textrbrackdbl \ $\mapsto$ (Number \ $\rightarrow$ Number) \\
+           & Number = Number & \textlbrackdbl \ \fbox{7} \textrbrackdbl \ $\mapsto$ Number \\
+           &  & \textlbrackdbl \ \fbox{1} \textrbrackdbl \ $\mapsto$ Number \\ 
+           &  & \textlbrackdbl \ \fbox{3} \textrbrackdbl \ $\mapsto$ Number \\
+           &  & \textlbrackdbl \ y \textrbrackdbl \; \ $\mapsto$ Number \\
+           &  & \textlbrackdbl \ \fbox{4} \textrbrackdbl \ $\mapsto$ Number \\
+           &  & \textlbrackdbl \ \fbox{5} \textrbrackdbl \ $\mapsto$ Number \\ \hline
+    Paso 3 & Number = Number & \textlbrackdbl \ \fbox{2} \textrbrackdbl \ $\mapsto$ (Number \ $\rightarrow$ Number) \\
+           &  & \textlbrackdbl \ \fbox{7} \textrbrackdbl \ $\mapsto$ Number \\
+           &  & \textlbrackdbl \ \fbox{1} \textrbrackdbl \ $\mapsto$ Number \\ 
+           &  & \textlbrackdbl \ \fbox{3} \textrbrackdbl \ $\mapsto$ Number \\
+           &  & \textlbrackdbl \ y \textrbrackdbl \; \ $\mapsto$ Number \\
+           &  & \textlbrackdbl \ \fbox{4} \textrbrackdbl \ $\mapsto$ Number \\
+           &  & \textlbrackdbl \ \fbox{5} \textrbrackdbl \ $\mapsto$ Number \\
+           &  & \textlbrackdbl \ \fbox{6} \textrbrackdbl \ $\mapsto$ Number \\ \hline
+    Paso 1 & Vacío & \textlbrackdbl \ \fbox{2} \textrbrackdbl \ $\mapsto$ (Number \ $\rightarrow$ Number) \\
+           &  & \textlbrackdbl \ \fbox{7} \textrbrackdbl \ $\mapsto$ Number \\
+           &  & \textlbrackdbl \ \fbox{1} \textrbrackdbl \ $\mapsto$ Number \\ 
+           &  & \textlbrackdbl \ \fbox{3} \textrbrackdbl \ $\mapsto$ Number \\
+           &  & \textlbrackdbl \ y \textrbrackdbl \; \ $\mapsto$ Number \\
+           &  & \textlbrackdbl \ \fbox{4} \textrbrackdbl \ $\mapsto$ Number \\
+           &  & \textlbrackdbl \ \fbox{5} \textrbrackdbl \ $\mapsto$ Number \\
+           &  & \textlbrackdbl \ \fbox{6} \textrbrackdbl \ $\mapsto$ Number \\ \hline
+    \end{longtable}
+    Así queda hecho el algoritmo de unificación en la expresión dada de acuerdo al algoritmo de unificación que viene justo aquí en la tarea.
     \item Define un macro que calcule el cuadrado de un número con la sintaxis vista en clases.
 \end{enumerate}
 \subsection*{Algoritmo de Unificación}
