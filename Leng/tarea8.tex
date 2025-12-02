@@ -12,6 +12,8 @@
 \usepackage{xcolor}
 \usepackage{longtable}
 \usepackage{ mathrsfs }
+\usepackage{bussproofs}
+\usepackage{xcolor}
 \usetikzlibrary{decorations.pathreplacing, calc}
 
 \geometry{letterpaper, margin=2cm}
@@ -66,6 +68,34 @@
             n
             (+ (fib (- n 1)) (fib (- n 2))))))
     \end{lstlisting}
+
+    \textbf{Solucion:}\\
+    Empezamos a construir el juicio de tipos para la expresion dada.\\
+    Nota: Abreviaremos num como el tipo number para facilitar la escritura del juicio y también lo desarrollaremos por partes por el espacio que requiere.\\
+    Primero, nos fijamos en la expresión completa y empezamos a construir el juicio de tipos a partir de esta misma.\\
+
+    \begin{center}
+        \includegraphics[width=0.85\textwidth]{1.jpg}
+    \end{center}
+
+    Ahora bien, nos fijamos en la expresión del \texttt{if} y empezamos a construir el juicio de tipos para esta.\\
+    Sea el entorno de tipos para la expresión del \texttt{if} el cual nos genera 3 ramas para el juicio de tipos, una por cada una de las expresiones que componen el \texttt{if}.\\
+    La primera rama: 
+    \begin{center}
+        \includegraphics[width=0.85\textwidth]{2.jpg}
+    \end{center}
+    La segunda rama:
+    \begin{center}
+        \includegraphics[width=0.85\textwidth]{3.jpg}
+    \end{center}
+    La tercera y ultima rama:
+    \begin{center}
+        \includegraphics[width=0.85\textwidth]{4.jpg}
+    \end{center}
+    Por tanto el juicio de tipos es el árbol mostrado en las anteriores imágenes mostrado por partes.\\
+
+
+
 
     \item Realiza la inferencia de tipos de la siguiente expresión, exponiendo de manera explícita los tipos que recibe y regresa la expresión al finalizar la inferencia.
 
@@ -157,7 +187,7 @@
         \item \textlbrackdbl \ \fbox{6} \textrbrackdbl \ = Number
         \item \textlbrackdbl \ \fbox{7} \textrbrackdbl \ = Number
     \end{itemize}
-    Ejecutamos el algoritmo de unificación:\\\\
+    Ejecutamos el algoritmo de unificación:
     \begin{longtable}{|c|l|l|}
     \hline
     Acción & \multicolumn{1}{c|}{Stack} & \multicolumn{1}{c|}{Sustitución} \\ \hline
@@ -242,7 +272,6 @@
            &  & \textlbrackdbl \ \fbox{6} \textrbrackdbl \ $\mapsto$ Number \\ \hline
     \end{longtable}
     Así queda hecho el algoritmo de unificación en la expresión dada de acuerdo al algoritmo de unificación que viene justo aquí en la tarea.
-    \item Define un macro que calcule el cuadrado de un número con la sintaxis vista en clases.
 \end{enumerate}
 \subsection*{Algoritmo de Unificación}
 \begin{enumerate}
