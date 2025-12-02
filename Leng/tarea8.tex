@@ -66,15 +66,82 @@
             n
             (+ (fib (- n 1)) (fib (- n 2))))))
     \end{lstlisting}
+
     \item Realiza la inferencia de tipos de la siguiente expresión, exponiendo de manera explícita los tipos que recibe y regresa la expresión al finalizar la inferencia.
+
+    En este ejercicio, se sustituyó el argumento de null? (nlst) por (lst).
     \begin{lstlisting}[language=Lisp]
 (define foo
     (lambda (lst item)
         (cond
-            ((null? nlst) nempty)
+            ((null? lst) nempty)
             ((equal? item (nfirst lst)) (nrest lst))
             (else (ncons (nfirst lst) (foo (nrest lst) item))))))
     \end{lstlisting}
+    Utilizamos el siguiente etiquetado de expresiones para facilitar la inferencia de tipos:\\
+    \begin{itemize}
+        \item \fbox{1} = \texttt{(lambda (lst item)
+        (cond
+            ((null? nlst) nempty)
+            ((equal? item (nfirst lst)) (nrest lst))
+            (else (ncons (nfirst lst) (foo (nrest lst) item)))))}
+        \item \fbox{2} = \texttt{(cond
+            ((null? nlst) nempty)
+            ((equal? item (nfirst lst)) (nrest lst))
+            (else (ncons (nfirst lst) (foo (nrest lst) item))))}
+        \item \fbox{3} = \texttt{(null? lst)}
+        \item \fbox{4} = \texttt{nempty}
+        \item \fbox{5} = \texttt{(equal? item (nfirst lst))}
+        \item \fbox{6} = \texttt{(nfirst lst)}
+        \item \fbox{7} = \texttt{(nrest lst)}
+        \item \fbox{8} = \texttt{else}
+        \item \fbox{9} = \texttt{(ncons (nfirst lst) (foo (nrest lst) item))}
+        \item \fbox{10} = \texttt{(nfirst lst)}
+        \item \fbox{11} = \texttt{(foo (nrest lst) item)}
+        \item \fbox{12} = \texttt{(nrest lst)}
+    \end{itemize}
+    Asumiendo que como en clase, los predicados \texttt{equal?} toma tipos \textit{number} y \texttt{nfirst} devuelva tipo \textit{number},
+    la inferencia de tipos queda de la siguiente manera:
+    \begin{itemize}
+        \item \textlbrackdbl \ \fbox{1} \textrbrackdbl \ = (\textlbrackdbl \ lst \textrbrackdbl $\times$ \textlbrackdbl \ item \textrbrackdbl) $\rightarrow$ \textlbrackdbl \ \fbox{2} \textrbrackdbl\\
+        Ya que se trata de una lambda y \fbox{2} es el cuerpo de esta.
+        
+        \item \textlbrackdbl \ \fbox{2} \textrbrackdbl \ = \textlbrackdbl \ \fbox{3} \textrbrackdbl $\rightarrow$ \textlbrackdbl \ \fbox{4} \textrbrackdbl \ \textbar \ \textlbrackdbl \ \fbox{5} \textrbrackdbl $\rightarrow$ \textlbrackdbl \ \fbox{7} \textrbrackdbl \ \textbar \ \textlbrackdbl \ \fbox{8} \textrbrackdbl $\rightarrow$ \textlbrackdbl \ \fbox{9} \textrbrackdbl, donde
+        \textlbrackdbl \ \fbox{4} \textrbrackdbl \ = \textlbrackdbl \ \fbox{7} \textrbrackdbl \ = \textlbrackdbl \ \fbox{9} \textrbrackdbl \\
+        Ya que se trata de un cond con tres posibles casos diferentes.
+
+        \item \textlbrackdbl \ \fbox{3} \textrbrackdbl = \textlbrackdbl \ \texttt{null? lst} \textrbrackdbl = \textit{boolean} con \textlbrackdbl \ \texttt{lst} \textrbrackdbl = \textit{nlist}
+
+        \item \textlbrackdbl \ \fbox{4} \textrbrackdbl = \textlbrackdbl \ \texttt{nempty} \textrbrackdbl = \textit{nlist}
+
+        \item \textlbrackdbl \ \fbox{5} \textrbrackdbl = \textlbrackdbl \ \texttt{equal? item (nfirst lst)} \textrbrackdbl = \textit{boolean} con \textlbrackdbl \ \texttt{item} \textrbrackdbl = \textit{number} y
+        \textlbrackdbl \ \fbox{6} \textrbrackdbl = \textit{number}
+
+        \item \textlbrackdbl \ \fbox{6} \textrbrackdbl = \textlbrackdbl \ \texttt{(nfirst lst)} \textrbrackdbl = \textit{number} con \textlbrackdbl \ \texttt{lst} \textrbrackdbl = \textit{nlist}
+
+        \item \textlbrackdbl \ \fbox{7} \textrbrackdbl (i.e.) \textlbrackdbl \ \texttt{nrest lst} \textrbrackdbl = \textit{nlist} con \textlbrackdbl \ \texttt{lst} \textrbrackdbl = \textit{nlist}
+
+        \item \textlbrackdbl \ \fbox{8} \textrbrackdbl = \textlbrackdbl \ \texttt{else} \textrbrackdbl = \textit{boolean} ya que según el P.L.A.I, true y else en este caso del cond son equivalentes (se suele usar true para hacer este tipo de análisis en vez de else).
+
+        \item \textlbrackdbl \ \fbox{9} \textrbrackdbl = \textit{nlist} con \textlbrackdbl \ \fbox{10} \textrbrackdbl (i.e.) \textlbrackdbl \ \texttt{nfirst lst} \textrbrackdbl = \textit{number} y
+        \textlbrackdbl \ \fbox{11} \textrbrackdbl = \textit{nlist}
+        Ya que se trata de la aplicación de un ncons con sus dos argumentos.
+
+        \item \textlbrackdbl \ \fbox{10} \textrbrackdbl (i.e) \textlbrackdbl \ \texttt{nfirst lst} \textrbrackdbl = \textit{number} con \textlbrackdbl \ \texttt{lst} \textrbrackdbl = \textit{nlist}
+
+        \item \textlbrackdbl \ \fbox{11} \textrbrackdbl se tiene la restricción \textlbrackdbl \ \texttt{foo} \textrbrackdbl = (\textlbrackdbl \ \fbox{12} \textrbrackdbl $\times$ \textlbrackdbl \ \texttt{item} \textrbrackdbl) $\rightarrow$
+        \textlbrackdbl \ \texttt{foo} \fbox{12} \texttt{item} \textrbrackdbl
+
+        \item \textlbrackdbl \ \fbox{12} \textrbrackdbl (i.e) \textlbrackdbl \ \texttt{nrest lst} \textrbrackdbl = \textit{nlist} con \textlbrackdbl \ \texttt{lst} \textrbrackdbl = \textit{nlist}
+
+        Por lo que tenemos que \textlbrackdbl \ \texttt{lst} \textrbrackdbl = \textit{nlist}, así como \textlbrackdbl \ \fbox{12} \textrbrackdbl = \textit{nlist}. Así mismo, se infiere por \fbox{5} que \textlbrackdbl \ \texttt{item} \textrbrackdbl = \textit{number}.\\
+        Por lo que el tipo de \texttt{foo} es:
+        \textlbrackdbl \ \texttt{foo} \textrbrackdbl = ( \textit{nlist}  $\times$ \textit{number}) $\rightarrow$
+        \textlbrackdbl \ \texttt{foo} \textit{nlist} \textit{number} \textrbrackdbl.
+        Por otro lado, teniendo en cuenta, el retorno de los casos del cond, y con la restricción impuesta por \texttt{cons} (\fbox{9}), se tiene que \texttt{foo} devuelve algo de tipo \textit{nlist}, por lo que tenemos que el tipo de la función foo es:\\
+        $nlist \times number \rightarrow nlist$
+    \end{itemize}
+    
     \item Utilizando el algoritmo de unificación visto en clase en la siguiente expresión:\\
     ((lambda (y) (* y (+ 0 0))) 1)\\
     Obtenemos las sub-expresiones y las nombramos:\\
