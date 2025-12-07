@@ -1,0 +1,118 @@
+\documentclass[11pt]{article}
+\usepackage[spanish]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath, amssymb}
+\usepackage{geometry}
+\usepackage{setspace}
+\usepackage{enumitem}
+\usepackage{graphicx}
+\usepackage{xurl}
+\usepackage{listings}
+\usepackage{tikz}
+\usepackage{xcolor}
+\usetikzlibrary{decorations.pathreplacing, calc}
+
+\geometry{letterpaper, margin=2cm}
+
+\lstset{escapeinside={(*}{*)}}
+
+\begin{document}
+\begin{titlepage}
+    \centering
+    \vspace{2cm}
+    {\includegraphics[height=3.2cm]{../logo_unam.png}}
+    \hfill
+    {\includegraphics[height=3.2cm]{../logo_fc.png}\par}
+    \vspace{1cm}
+    {\bfseries\LARGE UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO \par}
+    \vspace{0.7cm}
+    {\scshape\Large FACULTAD DE CIENCIAS \par}
+    \vspace{1cm}
+    {\itshape\Large Lenguajes de programación \par}
+    \vspace{0.5cm}
+    {\itshape\Large Semestre 2026-1 \par}
+    \vspace{2cm}
+    {\scshape\Huge Tarea 7 \par}
+    \vspace{1cm}
+    {\itshape\Large Fecha de entrega: 20 de noviembre de 2025 \par}
+    \vspace{2cm}
+    {\Large Autores: \par}
+    \vspace{0.4cm}
+    {\Large Escobar Gonzalez Isaac Giovani \hspace{1cm} 321336400 \par}
+    {\Large Garduño Escobar Kevin Jonathan \hspace{0.5cm} 321070629 \par}
+    {\Large Zaldivar Alanis Rodrigo \hspace{2.75cm} 424029605 \par}
+\end{titlepage}
+\section*{Instrucciones}
+\noindent Resolver los siguientes ejercicios de forma clara y ordenada de acuerdo a los lineamientos de entrega de tareas disponibles en la página del curso.\\
+\section*{Ejercicios}
+
+\begin{enumerate}[leftmargin=0.8cm]
+    \item Define un macro que calculé el cuadrado de un número con la sintaxis vista en clases.
+    \item Define los siguientes conceptos con tus propias palabras y en no más de cinco renglones
+    \begin{enumerate}[label=\alph*.]
+        \item Variable de tipo
+        \item Polimorfismo explícito
+        \item Polimorfismo implícito
+    \end{enumerate}
+    \item Toma en cuenta los siguiente códigos implementados en el lenguaje de programación Racket:
+    \begin{itemize}
+        \item \begin{lstlisting}[language=Lisp]
+#lang plai-typed
+        \end{lstlisting}
+        \begin{lstlisting}[language=Lisp]
+(define (mapea [funcion : ('A -> 'B)]
+               [lista : (Listof 'A)]) : (Listof 'B)
+  (if (empty? lista)
+        empty
+        (cons (funcion (first lista))
+                (mapea funcion (rest lista)))))
+        \end{lstlisting}
+    \end{itemize}
+    \begin{itemize}
+        \item \begin{lstlisting}[language=Lisp]
+#lang plai
+        \end{lstlisting}
+        \begin{lstlisting}[language=Lisp]
+(define (mapea funcion lista)
+  (if (empty? lista)
+        empty
+        (cons (funcion (first lista))
+                (mapea funcion (rest lista)))))
+        \end{lstlisting}
+    \end{itemize}
+    \begin{enumerate}[label=\alph*.]
+        \item ¿Cuál de las 2 funciones mapea demuestra polimorfismo explícito y cual polimorfismo implícito? Justifica tu respuesta.
+        \item Si tuvieras que pasar una función \textit{funcion} que opera sobre números y una lista de números a ambas versiones de mapea, ¿existiría alguna diferencia en cómo se verifica el tipo de la función y los elementos de la lista en tiempo de compilación o ejecución entre la versión implícita y la explícita? Describe este proceso.
+    \end{enumerate}
+    \item Investiga brevemente los siguientes conceptos del \textit{paradigma de programación Orientada a Objetos} con 3 diferentes \textit{Inteligencias Artificiales} por ejemplo \textit{ChatGpt, Gemini, DeepSeek, etc.} A partir del resultado realiza un pequeño resumen de cuales son las diferencias, similitudes y características particulares entre cada una de las respuestas de las diferentes \textit{Inteligencias Artificiales} que utilizaste.
+    \begin{itemize}
+        \item Clase
+        \item Objeto
+        \item Interfaz
+        \item Clase Abstracta
+        \item Encapsulamiento
+        \item Herencia
+        \item Polimorfismo
+    \end{itemize}
+    Una vez se hayan usado las diferentes \textit{Inteligencias Artificales}, cita de dónde obtuviste dicha información. Por ejemplo si la \textit{Inteligencia Artificial} te entregó el siguiente párrafo: "Párrafo de ejemplo...."[NUM-REF] ó "Según la información generada por ChatGPT (OpenAI, 1 de agosto de 2024),... ". ponerlo entre comillas dobles y citar usando numerado de referencias en un apartado al final de la tarea donde venga la bibliografía.\\
+    Bibliografía\\
+    $[1]$ OpenAI. (2024). ChatGPT (versión 3.5) [Modelo de lenguaje grande]. https://chat.openai.com/ [Consulta: 16 de agosto de ...]\\
+    Otra manera de incluirlas las referencias es incluir el prompt propio de la respuesta:\\
+    OpenAI. (2024). ChatGPT (versión 3.5) [Modelo de lenguaje grande]. https://chat.openai.com/ [Consulta: 16 de agosto de. Ver anexo para el prompt....]
+    \item Toma en cuenta el siguiente código hecho en lenguaje de programación \textit{java}:\\
+    \begin{lstlisting}[language=Java, frame=single, basicstyle=\ttfamily]
+public class CuentaBancaria {
+    private double saldo;
+    private String titular;
+
+}
+    \end{lstlisting}
+    \begin{enumerate}[label=\alph*.]
+        \item ¿Por qué es importante el encapsulamiento de datos?
+        \item Implementa un constructor para la clase \textbf{CuentaBancaria} que acepte valores iniciales para el saldo y el titular.
+        \item Proporciona un ejemplo de cómo crear una instancia de la clase \textbf{CuentaBancaria} y establece un saldo inicial y un nombre del titular de la cuenta.
+        \item Que ventaja tiene acceder a atributos de una clase con los métodos \textit{getter} y \textit{setter} en lugar de acceder directamente a los atributos fuera de la clase.
+    \end{enumerate}
+\end{enumerate}
+
+\end{document}
