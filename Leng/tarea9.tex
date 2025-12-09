@@ -49,10 +49,12 @@
 \begin{enumerate}[leftmargin=0.8cm]
     \item Define un macro que calculé el cuadrado de un número con la sintaxis vista en clases.
     \item Define los siguientes conceptos con tus propias palabras y en no más de cinco renglones
-    \begin{enumerate}[label=\alph*.]
-        \item Variable de tipo
-        \item Polimorfismo explícito
-        \item Polimorfismo implícito
+\begin{enumerate}[label=\alph*.]
+        \item Variable de tipo: Son variables que esperan ser ligadas en una expresión y así realizar polimorfismo explícito en esta. Cuando son ligadas, determinan el tipo de la expresión y sus restricciones. Es como cuando al implementar listas en el curso de estructuras de datos en java, se utiliza el parámetro \texttt{<T>}. O los tipos $\tau$ que reciben las expresiones $\Lambda$ en Racket.
+        \item Polimorfismo explícito: Es una manera de escribir expresiones análogas entre tipos de tal manera de que puedan recibir distintos tipos (abstrae estas expresiones en una sola).
+        Pero fuerza al programador a especificar el tipo de la expresión que está dando. Como cuando declaras una lista genérica en java. (\texttt{new ArrayList<String>()}).
+        \item Polimorfismo implícito: Es una manera de escribir expresiones análogas entre tipos de tal manera de que puedan recibir distintos tipos.
+        A diferencia del polimorfismo explícito, no necesita que se especifique el tipo de expresión. Más bien, este es inferido. Función longitud en Racket (\texttt{length '(1 2 3)}).
     \end{enumerate}
     \item Toma en cuenta los siguiente códigos implementados en el lenguaje de programación Racket:
     \begin{itemize}
