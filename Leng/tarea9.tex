@@ -47,7 +47,18 @@
 \section*{Ejercicios}
 
 \begin{enumerate}[leftmargin=0.8cm]
-    \item Define un macro que calculé el cuadrado de un número con la sintaxis vista en clases.
+    \item Define un macro que calculé el cuadrado de un número con la sintaxis vista en clases.\\
+    \textbf{Solución:}\\
+    Daremos la siguiente definición para el macro que calcula el cuadrado de un número usando la sintaxis vista en clases:
+    \begin{verbatim}
+(define-syntax my-sqr
+  (syntax-rules ()
+    [(my-sqr expr)
+      (let ([x expr])
+        (* x x))]))
+\end{verbatim}
+    Hacemos uso de \texttt{syntax-rules} para definir el macro \texttt{my-sqr}, que toma una expresión \texttt{expr} como argumento. Dentro del macro, usamos un \texttt{let} para evaluar la expresión y almacenar su valor en la variable \texttt{val}. Finalmente, retornamos el producto de \texttt{val} consigo mismo, que es el cuadrado de la expresión dada.
+
     \item Define los siguientes conceptos con tus propias palabras y en no más de cinco renglones
     \begin{enumerate}[label=\alph*.]
         \item Variable de tipo
@@ -124,10 +135,37 @@ public class CuentaBancaria {
 }
     \end{lstlisting}
     \begin{enumerate}[label=\alph*.]
-        \item ¿Por qué es importante el encapsulamiento de datos?
-        \item Implementa un constructor para la clase \textbf{CuentaBancaria} que acepte valores iniciales para el saldo y el titular.
-        \item Proporciona un ejemplo de cómo crear una instancia de la clase \textbf{CuentaBancaria} y establece un saldo inicial y un nombre del titular de la cuenta.
-        \item Que ventaja tiene acceder a atributos de una clase con los métodos \textit{getter} y \textit{setter} en lugar de acceder directamente a los atributos fuera de la clase.
+        \item ¿Por qué es importante el encapsulamiento de datos?\\
+        \textbf{Solución:}\\
+        Es muy importante el encapsulamiento de datos porque, como su nombre nos indica, nos permite encapsular o proteger los datos de una clase, evitando que se puedan modificar o acceder directamente desde fuera de la clase. Pues al encapsular los datos, podemos controlar cómo se accede y modifica la información, lo que ayuda a mantener la integridad y consistencia de los datos. También nos puede ser útil al momento de realizar cambios en la implementación interna de la clase, ya que si los datos están encapsulados, no afectará a otras partes del código que utilizan esa clase.
+
+        \item Implementa un constructor para la clase \textbf{CuentaBancaria} que acepte valores iniciales para el saldo y el titular.\\
+        \textbf{Solución:}\\ 
+        Daremos el siguiente constructor para la clase \textbf{CuentaBancaria} que acepte dos parámetros, uno para el saldo inicial y otro para el nombre del titular de la cuenta bancaria. El constructor asignará estos valores a los atributos privados de la clase. Por lo que el constructor quedaría de la siguiente manera:\\
+        \begin{lstlisting}[language=Java, frame=single, basicstyle=\ttfamily]
+public CuentaBancaria(double saldo, String titular) {
+    this.saldo = saldo;
+    this.titular = titular;
+}
+        \end{lstlisting}
+        
+\lstset{
+  showspaces=false,
+  showstringspaces=false
+}
+
+        \item Proporciona un ejemplo de cómo crear una instancia de la clase \textbf{CuentaBancaria} y establece un saldo inicial y un nombre del titular de la cuenta.\\
+        \textbf{Solución:}\\
+        Para crear una instancia de la clase \textbf{CuentaBancaria} es necesario llamar al constructor de la clase con los parámetros necesarios los cuales establecimos en el punto anterior, necesitamos un saldo inicial y un nombre del titular de la cuenta, por ejemplo, lo podemos hacer de la siguiente manera:\\
+        \begin{lstlisting}[language=Java, frame=single, basicstyle=\ttfamily]
+CuentaBancaria cuentaB1 = new CuentaBancaria(99.9,"Alonzo Church");
+        \end{lstlisting}
+
+        \item Que ventaja tiene acceder a atributos de una clase con los métodos \textit{getter} y \textit{setter} en lugar de acceder directamente a los atributos fuera de la clase.\\
+        \textbf{Solución:}\\
+        La ventaja es que si contamos con los \textit{getter} podemos obtener el valor de un atributo privado sin modificarlo, y con los \textit{setter} podemos validar o controlar los valores que se asignan a los atributos privados, evitando así inconsistencias o errores en los datos. Pues siempre buscaremos mantener la integridad de los datos.\\
+        Nos garantizan una mayor seguridad y control sobre dichas variables, evitandonos que no se existan modificaciones no deseadas o accesos indebidos a los atributos de la clase.
+
     \end{enumerate}
 \end{enumerate}
 
@@ -135,5 +173,6 @@ public class CuentaBancaria {
 \noindent$[1]$ OpenAI. (2025). ChatGPT (versión GPT-4) [Modelo de lenguaje grande]. \url{https://chat.openai.com} [Consulta: 07 de diciembre de 2025].\\
 \noindent$[2]$ Google. (2025). Gemini (versión 3.0 Pro) [Modelo de lenguaje grande]. \url{https://gemini.google.com} [Consulta: 07 de diciembre de 2025].\\
 \noindent$[3]$ DeepSeek. (2025). DeepSeek Chat [Modelo de lenguaje grande]. \url{https://www.deepseek.com} [Consulta: 07 de diciembre de 2025].\\
+\noindent Oracle. (2025). Object-Oriented Programming. Oracle. \url{https://www.oracle.com/java/technologies/oop.html} [Consulta: 08 de diciembre de 2025].
 
 \end{document}
